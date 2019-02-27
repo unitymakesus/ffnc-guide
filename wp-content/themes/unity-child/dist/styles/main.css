@@ -16098,51 +16098,62 @@ html[data-text-size="large"] {
 
 /* line 90, resources/assets/styles/common/_typography.scss */
 
-body {
+body.page-template {
   font-family: 'Gotham', Helvetica, Arial, sans-serif;
 }
 
-/* line 116, resources/assets/styles/common/_typography.scss */
+/* line 115, resources/assets/styles/common/_typography.scss */
 
-h1,
-.h1 {
+body.page-template h1,
+body.page-template .h1 {
   font-size: 2.77778rem;
   font-weight: 600;
+  color: #4D5C6B;
 }
 
 /* line 121, resources/assets/styles/common/_typography.scss */
 
-h2,
-.h2 {
+body.page-template h2,
+body.page-template .h2 {
   font-size: 2rem;
   font-weight: 600;
+  color: #81BC41;
 }
 
-/* line 126, resources/assets/styles/common/_typography.scss */
+/* line 127, resources/assets/styles/common/_typography.scss */
 
-h3,
-.h3 {
+body.page-template h3,
+body.page-template .h3 {
   font-size: 1.33333rem;
   font-weight: 600;
   letter-spacing: 1px;
+  color: #81BC41;
 }
 
-/* line 132, resources/assets/styles/common/_typography.scss */
+/* line 134, resources/assets/styles/common/_typography.scss */
 
-h4,
-.h4 {
+body.page-template h4,
+body.page-template .h4 {
   font-size: 1.33333rem;
+  color: #4D5C6B;
 }
 
-/* line 136, resources/assets/styles/common/_typography.scss */
+/* line 139, resources/assets/styles/common/_typography.scss */
 
-h5,
-.h5 {
+body.page-template h5,
+body.page-template .h5 {
   font-size: 1rem;
   text-transform: uppercase;
+  color: #4D5C6B;
 }
 
-/* line 141, resources/assets/styles/common/_typography.scss */
+/* line 145, resources/assets/styles/common/_typography.scss */
+
+body.page-template a {
+  color: #4597CB;
+}
+
+/* line 150, resources/assets/styles/common/_typography.scss */
 
 a {
   text-decoration: underline;
@@ -16152,7 +16163,7 @@ a {
   transition: all 0.3s;
 }
 
-/* line 146, resources/assets/styles/common/_typography.scss */
+/* line 155, resources/assets/styles/common/_typography.scss */
 
 a:hover,
 a:active {
@@ -16160,14 +16171,14 @@ a:active {
           text-decoration-style: double;
 }
 
-/* line 150, resources/assets/styles/common/_typography.scss */
+/* line 159, resources/assets/styles/common/_typography.scss */
 
 html[data-contrast="true"] a:hover,
 html[data-contrast="true"] a:active {
   color: #FFF;
 }
 
-/* line 157, resources/assets/styles/common/_typography.scss */
+/* line 166, resources/assets/styles/common/_typography.scss */
 
 .main p,
 .main li,
@@ -16176,14 +16187,14 @@ html[data-contrast="true"] a:active {
   line-height: 1.6em;
 }
 
-/* line 161, resources/assets/styles/common/_typography.scss */
+/* line 170, resources/assets/styles/common/_typography.scss */
 
 .main dt {
   font-weight: bold;
   clear: both;
 }
 
-/* line 166, resources/assets/styles/common/_typography.scss */
+/* line 175, resources/assets/styles/common/_typography.scss */
 
 .main dd {
   margin-bottom: 1em;
@@ -16191,14 +16202,14 @@ html[data-contrast="true"] a:active {
 }
 
 @media only screen and (max-width: 600px) {
-  /* line 166, resources/assets/styles/common/_typography.scss */
+  /* line 175, resources/assets/styles/common/_typography.scss */
 
   .main dd {
     margin-left: 1em;
   }
 }
 
-/* line 176, resources/assets/styles/common/_typography.scss */
+/* line 185, resources/assets/styles/common/_typography.scss */
 
 .main ul li {
   list-style: none;
@@ -16206,7 +16217,7 @@ html[data-contrast="true"] a:active {
   padding-left: 30px;
 }
 
-/* line 181, resources/assets/styles/common/_typography.scss */
+/* line 190, resources/assets/styles/common/_typography.scss */
 
 .main ul li::before {
   content: '\2022';
@@ -16216,19 +16227,19 @@ html[data-contrast="true"] a:active {
   speak: none;
 }
 
-/* line 188, resources/assets/styles/common/_typography.scss */
+/* line 197, resources/assets/styles/common/_typography.scss */
 
 html[data-contrast="true"] .main ul li::before {
   color: #FFF;
 }
 
-/* line 196, resources/assets/styles/common/_typography.scss */
+/* line 205, resources/assets/styles/common/_typography.scss */
 
 blockquote {
   border-left: 0;
 }
 
-/* line 199, resources/assets/styles/common/_typography.scss */
+/* line 208, resources/assets/styles/common/_typography.scss */
 
 blockquote.wp-block-pullquote {
   clear: both;
@@ -16236,22 +16247,129 @@ blockquote.wp-block-pullquote {
   padding-right: 3em;
 }
 
-/* line 206, resources/assets/styles/common/_typography.scss */
+/* line 215, resources/assets/styles/common/_typography.scss */
 
 .label {
   font-weight: 600;
 }
 
-/* line 211, resources/assets/styles/common/_typography.scss */
+/* line 220, resources/assets/styles/common/_typography.scss */
 
 strong {
   font-weight: 700;
 }
 
-/* line 215, resources/assets/styles/common/_typography.scss */
+/* line 224, resources/assets/styles/common/_typography.scss */
 
 abbr[title] {
   border-bottom: 0;
+}
+
+/* line 229, resources/assets/styles/common/_typography.scss */
+
+sup.footnote a {
+  font-size: 0.7em !important;
+  color: #4597CB;
+}
+
+/* line 3, resources/assets/styles/components/_nav.scss */
+
+.navbar-menu ul a {
+  font-size: 1rem;
+  color: #4D5C6B;
+  padding: 0.7rem 25px;
+}
+
+/* line 8, resources/assets/styles/components/_nav.scss */
+
+.navbar-menu ul a:hover {
+  background: none;
+}
+
+/* line 14, resources/assets/styles/components/_nav.scss */
+
+.navbar-menu li:hover {
+  background: #4D5C6B;
+}
+
+/* line 17, resources/assets/styles/components/_nav.scss */
+
+.navbar-menu li:hover a {
+  color: #FFF;
+}
+
+/* line 21, resources/assets/styles/components/_nav.scss */
+
+.navbar-menu li:hover .sub-menu {
+  background: #4D5C6B;
+}
+
+/* line 29, resources/assets/styles/components/_nav.scss */
+
+.navbar-menu li.mega-menu > ul.sub-menu > li.menu-item > a {
+  color: #FFF;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: default;
+  padding: 0;
+  margin: 1em 25px;
+  text-decoration: underline;
+}
+
+/* line 39, resources/assets/styles/components/_nav.scss */
+
+.navbar-menu li.mega-menu > ul.sub-menu > li.menu-item > ul.sub-menu {
+  position: relative;
+  top: 0;
+  background: none;
+  border-top: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+@media only screen and (min-width: 993px) {
+  /* line 27, resources/assets/styles/components/_nav.scss */
+
+  .navbar-menu li.mega-menu > ul.sub-menu {
+    width: 100vw;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    left: 0;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+  }
+
+  /* line 54, resources/assets/styles/components/_nav.scss */
+
+  .navbar-menu li.mega-menu > ul.sub-menu ul {
+    width: auto;
+  }
+
+  /* line 57, resources/assets/styles/components/_nav.scss */
+
+  .navbar-menu li.mega-menu > ul.sub-menu ul a {
+    padding: 0.5em 25px;
+  }
+
+  /* line 62, resources/assets/styles/components/_nav.scss */
+
+  .navbar-menu li.mega-menu > ul.sub-menu > li.menu-item {
+    width: 20%;
+    padding: 15px 0;
+  }
+
+  /* line 66, resources/assets/styles/components/_nav.scss */
+
+  .navbar-menu li.mega-menu > ul.sub-menu > li.menu-item > a {
+    text-decoration: none !important;
+    color: #81BC41;
+    border-bottom: 1px solid #81BC41;
+    font-size: 0.9em;
+    line-height: 1.2em;
+  }
 }
 
 

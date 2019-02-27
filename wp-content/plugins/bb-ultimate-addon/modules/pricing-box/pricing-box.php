@@ -560,6 +560,11 @@ class UABBPricingTableModule extends FLBuilderModule {
 					);
 					unset( $settings->pricing_columns[ $i ]->button_letter_spacing );
 				}
+				if ( isset( $settings->pricing_columns[ $i ]->btn_link_nofollow ) ) {
+					if ( '1' == $settings->pricing_columns[ $i ]->btn_link_nofollow || 'yes' == $settings->pricing_columns[ $i ]->btn_link_nofollow ) {
+						$settings->pricing_columns[ $i ]->btn_link_nofollow = 'yes';
+					}
+				}
 				if ( ! isset( $settings->pricing_columns[ $i ]->featured_typo ) || ! is_object( $settings->pricing_columns[ $i ]->featured_typo ) ) {
 
 					$settings->pricing_columns[ $i ]->featured_typo            = new stdClass();

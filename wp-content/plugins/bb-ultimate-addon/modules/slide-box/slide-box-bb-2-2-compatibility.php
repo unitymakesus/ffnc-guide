@@ -380,28 +380,18 @@ FLBuilder::register_module(
 				'cta_type_text'   => array( // Section.
 					'title'  => __( 'Text', 'uabb' ), // Section Title.
 					'fields' => array( // Section Fields.
-						'link'        => array(
-							'type'        => 'link',
-							'label'       => __( 'Link', 'uabb' ),
-							'help'        => __( 'The link applies to the entire module. If choosing a call to action type below, this link will also be used for the text or button.', 'uabb' ),
-							'preview'     => array(
+						'link'     => array(
+							'type'          => 'link',
+							'label'         => __( 'Link', 'uabb' ),
+							'help'          => __( 'The link applies to the entire module. If choosing a call to action type below, this link will also be used for the text or button.', 'uabb' ),
+							'preview'       => array(
 								'type' => 'none',
 							),
-							'connections' => array( 'url' ),
+							'connections'   => array( 'url' ),
+							'show_target'   => true,
+							'show_nofollow' => true,
 						),
-						'link_target' => array(
-							'type'    => 'select',
-							'label'   => __( 'Link Target', 'uabb' ),
-							'default' => '_self',
-							'options' => array(
-								'_self'  => __( 'Same Window', 'uabb' ),
-								'_blank' => __( 'New Window', 'uabb' ),
-							),
-							'preview' => array(
-								'type' => 'none',
-							),
-						),
-						'cta_text'    => array(
+						'cta_text' => array(
 							'type'    => 'text',
 							'label'   => __( 'Text', 'uabb' ),
 							'default' => __( 'Read More', 'uabb' ),

@@ -295,6 +295,11 @@ class UABBInfoCircleModule extends FLBuilderModule {
 				$helper->handle_opacity_inputs( $settings->add_circle_item[ $i ], 'btn_bg_hover_color_opc', 'btn_bg_hover_color' );
 				$helper->handle_opacity_inputs( $settings->add_circle_item[ $i ], 'btn_bg_color_opc', 'btn_bg_color' );
 				$helper->handle_opacity_inputs( $settings->add_circle_item[ $i ], 'inner_circle_bg_color_opc', 'inner_circle_bg_color' );
+				if ( isset( $settings->add_circle_item[ $i ]->cta_link_nofollow ) ) {
+					if ( '1' == $settings->add_circle_item[ $i ]->cta_link_nofollow || 'yes' == $settings->add_circle_item[ $i ]->cta_link_nofollow ) {
+						$settings->add_circle_item[ $i ]->cta_link_nofollow = 'yes';
+					}
+				}
 			}
 		} elseif ( $version_bb_check && 'yes' != $page_migrated ) {
 
@@ -627,7 +632,7 @@ class UABBInfoCircleModule extends FLBuilderModule {
 					/* Link Section */
 					'link'                        => $item->cta_link,
 					'link_target'                 => $item->cta_link_target,
-
+					'link_nofollow'               => ( isset( $item->cta_link_nofollow ) ) ? $item->cta_link_nofollow : '',
 					/* Style Section */
 					'style'                       => $item->btn_style,
 					'border_size'                 => $item->btn_border_size,
@@ -678,7 +683,7 @@ class UABBInfoCircleModule extends FLBuilderModule {
 					/* Link Section */
 					'link'                       => $item->cta_link,
 					'link_target'                => $item->cta_link_target,
-
+					'link_nofollow'              => ( isset( $item->cta_link_nofollow ) ) ? $item->cta_link_nofollow : '',
 					/* Style Section */
 					'style'                      => $item->btn_style,
 					'border_size'                => $item->btn_border_size,
@@ -717,7 +722,7 @@ class UABBInfoCircleModule extends FLBuilderModule {
 			}
 			FLBuilder::render_module_html( 'uabb-button', $btn_settings );
 		} else {
-			echo '<a href="' . $item->cta_link . '" target="' . $item->cta_link_target . '" ' . BB_Ultimate_Addon_Helper::get_link_rel( $item->cta_link_target, 0, 0 ) . ' class="uabb-infoc-link" >' . $item->cta_text . '</a>';
+			echo '<a href="' . $item->cta_link . '" target="' . $item->cta_link_target . '" ' . BB_Ultimate_Addon_Helper::get_link_rel( $item->cta_link_target, $item->cta_link_nofollow, 0 ) . ' class="uabb-infoc-link" >' . $item->cta_text . '</a>';
 		}
 	}
 }

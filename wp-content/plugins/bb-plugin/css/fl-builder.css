@@ -3305,6 +3305,11 @@ form.fl-builder-settings {
 .fl-lightbox .mce-top-part::before {
 	box-shadow:none !important;
 }
+
+.mce-container .mce-stack-layout span {
+	color: initial;
+}
+
 .fl-lightbox div.mce-toolbar-grp {
 	background: transparent;
 	border:none;

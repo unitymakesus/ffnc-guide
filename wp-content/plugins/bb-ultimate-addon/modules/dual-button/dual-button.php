@@ -263,6 +263,16 @@ class UABBDualButtonModule extends FLBuilderModule {
 				);
 				unset( $settings->_divider_letter_spacing );
 			}
+			if ( isset( $settings->button_two_link_nofollow ) ) {
+				if ( '1' == $settings->button_two_link_nofollow || 'yes' == $settings->button_two_link_nofollow ) {
+					$settings->button_two_link_nofollow = 'yes';
+				}
+			}
+			if ( isset( $settings->button_one_link_nofollow ) ) {
+				if ( '1' == $settings->button_one_link_nofollow || 'yes' == $settings->button_one_link_nofollow ) {
+					$settings->button_one_link_nofollow = 'yes';
+				}
+			}
 		} elseif ( $version_bb_check && 'yes' != $page_migrated ) {
 
 			// Handle opacity field.

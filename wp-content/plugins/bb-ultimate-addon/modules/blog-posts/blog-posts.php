@@ -1780,14 +1780,33 @@ class BlogPostsModule extends FLBuilderModule {
 						$all_text = 'uabb_masonary_filter_all_edit_' . $post_type;
 
 						$filter_type = 'uabb_masonary_filter_type_' . $post_type;
+
 						if ( isset( $this->settings->$filter_type ) && 'drop-down' == $this->settings->$filter_type ) {
 							echo '<select class="uabb-masonary-filters">';
 							echo '<option class="uabb-masonary-filter-' . $this->node . ' uabb-masonary-current" data-filter="*" value="all">' . ( isset( $this->settings->$all_text ) ? $this->settings->$all_text : __( 'All', 'uabb' ) ) . '</option>';
 
 							foreach ( $category_detail as $cat_details ) {
 								if ( ! empty( $tax_value ) ) {
-									if ( in_array( $cat_details->term_id, $tax_value ) ) {
-										echo '<option class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</option>';
+									if ( 'category' === $this->settings->masonary_filter_post  ) {
+										if ( '0' === $this->settings->tax_post_category_matching ) {
+											if (  ! in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<option class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</option>';
+											}
+										}else {
+											if ( in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<option class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</option>';
+											}
+										}
+									} elseif ( 'post_tag' === $this->settings->masonary_filter_post ) {
+										if ( '0' === $this->settings->tax_post_post_tag_matching ) {
+											if (  ! in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<option class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</option>';
+											}
+										}else {
+											if ( in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<option class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</option>';
+											}
+										}
 									}
 								} else {
 									echo '<option class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</option>';
@@ -1799,8 +1818,26 @@ class BlogPostsModule extends FLBuilderModule {
 								echo '<li class="uabb-masonary-filter-' . $this->node . ' uabb-masonary-current" data-filter="*">' . ( isset( $this->settings->$all_text ) ? $this->settings->$all_text : __( 'All', 'uabb' ) ) . '</li>';
 							foreach ( $category_detail as $cat_details ) {
 								if ( ! empty( $tax_value ) ) {
-									if ( in_array( $cat_details->term_id, $tax_value ) ) {
-										echo '<li class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</li>';
+									if ( 'category' === $this->settings->masonary_filter_post  ) {
+										if ( '0' === $this->settings->tax_post_category_matching ) {
+											if (  ! in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<li class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</li>';
+											}
+										} else {
+											if ( in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<li class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</li>';
+											}
+										}
+									} elseif ( 'post_tag' === $this->settings->masonary_filter_post ) {
+										if ( '0' === $this->settings->tax_post_category_matching ) {
+											if (  ! in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<li class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</li>';
+											}
+										} else {
+											if ( in_array( $cat_details->term_id, $tax_value ) ) {
+												echo '<li class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</li>';
+											}
+										}
 									}
 								} else {
 									echo '<li class="uabb-masonary-filter-' . $this->node . '" data-filter=".uabb-masonary-cat-' . $cat_details->term_id . '">' . $cat_details->name . '</li>';

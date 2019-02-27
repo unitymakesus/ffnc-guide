@@ -123,7 +123,7 @@ add_action('widgets_init', function () {
  * Add case studies post type
  */
 function add_post_type() {
- $argsTeam = array(
+ $argsCaseStudies = array(
    'labels' => array(
 				'name' => 'Case Studies',
 				'singular_name' => 'Case Study',
@@ -159,6 +159,40 @@ function add_post_type() {
      'slug' => 'case-study'
    )
  );
- register_post_type( 'ff-case-study', $argsTeam );
+ register_post_type( 'ff-case-study', $argsCaseStudies );
+
+ $argsCompanies = array(
+   'labels' => array(
+				'name' => 'Companies',
+				'singular_name' => 'Company',
+				'add_new' => 'Add New',
+				'add_new_item' => 'Add New Company',
+				'edit' => 'Edit',
+				'edit_item' => 'Edit Company',
+				'new_item' => 'New Company',
+				'view_item' => 'View Company',
+				'search_items' => 'Search Companies',
+				'not_found' =>  'Nothing found in the Database.',
+				'not_found_in_trash' => 'Nothing found in Trash',
+				'parent_item_colon' => ''
+   ),
+   'public' => false,
+   'exclude_from_search' => true,
+   'publicly_queryable' => true,
+   'show_ui' => true,
+   'show_in_nav_menus' => false,
+   'menu_position' => 21,
+   'menu_icon' => 'dashicons-groups',
+   'capability_type' => 'page',
+   'hierarchical' => false,
+   'supports' => array(
+     'title',
+     'revisions',
+     'page-attributes',
+   ),
+   'has_archive' => false,
+   'rewrite' => false
+ );
+ register_post_type( 'ff-company', $argsCompanies );
 }
 add_action( 'init', __NAMESPACE__.'\\add_post_type' );

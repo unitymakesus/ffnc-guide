@@ -309,6 +309,11 @@ class InteractiveBanner1Module extends FLBuilderModule {
 				);
 				unset( $settings->button->letter_spacing );
 			}
+			if ( isset( $settings->button->link_nofollow ) ) {
+				if ( '1' == $settings->button->link_nofollow || 'yes' == $settings->button->link_nofollow ) {
+					$settings->button->link_nofollow = 'yes';
+				}
+			}
 			if ( isset( $settings->cta_link_follow ) ) {
 				$settings->cta_link_nofollow = ( '1' == $settings->cta_link_follow ) ? 'yes' : '';
 				unset( $settings->cta_link_follow );
@@ -510,6 +515,11 @@ class InteractiveBanner1Module extends FLBuilderModule {
 						'length' => round( $settings->button->line_height->small / $settings->button->font_size->small, 2 ),
 						'unit'   => 'em',
 					);
+				}
+			}
+			if ( isset( $settings->button->link_nofollow ) ) {
+				if ( '1' == $settings->button->link_nofollow || 'yes' == $settings->button->link_nofollow ) {
+					$settings->button->link_nofollow = 'yes';
 				}
 			}
 			if ( isset( $settings->cta_link_nofollow ) ) {

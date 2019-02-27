@@ -87,7 +87,7 @@ html {
   font-style: italic;
 }
 
-body {
+body.page-template {
   font-family: 'Gotham', Helvetica, Arial, sans-serif;
 
   // h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, blockquote {
@@ -111,31 +111,40 @@ body {
   // h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
   //   color: $color-ff-green;
   // }
-}
+  //
+  h1, .h1 {
+    font-size: rem-calc(50px);
+    font-weight: 600;
+    color: $color-ff-gray-dark;
+  }
 
-h1, .h1 {
-  font-size: rem-calc(50px);
-  font-weight: 600;
-}
+  h2, .h2 {
+    font-size: rem-calc(36px);
+    font-weight: 600;
+    color: $color-ff-green;
+  }
 
-h2, .h2 {
-  font-size: rem-calc(36px);
-  font-weight: 600;
-}
+  h3, .h3 {
+    font-size: rem-calc(24px);
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: $color-ff-green;
+  }
 
-h3, .h3 {
-  font-size: rem-calc(24px);
-  font-weight: 600;
-  letter-spacing: 1px;
-}
+  h4, .h4 {
+    font-size: rem-calc(24px);
+    color: $color-ff-gray-dark;
+  }
 
-h4, .h4 {
-  font-size: rem-calc(24px);
-}
+  h5, .h5 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: $color-ff-gray-dark;
+  }
 
-h5, .h5 {
-  font-size: 1rem;
-  text-transform: uppercase;
+  a {
+    color: $color-ff-blue;
+  }
 }
 
 a {
@@ -214,4 +223,11 @@ strong {
 
 abbr[title] {
   border-bottom: 0;
+}
+
+sup.footnote {
+  a {
+    font-size: 0.7em !important;
+    color: $color-ff-blue;
+  }
 }

@@ -533,6 +533,16 @@ class SlideBoxModule extends FLBuilderModule {
 				);
 				unset( $settings->button->letter_spacing );
 			}
+			if ( isset( $settings->button->link_nofollow ) ) {
+				if ( '1' == $settings->button->link_nofollow || 'yes' == $settings->button->link_nofollow ) {
+					$settings->button->link_nofollow = 'yes';
+				}
+			}
+			if ( isset( $settings->link_nofollow ) ) {
+				if ( '1' == $settings->link_nofollow || 'yes' == $settings->link_nofollow ) {
+					$settings->link_nofollow = 'yes';
+				}
+			}
 		} elseif ( $version_bb_check && 'yes' != $page_migrated ) {
 
 			// Opacity.
@@ -953,6 +963,11 @@ class SlideBoxModule extends FLBuilderModule {
 						'length' => round( $settings->button->line_height->small / $settings->button->font_size->small, 2 ),
 						'unit'   => 'em',
 					);
+				}
+			}
+			if ( isset( $settings->button->link_nofollow ) ) {
+				if ( '1' == $settings->button->link_nofollow || 'yes' == $settings->button->link_nofollow ) {
+					$settings->button->link_nofollow = 'yes';
 				}
 			}
 			// Unset the old values.

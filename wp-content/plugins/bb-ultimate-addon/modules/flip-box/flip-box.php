@@ -69,13 +69,22 @@ class FlipBoxModule extends FLBuilderModule {
 					unset( $settings->front_border_color );
 				}
 				if ( isset( $settings->front_border_size ) ) {
-					$settings->front_border['width'] = array(
-						'top'    => $settings->front_border_size,
-						'right'  => $settings->front_border_size,
-						'bottom' => $settings->front_border_size,
-						'left'   => $settings->front_border_size,
-					);
-					unset( $settings->front_border_size );
+					if ( empty( $settings->front_border_size ) ) {
+						$settings->front_border['width'] = array(
+							'top'    => '1',
+							'right'  => '1',
+							'bottom' => '1',
+							'left'   => '1',
+						);
+					} else {
+						$settings->front_border['width'] = array(
+							'top'    => $settings->front_border_size,
+							'right'  => $settings->front_border_size,
+							'bottom' => $settings->front_border_size,
+							'left'   => $settings->front_border_size,
+						);
+						unset( $settings->front_border_size );
+					}
 				}
 			}
 			// Handle old back border settings.
@@ -84,13 +93,22 @@ class FlipBoxModule extends FLBuilderModule {
 
 				// Border style, color, and width.
 				if ( isset( $settings->back_border_size ) ) {
-					$settings->back_border['width'] = array(
-						'top'    => $settings->back_border_size,
-						'right'  => $settings->back_border_size,
-						'bottom' => $settings->back_border_size,
-						'left'   => $settings->back_border_size,
-					);
-					unset( $settings->back_border_size );
+					if ( empty( $settings->back_border_size ) ) {
+						$settings->back_border['width'] = array(
+							'top'    => '1',
+							'right'  => '1',
+							'bottom' => '1',
+							'left'   => '1',
+						);
+					} else {
+						$settings->back_border['width'] = array(
+							'top'    => $settings->back_border_size,
+							'right'  => $settings->back_border_size,
+							'bottom' => $settings->back_border_size,
+							'left'   => $settings->back_border_size,
+						);
+						unset( $settings->back_border_size );
+					}
 				}
 				if ( isset( $settings->back_box_border_style ) ) {
 					$settings->back_border['style'] = $settings->back_box_border_style;
@@ -504,25 +522,39 @@ class FlipBoxModule extends FLBuilderModule {
 				);
 				unset( $settings->button->letter_spacing );
 			}
+			if ( isset( $settings->button->link_nofollow ) ) {
+				if ( '1' == $settings->button->link_nofollow || 'yes' == $settings->button->link_nofollow ) {
+					$settings->button->link_nofollow = 'yes';
+				}
+			}
 		} elseif ( $version_bb_check && 'yes' != $page_migrated ) {
 
 			// Handle opacity fields.
 			$helper->handle_opacity_inputs( $settings, 'back_background_color_opc', 'back_background_color' );
 			$helper->handle_opacity_inputs( $settings, 'front_background_color_opc', 'front_background_color' );
 
-			// Handle old front border settings.
+			// Handle old back border settings.
 			if ( isset( $settings->back_border_color ) ) {
 				$settings->back_border = array();
 
 				// Border style, color, and width.
 				if ( isset( $settings->back_border_size ) ) {
-					$settings->back_border['width'] = array(
-						'top'    => $settings->back_border_size,
-						'right'  => $settings->back_border_size,
-						'bottom' => $settings->back_border_size,
-						'left'   => $settings->back_border_size,
-					);
-					unset( $settings->back_border_size );
+					if ( empty( $settings->back_border_size ) ) {
+						$settings->back_border['width'] = array(
+							'top'    => '1',
+							'right'  => '1',
+							'bottom' => '1',
+							'left'   => '1',
+						);
+					} else {
+						$settings->back_border['width'] = array(
+							'top'    => $settings->back_border_size,
+							'right'  => $settings->back_border_size,
+							'bottom' => $settings->back_border_size,
+							'left'   => $settings->back_border_size,
+						);
+						unset( $settings->back_border_size );
+					}
 				}
 				if ( isset( $settings->back_box_border_style ) ) {
 					$settings->back_border['style'] = $settings->back_box_border_style;
@@ -534,27 +566,36 @@ class FlipBoxModule extends FLBuilderModule {
 				}
 			}
 
-			// Handle old back border settings.
-			if ( isset( $settings->back_border_color ) ) {
-				$settings->back_border = array();
+			// Handle old front border settings.
+			if ( isset( $settings->front_border_color ) ) {
+				$settings->front_border = array();
 
 				// Border style, color, and width.
-				if ( isset( $settings->back_border_size ) ) {
-					$settings->back_border['width'] = array(
-						'top'    => $settings->back_border_size,
-						'right'  => $settings->back_border_size,
-						'bottom' => $settings->back_border_size,
-						'left'   => $settings->back_border_size,
-					);
-					unset( $settings->back_border_size );
+				if ( isset( $settings->front_box_border_style ) ) {
+					$settings->front_border['style'] = $settings->front_box_border_style;
+					unset( $settings->front_box_border_style );
 				}
-				if ( isset( $settings->back_box_border_style ) ) {
-					$settings->back_border['style'] = $settings->back_box_border_style;
-					unset( $settings->back_box_border_style );
+				if ( isset( $settings->front_border_color ) ) {
+					$settings->front_border['color'] = $settings->front_border_color;
+					unset( $settings->front_border_color );
 				}
-				if ( isset( $settings->back_border_color ) ) {
-					$settings->back_border['color'] = $settings->back_border_color;
-					unset( $settings->back_border_color );
+				if ( isset( $settings->front_border_size ) ) {
+					if ( empty( $settings->front_border_size ) ) {
+						$settings->front_border['width'] = array(
+							'top'    => '1',
+							'right'  => '1',
+							'bottom' => '1',
+							'left'   => '1',
+						);
+					} else {
+						$settings->front_border['width'] = array(
+							'top'    => $settings->front_border_size,
+							'right'  => $settings->front_border_size,
+							'bottom' => $settings->front_border_size,
+							'left'   => $settings->front_border_size,
+						);
+						unset( $settings->front_border_size );
+					}
 				}
 			}
 
@@ -979,6 +1020,11 @@ class FlipBoxModule extends FLBuilderModule {
 						'length' => round( $settings->button->line_height->small / $settings->button->font_size->small, 2 ),
 						'unit'   => 'em',
 					);
+				}
+			}
+			if ( isset( $settings->button->link_nofollow ) ) {
+				if ( '1' == $settings->button->link_nofollow || 'yes' == $settings->button->link_nofollow ) {
+					$settings->button->link_nofollow = 'yes';
 				}
 			}
 			// Unset the previous values.
