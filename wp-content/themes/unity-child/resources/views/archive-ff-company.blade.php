@@ -76,7 +76,7 @@
                 <span class="spacer">&bull;</span>
                 <strong>Number of Employees:</strong> <em class="employees"> {{ the_field('number_of_employees') }}</em>
               </div>
-              <div class="policies hentry">
+              <div class="policies entry-content">
                 <h3 class="h4">Policies</h3>
                 {!! the_field('policies') !!}
               </div>

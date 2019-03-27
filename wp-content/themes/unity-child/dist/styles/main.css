@@ -16800,7 +16800,13 @@ html[data-text-size="large"] {
   color: #4597CB;
 }
 
-/* line 154, resources/assets/styles/common/_typography.scss */
+/* line 155, resources/assets/styles/common/_typography.scss */
+
+.content ul li::before {
+  color: #F89C24;
+}
+
+/* line 162, resources/assets/styles/common/_typography.scss */
 
 a {
   text-decoration: underline;
@@ -16810,7 +16816,7 @@ a {
   transition: all 0.3s;
 }
 
-/* line 159, resources/assets/styles/common/_typography.scss */
+/* line 167, resources/assets/styles/common/_typography.scss */
 
 a:hover,
 a:active {
@@ -16818,20 +16824,20 @@ a:active {
           text-decoration-style: double;
 }
 
-/* line 163, resources/assets/styles/common/_typography.scss */
+/* line 171, resources/assets/styles/common/_typography.scss */
 
 html[data-contrast="true"] a:hover,
 html[data-contrast="true"] a:active {
   color: #FFF;
 }
 
-/* line 169, resources/assets/styles/common/_typography.scss */
+/* line 177, resources/assets/styles/common/_typography.scss */
 
 blockquote {
   border-left: 0;
 }
 
-/* line 172, resources/assets/styles/common/_typography.scss */
+/* line 180, resources/assets/styles/common/_typography.scss */
 
 blockquote.wp-block-pullquote {
   clear: both;
@@ -16839,25 +16845,25 @@ blockquote.wp-block-pullquote {
   padding-right: 3em;
 }
 
-/* line 179, resources/assets/styles/common/_typography.scss */
+/* line 187, resources/assets/styles/common/_typography.scss */
 
 .label {
   font-weight: 600;
 }
 
-/* line 184, resources/assets/styles/common/_typography.scss */
+/* line 192, resources/assets/styles/common/_typography.scss */
 
 strong {
   font-weight: 700;
 }
 
-/* line 188, resources/assets/styles/common/_typography.scss */
+/* line 196, resources/assets/styles/common/_typography.scss */
 
 abbr[title] {
   border-bottom: 0;
 }
 
-/* line 193, resources/assets/styles/common/_typography.scss */
+/* line 201, resources/assets/styles/common/_typography.scss */
 
 sup.footnote a {
   font-size: 0.7em !important;

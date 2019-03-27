@@ -149,6 +149,14 @@ html {
   a {
     color: $color-ff-blue;
   }
+
+  ul {
+    li {
+      &::before {
+        color: $color-ff-orange;
+      }
+    }
+  }
 }
 
 a {
