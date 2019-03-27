@@ -1,0 +1,12 @@
+.banner .cta-link .btn {
+  background: $color-white;
+  color: $color-ff-green;
+
+  &:hover, &:active, &:focus {
+    @extend .z-depth-3;
+  }
+}
+
+.banner {
+  z-index: 4;
+}

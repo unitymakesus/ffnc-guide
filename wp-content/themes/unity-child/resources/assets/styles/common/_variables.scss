@@ -6,9 +6,25 @@ $color-ff-brown: #744F28;
 $color-ff-gray-dark: #4D5C6B;
 $color-ff-gray-med: #8194AA;
 $color-ff-gray-light: #E6EAEE;
+$color-white: #FFF;
+$color-white-trans: rgba($color-white, 0);
 
 $primary-color:               $color-ff-green;
 $secondary-color:             $color-ff-gray-dark;
 $success-color:               $color-ff-green;
 $error-color:                 #A3320B;
 $link-color:                  $color-ff-blue;
+
+@mixin filter-gradient($start-color, $end-color, $orientation: vertical) {
+  $gradient-type: if($orientation == vertical, 0, 1);
+
+  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=#{$gradient-type}, startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}');
+}
+@mixin trans-white-gradient-down {
+  @include filter-gradient($color-white-trans, $color-white, vertical);
+
+  background-image: -o-linear-gradient(180deg, $color-white-trans 0%, $color-white 100%);
+  background-image: -moz-linear-gradient(180deg, $color-white-trans 0%, $color-white 100%);
+  background-image: -ms-linear-gradient(180deg, $color-white-trans 0%, $color-white 100%);
+  background-image: linear-gradient(180deg, $color-white-trans 0%, $color-white 100%);
+}

@@ -500,18 +500,20 @@ Router.prototype.loadEvents = function loadEvents () {
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   init: function init() {
-    __WEBPACK_IMPORTED_MODULE_0_macy_dist_macy_js___default.a.init({
-      container: '.grid',
-      trueOrder: true,
-      columns: 2,
-      margin: {
-        x: 20,
-        y: 30,
-      },
-      breakAt: {
-        767: 1,
-      },
-    });
+    if (document.querySelector('.grid') !== null) {
+      var macyGrid = __WEBPACK_IMPORTED_MODULE_0_macy_dist_macy_js___default()({   // eslint-disable-line no-unused-vars
+        container: '.grid',
+        trueOrder: true,
+        columns: 2,
+        margin: {
+          x: 20,
+          y: 30,
+        },
+        breakAt: {
+          767: 1,
+        },
+      });
+    }
   },
   finalize: function finalize() {
   },

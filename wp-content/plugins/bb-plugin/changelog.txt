@@ -1,3 +1,35 @@
+<h4>2.2.1.5 - 03/20/2019</h4>
+<p><strong>Hot Fix</strong></p>
+<ul>
+	<li>Updated Font Awesome to 5.8.0!</li>
+	<li>Patched bxslider to fix link problem in latest Chrome release.</li>
+	<li>Fixed issue with Caldera Forms widget.</li>
+	<li>Fixed undefined height/width in photo module if using non images like SVGs.</li>
+	<li>Fixed issue with disappearing content when switching from the Builder to Gutenberg.</li>
+	<li>Fixed CSS issue with connections toggle being hidden.</li>
+	<li>Fixed white label issue with template categories.</li>
+	<li>Updated jQuery Mosaic to fix Gallery Module issue.</li>
+	<li>Fixed PHP notices in Infusionsoft and Mailerlite subscribe services.</li>
+</ul>
+
+<h4>2.2.1.4 - 03/05/2019</h4>
+<p><strong>Hot Fix</strong></p>
+<ul>
+	<li>Fixed PHP notice in WPML global node filter.</li>
+	<li>Fixed fatal JS error with SumoMe plugin.</li>
+	<li>Fixed PHP notice if a deleted font is registered.</li>
+	<li>Run fl_builder_cache_cleared after plugin update.</li>
+</ul>
+
+<h4>2.2.1.3 - 02/27/2019</h4>
+<p><strong>Hot Fix</strong></p>
+<ul>
+	<li>Updated translations, introduced de_formal and finally fixed de_de.</li>
+	<li>Fixed the form filter for settings presets throwing an error when sections or fields aren't defined.</li>
+	<li>Fixed a recursion bug when rendering WPML translated global columns.</li>
+	<li>Fixed more issues with SiteGround plugin.</li>
+</ul>
+
 <h4>2.2.1.2 - 02/20/2019</h4>
 <p><strong>Hot Fix</strong></p>
 <ul>

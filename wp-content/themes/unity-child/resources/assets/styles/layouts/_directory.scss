@@ -1,0 +1,141 @@
+.archive-ff-company-data {
+  .content {
+    width: 100%;
+  }
+
+  .wrap .main {
+    padding: 0;
+  }
+
+  .page-header {
+    background-image: url(http://family-forward-guide.test/wp-content/uploads/2019/02/iStock-803284710-1.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
+    background-size: cover;
+    padding: 350px 20px 50px;
+    margin: 0;
+    position: relative;
+
+    .header-row {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .header-card {
+      width: 50%;
+      background: $color-white;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 1;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .header-card-title {
+      margin: 0 0 10px;
+    }
+  }
+}
+
+.filter-wrap {
+  background: $color-ff-gray-med;
+  padding: 1em;
+
+  .input-field {
+    margin-bottom: 0;
+
+    & > label {
+      transform: translateY(1rem);
+
+      &.active {
+        transform: translateY(-1rem) scale(0.8);
+      }
+    }
+  }
+
+  input.search {
+    background: $color-white;
+    margin-bottom: 0;
+
+    &:focus {
+      & + label {
+        color: $color-white !important;
+      }
+    }
+  }
+
+  span.label {
+    color: $color-white;
+    font-weight: normal;
+  }
+
+  select.filter {
+    height: 2rem;
+    display: inline-block;
+    width: auto;
+  }
+}
+
+.magic-list {
+  .list {
+    @extend .row;
+
+    .expandable-body {
+      padding: 0.75rem;
+      display: block;
+      margin: 2em 0;
+      position: relative;
+
+      .expandable-body-inner {
+        overflow: hidden;
+        position: relative;
+      }
+
+      &.closed {
+        padding-bottom: 60px;
+
+        &::after {
+          bottom: 0;
+          color: $color-ff-blue;
+          content: "Expand\A\25BE";
+          cursor: pointer;
+          font-size: 18px;
+          font-weight: 700;
+          height: 100%;
+          left: 0;
+          line-height: 1em;
+          padding: calc(1em + 230px) 0 0;
+          position: absolute;
+          text-align: center;
+          text-transform: uppercase;
+          white-space: pre;
+          width: 100%;
+        }
+
+        .expandable-body-inner {
+          height: 230px;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+
+            @include trans-white-gradient-down;
+          }
+        }
+      }
+    }
+  }
+
+  .name {
+    margin: 0;
+  }
+
+  .meta {
+    font-size: 0.8em;
+  }
+}

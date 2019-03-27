@@ -13604,40 +13604,40 @@ html[data-contrast="true"] a:active {
   color: #CC5803;
 }
 
-/* line 101, resources/assets/styles/common/_typography.scss */
+/* line 100, resources/assets/styles/common/_typography.scss */
 
-.main p,
-.main li,
-.main dt,
-.main dd {
+p,
+li,
+dt,
+dd {
   line-height: 1.6em;
 }
 
-/* line 105, resources/assets/styles/common/_typography.scss */
+/* line 104, resources/assets/styles/common/_typography.scss */
 
-.main dt {
+dt {
   font-weight: bold;
   clear: both;
 }
 
-/* line 110, resources/assets/styles/common/_typography.scss */
+/* line 109, resources/assets/styles/common/_typography.scss */
 
-.main dd {
+dd {
   margin-bottom: 1em;
   margin-left: 2em;
 }
 
 @media only screen and (max-width: 600px) {
-  /* line 110, resources/assets/styles/common/_typography.scss */
+  /* line 109, resources/assets/styles/common/_typography.scss */
 
-  .main dd {
+  dd {
     margin-left: 1em;
   }
 }
 
 /* line 120, resources/assets/styles/common/_typography.scss */
 
-.main ul li {
+.hentry ul li {
   list-style: none;
   position: relative;
   padding-left: 30px;
@@ -13645,7 +13645,7 @@ html[data-contrast="true"] a:active {
 
 /* line 125, resources/assets/styles/common/_typography.scss */
 
-.main ul li::before {
+.hentry ul li::before {
   content: '\2022';
   display: block;
   position: absolute;
@@ -13655,43 +13655,43 @@ html[data-contrast="true"] a:active {
 
 /* line 132, resources/assets/styles/common/_typography.scss */
 
-html[data-contrast="true"] .main ul li::before {
+html[data-contrast="true"] .hentry ul li::before {
   color: #FFF;
 }
 
 /* line 137, resources/assets/styles/common/_typography.scss */
 
-[data-color="bright"] .main ul li::before {
+[data-color="bright"] .hentry ul li::before {
   color: #FFBF69;
 }
 
 /* line 137, resources/assets/styles/common/_typography.scss */
 
-[data-color="chrome"] .main ul li::before {
+[data-color="chrome"] .hentry ul li::before {
   color: #9999A1;
 }
 
 /* line 137, resources/assets/styles/common/_typography.scss */
 
-[data-color="executive"] .main ul li::before {
+[data-color="executive"] .hentry ul li::before {
   color: #E6AF2E;
 }
 
 /* line 137, resources/assets/styles/common/_typography.scss */
 
-[data-color="grass"] .main ul li::before {
+[data-color="grass"] .hentry ul li::before {
   color: #C6DABF;
 }
 
 /* line 137, resources/assets/styles/common/_typography.scss */
 
-[data-color="ocean"] .main ul li::before {
+[data-color="ocean"] .hentry ul li::before {
   color: #00A8E8;
 }
 
 /* line 137, resources/assets/styles/common/_typography.scss */
 
-[data-color="sunrise"] .main ul li::before {
+[data-color="sunrise"] .hentry ul li::before {
   color: #FFB627;
 }
 

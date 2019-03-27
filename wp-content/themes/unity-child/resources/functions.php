@@ -111,12 +111,28 @@ add_filter( 'image_size_names_choose', function( $sizes ) {
  * Register sidebars
  */
 add_action('widgets_init', function () {
-  $config = [
-    'before_widget' => '<section class="widget %1$s %2$s">',
-    'after_widget'  => '</section>',
-    'before_title'  => '<h3>',
-    'after_title'   => '</h3>'
-  ];
+    $config = [
+        'before_widget' => '<section class="widget %1$s %2$s">',
+        'after_widget'  => '</section>',
+        'before_title'  => '<h3>',
+        'after_title'   => '</h3>'
+    ];
+    register_sidebar([
+        'name'          => __('Primary', 'sage'),
+        'id'            => 'sidebar-primary'
+    ] + $config);
+    register_sidebar([
+        'name'          => __('Footer-Left', 'sage'),
+        'id'            => 'footer-left'
+    ] + $config);
+    register_sidebar([
+        'name'          => __('Footer-Center', 'sage'),
+        'id'            => 'footer-center'
+    ] + $config);
+    register_sidebar([
+        'name'          => __('Footer-Right', 'sage'),
+        'id'            => 'footer-right'
+    ] + $config);
 });
 
 /**
@@ -176,7 +192,7 @@ function add_post_type() {
 				'not_found_in_trash' => 'Nothing found in Trash',
 				'parent_item_colon' => ''
    ),
-   'public' => false,
+   'public' => true,
    'exclude_from_search' => true,
    'publicly_queryable' => true,
    'show_ui' => true,
@@ -190,9 +206,36 @@ function add_post_type() {
      'revisions',
      'page-attributes',
    ),
-   'has_archive' => false,
-   'rewrite' => false
+   'has_archive' => 'directory',
+   'rewrite' => true
  );
  register_post_type( 'ff-company', $argsCompanies );
 }
 add_action( 'init', __NAMESPACE__.'\\add_post_type' );
+
+
+//  Manually 404 the individual company pages in directory
+add_action(
+    'template_redirect',
+    function () {
+        if (is_singular('ff-company')) {
+           global $wp_query;
+           $wp_query->posts = [];
+           $wp_query->post = null;
+           $wp_query->set_404();
+           status_header(404);
+           nocache_headers();
+        }
+    }
+);
+
+
+// Order directory companies by name
+add_filter('pre_get_posts', function($query) {
+  if (is_post_type_archive('ff-company')) {
+    $query->set('posts_per_page', -1);
+    $query->set('orderby', 'title');
+    $query->set('order', 'ASC');
+    return;
+  }
+});
