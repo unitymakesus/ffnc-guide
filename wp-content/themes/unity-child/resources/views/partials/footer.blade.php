@@ -20,7 +20,7 @@
       <p class="copyright">&copy; {!! current_time('Y') !!} Family Forward NC. All rights reserved.</p>
     </div>
     <div class="footer-right col m6 s12">
-      <a href="{{ get_home_url() }}/privacy-policy/">Privacy Policy</a>
+      {{-- <a href="{{ get_home_url() }}/privacy-policy/">Privacy Policy</a> --}}
     </div>
   </div>
 
