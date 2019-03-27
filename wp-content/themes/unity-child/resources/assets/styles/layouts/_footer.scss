@@ -1,0 +1,18 @@
+.page-footer {
+  background-color: $color-ff-gray-dark !important;
+
+  .menu li {
+    padding: 5px 0;
+
+    a {
+      font-weight: normal;
+    }
+  }
+}
+
+.footer-right {
+  .textwidget {
+    text-align: left;
+    font-size: 0.7em;
+  }
+}

@@ -17154,6 +17154,31 @@ sup.footnote a {
   font-size: 0.8em;
 }
 
+/* line 1, resources/assets/styles/layouts/_footer.scss */
+
+.page-footer {
+  background-color: #4D5C6B !important;
+}
+
+/* line 4, resources/assets/styles/layouts/_footer.scss */
+
+.page-footer .menu li {
+  padding: 5px 0;
+}
+
+/* line 7, resources/assets/styles/layouts/_footer.scss */
+
+.page-footer .menu li a {
+  font-weight: normal;
+}
+
+/* line 14, resources/assets/styles/layouts/_footer.scss */
+
+.footer-right .textwidget {
+  text-align: left;
+  font-size: 0.7em;
+}
+
 /* line 1, resources/assets/styles/layouts/_header.scss */
 
 .banner .cta-link .btn,
