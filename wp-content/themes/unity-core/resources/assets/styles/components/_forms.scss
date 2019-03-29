@@ -84,7 +84,9 @@
 input {
   &:not([type]), &[type=text], &[type=password], &[type=email], &[type=url], &[type=time], &[type=date], &[type=datetime], &[type=datetime-local], &[type=tel], &[type=number], &[type=search] {
     &:not(.browser-default) {
-      border: 1px solid $color-grey-medium;
+      border: 1px solid $color-grey-light;
+      padding: 0 10px;
+      width: calc(100% - 20px);
     }
   }
 }

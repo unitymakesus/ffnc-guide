@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.directory')
 
 @php
   $upload_dir = wp_upload_dir();

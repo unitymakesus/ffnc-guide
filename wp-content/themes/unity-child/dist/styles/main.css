@@ -14837,22 +14837,24 @@ input[type=datetime-local]:not(.browser-default),
 input[type=tel]:not(.browser-default),
 input[type=number]:not(.browser-default),
 input[type=search]:not(.browser-default) {
-  border: 1px solid #9999A1;
+  border: 1px solid #C5C5CC;
+  padding: 0 10px;
+  width: calc(100% - 20px);
 }
 
-/* line 92, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 94, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 textarea.materialize-textarea {
   border: 1px solid #9999A1;
 }
 
-/* line 96, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 98, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 .input-field label {
   left: 5px;
 }
 
-/* line 103, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 105, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 [data-color="bright"] .input-field label:not(.label-icon).active {
   color: #2E827C;
@@ -14861,7 +14863,7 @@ textarea.materialize-textarea {
           transform: translateY(-22px) scale(0.8);
 }
 
-/* line 103, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 105, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 [data-color="chrome"] .input-field label:not(.label-icon).active {
   color: #66666E;
@@ -14870,7 +14872,7 @@ textarea.materialize-textarea {
           transform: translateY(-22px) scale(0.8);
 }
 
-/* line 103, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 105, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 [data-color="executive"] .input-field label:not(.label-icon).active {
   color: #A3320B;
@@ -14879,7 +14881,7 @@ textarea.materialize-textarea {
           transform: translateY(-22px) scale(0.8);
 }
 
-/* line 103, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 105, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 [data-color="grass"] .input-field label:not(.label-icon).active {
   color: #114B5F;
@@ -14888,7 +14890,7 @@ textarea.materialize-textarea {
           transform: translateY(-22px) scale(0.8);
 }
 
-/* line 103, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 105, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 [data-color="ocean"] .input-field label:not(.label-icon).active {
   color: #003459;
@@ -14897,7 +14899,7 @@ textarea.materialize-textarea {
           transform: translateY(-22px) scale(0.8);
 }
 
-/* line 103, ../unity-core/resources/assets/styles/components/_forms.scss */
+/* line 105, ../unity-core/resources/assets/styles/components/_forms.scss */
 
 [data-color="sunrise"] .input-field label:not(.label-icon).active {
   color: #CC5803;
@@ -16287,21 +16289,27 @@ nav ul li.current_page_item a {
           flex: 1 1 auto;
 }
 
-/* line 166, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 165, ../unity-core/resources/assets/styles/layouts/_header.scss */
+
+.navbar-menu li::before {
+  display: none;
+}
+
+/* line 170, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu li.menu-item-has-children a {
   cursor: default;
 }
 
 @media only screen and (max-width: 992px) {
-  /* line 166, ../unity-core/resources/assets/styles/layouts/_header.scss */
+  /* line 170, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
   .navbar-menu li.menu-item-has-children a {
     cursor: pointer;
   }
 }
 
-/* line 174, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 178, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu li.menu-item-has-children .sub-menu {
   max-height: 0;
@@ -16311,20 +16319,20 @@ nav ul li.current_page_item a {
   transition: max-height 0.3s ease;
 }
 
-/* line 180, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 184, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu li.menu-item-has-children .sub-menu li {
   float: none;
 }
 
-/* line 184, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 188, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu li.menu-item-has-children .sub-menu a {
   cursor: pointer;
 }
 
 @media only screen and (min-width: 993px) {
-  /* line 174, ../unity-core/resources/assets/styles/layouts/_header.scss */
+  /* line 178, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
   .navbar-menu li.menu-item-has-children .sub-menu {
     max-height: 300em;
@@ -16343,7 +16351,7 @@ nav ul li.current_page_item a {
   }
 }
 
-/* line 201, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 205, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu li.menu-item-has-children:hover .sub-menu,
 .navbar-menu li.menu-item-has-children:focus .sub-menu,
@@ -16351,7 +16359,7 @@ nav ul li.current_page_item a {
   height: auto;
 }
 
-/* line 214, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 218, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu li:hover > a,
 .navbar-menu li:focus > a,
@@ -16359,7 +16367,7 @@ nav ul li.current_page_item a {
   text-decoration: underline;
 }
 
-/* line 220, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 224, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu li a {
   background: none;
@@ -16372,7 +16380,7 @@ nav ul li.current_page_item a {
     height: 4.66667em;
   }
 
-  /* line 228, ../unity-core/resources/assets/styles/layouts/_header.scss */
+  /* line 232, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
   .navbar-menu li {
     height: 100%;
@@ -16384,7 +16392,7 @@ nav ul li.current_page_item a {
             align-items: center;
   }
 
-  /* line 233, ../unity-core/resources/assets/styles/layouts/_header.scss */
+  /* line 237, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
   .navbar-menu li a {
     font-size: 0.9em;
@@ -16410,26 +16418,26 @@ nav ul li.current_page_item a {
     overflow: hidden;
   }
 
-  /* line 247, ../unity-core/resources/assets/styles/layouts/_header.scss */
+  /* line 251, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
   .navbar-menu li {
     width: 100%;
   }
 
-  /* line 251, ../unity-core/resources/assets/styles/layouts/_header.scss */
+  /* line 255, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
   .navbar-menu li.hover .sub-menu {
     max-height: 100em;
   }
 
-  /* line 257, ../unity-core/resources/assets/styles/layouts/_header.scss */
+  /* line 261, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
   .mobilenav-active .navbar-menu {
     max-height: 100em;
   }
 }
 
-/* line 262, ../unity-core/resources/assets/styles/layouts/_header.scss */
+/* line 266, ../unity-core/resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu .cta-link {
   padding: 0 15px;
