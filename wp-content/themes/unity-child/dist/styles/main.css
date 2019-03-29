@@ -14749,7 +14749,7 @@ a.btn-small,
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNyIgaGVpZ2h0PSIyNiIgdmlld0JveD0iMCAwIDI3IDI2IiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPGRlZnM+CiAgICA8cGF0aCBpZD0iYSIgZD0iTTE4LjI5ODgyODEsMTIuNTUwNzgxMiBDMTguMjk4ODI4MSwxMC42NTIzMzQzIDE3LjY0ODQ0NCw5LjA1Mjc0MDg4IDE2LjM0NzY1NjIsNy43NTE5NTMxMiBDMTUuMDQ2ODY4NSw2LjQ1MTE2NTM3IDEzLjQ0NzI3NTEsNS44MDA3ODEyNSAxMS41NDg4MjgxLDUuODAwNzgxMjUgQzkuNjg1NTM3NTYsNS44MDA3ODEyNSA4LjEwMzUyMjEzLDYuNDUxMTY1MzcgNi44MDI3MzQzOCw3Ljc1MTk1MzEyIEM1LjQ2Njc5MDIsOS4wODc4OTczIDQuNzk4ODI4MTIsMTAuNjg3NDkwNyA0Ljc5ODgyODEyLDEyLjU1MDc4MTIgQzQuNzk4ODI4MTIsMTQuMzc4OTE1NCA1LjQ2Njc5MDIsMTUuOTYwOTMwOCA2LjgwMjczNDM4LDE3LjI5Njg3NSBDOC4xMzg2Nzg1NSwxOC42MzI4MTkyIDkuNzIwNjkzOTgsMTkuMzAwNzgxMiAxMS41NDg4MjgxLDE5LjMwMDc4MTIgQzEzLjQxMjExODcsMTkuMzAwNzgxMiAxNS4wMTE3MTIxLDE4LjYzMjgxOTIgMTYuMzQ3NjU2MiwxNy4yOTY4NzUgQzE3LjY0ODQ0NCwxNS45OTYwODcyIDE4LjI5ODgyODEsMTQuNDE0MDcxOCAxOC4yOTg4MjgxLDEyLjU1MDc4MTIgWiBNMjYuMDUwNzgxMiwyNS4wNDg4MjgxIEMyNi4wNTA3ODEyLDI1LjU3NjE3NDUgMjUuODU3NDIzOCwyNi4wMzMyMDEyIDI1LjQ3MDcwMzEsMjYuNDE5OTIxOSBDMjUuMDgzOTgyNCwyNi44MDY2NDI2IDI0LjYyNjk1NTgsMjcgMjQuMDk5NjA5NCwyNyBDMjMuNTcyMjYzLDI3IDIzLjExNTIzNjMsMjYuODA2NjQyNiAyMi43Mjg1MTU2LDI2LjQxOTkyMTkgTDE3LjU2MDU0NjksMjEuMjUxOTUzMSBDMTUuNzY3NTY5MiwyMi41MTc1ODQ1IDEzLjc2MzY4MjksMjMuMTUwMzkwNiAxMS41NDg4MjgxLDIzLjE1MDM5MDYgQzEwLjA3MjI1ODIsMjMuMTUwMzkwNiA4LjcwMTE3ODIsMjIuODY5MTQzNCA3LjQzNTU0Njg4LDIyLjMwNjY0MDYgQzYuMDk5NjAyNywyMS43NDQxMzc4IDQuOTc0NjEzOTUsMjAuOTg4Mjg2IDQuMDYwNTQ2ODgsMjAuMDM5MDYyNSBDMy4xMTEzMjMzOCwxOS4xMjQ5OTU0IDIuMzU1NDcxNTYsMTguMDAwMDA2NyAxLjc5Mjk2ODc1LDE2LjY2NDA2MjUgQzEuMjMwNDY1OTQsMTUuMjU3ODA1NSAwLjk0OTIxODc1LDEzLjg4NjcyNTQgMC45NDkyMTg3NSwxMi41NTA3ODEyIEMwLjk0OTIxODc1LDExLjE0NDUyNDIgMS4yMzA0NjU5NCw5Ljc3MzQ0NDE4IDEuNzkyOTY4NzUsOC40Mzc1IEMyLjM5MDYyNzk5LDcuMDY2Mzk5MzkgMy4xNDY0Nzk4LDUuOTIzODMyNyA0LjA2MDU0Njg4LDUuMDA5NzY1NjIgQzUuMDA5NzcwMzcsNC4wNjA1NDIxMyA2LjEzNDc1OTEyLDMuMzA0NjkwMzEgNy40MzU1NDY4OCwyLjc0MjE4NzUgQzguNzM2MzM0NjMsMi4yMTQ4NDExMSAxMC4xMDc0MTQ3LDEuOTUxMTcxODggMTEuNTQ4ODI4MSwxLjk1MTE3MTg4IEMxMi45OTAyNDE2LDEuOTUxMTcxODggMTQuMzc4ODk5NiwyLjIxNDg0MTExIDE1LjcxNDg0MzgsMi43NDIxODc1IEMxNy4wODU5NDQ0LDMuMzc1MDAzMTYgMTguMjEwOTMzMSw0LjEzMDg1NDk4IDE5LjA4OTg0MzgsNS4wMDk3NjU2MiBDMjAuMDAzOTEwOCw1LjkyMzgzMjcgMjAuNzU5NzYyNiw3LjA2NjM5OTM5IDIxLjM1NzQyMTksOC40Mzc1IEMyMS45MTk5MjQ3LDkuNzczNDQ0MTggMjIuMjAxMTcxOSwxMS4xNDQ1MjQyIDIyLjIwMTE3MTksMTIuNTUwNzgxMiBDMjIuMjAxMTcxOSwxNC43NjU2MzYxIDIxLjU2ODM2NTcsMTYuNzY5NTIyMyAyMC4zMDI3MzQ0LDE4LjU2MjUgTDI1LjQ3MDcwMzEsMjMuNzMwNDY4OCBDMjUuODU3NDIzOCwyNC4xMTcxODk0IDI2LjA1MDc4MTIsMjQuNTU2NjM4MiAyNi4wNTA3ODEyLDI1LjA0ODgyODEgWiIvPgogIDwvZGVmcz4KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTEpIj4KICAgIDx1c2UgeGxpbms6aHJlZj0iI2EiLz4KICAgIDx1c2UgeGxpbms6aHJlZj0iI2EiLz4KICA8L2c+Cjwvc3ZnPgo=);
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNyIgaGVpZ2h0PSIyNiIgdmlld0JveD0iMCAwIDI3IDI2IiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPGRlZnM+CiAgICA8cGF0aCBpZD0iYSIgZD0iTTE4LjI5ODgyODEsMTIuNTUwNzgxMiBDMTguMjk4ODI4MSwxMC42NTIzMzQzIDE3LjY0ODQ0NCw5LjA1Mjc0MDg4IDE2LjM0NzY1NjIsNy43NTE5NTMxMiBDMTUuMDQ2ODY4NSw2LjQ1MTE2NTM3IDEzLjQ0NzI3NTEsNS44MDA3ODEyNSAxMS41NDg4MjgxLDUuODAwNzgxMjUgQzkuNjg1NTM3NTYsNS44MDA3ODEyNSA4LjEwMzUyMjEzLDYuNDUxMTY1MzcgNi44MDI3MzQzOCw3Ljc1MTk1MzEyIEM1LjQ2Njc5MDIsOS4wODc4OTczIDQuNzk4ODI4MTIsMTAuNjg3NDkwNyA0Ljc5ODgyODEyLDEyLjU1MDc4MTIgQzQuNzk4ODI4MTIsMTQuMzc4OTE1NCA1LjQ2Njc5MDIsMTUuOTYwOTMwOCA2LjgwMjczNDM4LDE3LjI5Njg3NSBDOC4xMzg2Nzg1NSwxOC42MzI4MTkyIDkuNzIwNjkzOTgsMTkuMzAwNzgxMiAxMS41NDg4MjgxLDE5LjMwMDc4MTIgQzEzLjQxMjExODcsMTkuMzAwNzgxMiAxNS4wMTE3MTIxLDE4LjYzMjgxOTIgMTYuMzQ3NjU2MiwxNy4yOTY4NzUgQzE3LjY0ODQ0NCwxNS45OTYwODcyIDE4LjI5ODgyODEsMTQuNDE0MDcxOCAxOC4yOTg4MjgxLDEyLjU1MDc4MTIgWiBNMjYuMDUwNzgxMiwyNS4wNDg4MjgxIEMyNi4wNTA3ODEyLDI1LjU3NjE3NDUgMjUuODU3NDIzOCwyNi4wMzMyMDEyIDI1LjQ3MDcwMzEsMjYuNDE5OTIxOSBDMjUuMDgzOTgyNCwyNi44MDY2NDI2IDI0LjYyNjk1NTgsMjcgMjQuMDk5NjA5NCwyNyBDMjMuNTcyMjYzLDI3IDIzLjExNTIzNjMsMjYuODA2NjQyNiAyMi43Mjg1MTU2LDI2LjQxOTkyMTkgTDE3LjU2MDU0NjksMjEuMjUxOTUzMSBDMTUuNzY3NTY5MiwyMi41MTc1ODQ1IDEzLjc2MzY4MjksMjMuMTUwMzkwNiAxMS41NDg4MjgxLDIzLjE1MDM5MDYgQzEwLjA3MjI1ODIsMjMuMTUwMzkwNiA4LjcwMTE3ODIsMjIuODY5MTQzNCA3LjQzNTU0Njg4LDIyLjMwNjY0MDYgQzYuMDk5NjAyNywyMS43NDQxMzc4IDQuOTc0NjEzOTUsMjAuOTg4Mjg2IDQuMDYwNTQ2ODgsMjAuMDM5MDYyNSBDMy4xMTEzMjMzOCwxOS4xMjQ5OTU0IDIuMzU1NDcxNTYsMTguMDAwMDA2NyAxLjc5Mjk2ODc1LDE2LjY2NDA2MjUgQzEuMjMwNDY1OTQsMTUuMjU3ODA1NSAwLjk0OTIxODc1LDEzLjg4NjcyNTQgMC45NDkyMTg3NSwxMi41NTA3ODEyIEMwLjk0OTIxODc1LDExLjE0NDUyNDIgMS4yMzA0NjU5NCw5Ljc3MzQ0NDE4IDEuNzkyOTY4NzUsOC40Mzc1IEMyLjM5MDYyNzk5LDcuMDY2Mzk5MzkgMy4xNDY0Nzk4LDUuOTIzODMyNyA0LjA2MDU0Njg4LDUuMDA5NzY1NjIgQzUuMDA5NzcwMzcsNC4wNjA1NDIxMyA2LjEzNDc1OTEyLDMuMzA0NjkwMzEgNy40MzU1NDY4OCwyLjc0MjE4NzUgQzguNzM2MzM0NjMsMi4yMTQ4NDExMSAxMC4xMDc0MTQ3LDEuOTUxMTcxODggMTEuNTQ4ODI4MSwxLjk1MTE3MTg4IEMxMi45OTAyNDE2LDEuOTUxMTcxODggMTQuMzc4ODk5NiwyLjIxNDg0MTExIDE1LjcxNDg0MzgsMi43NDIxODc1IEMxNy4wODU5NDQ0LDMuMzc1MDAzMTYgMTguMjEwOTMzMSw0LjEzMDg1NDk4IDE5LjA4OTg0MzgsNS4wMDk3NjU2MiBDMjAuMDAzOTEwOCw1LjkyMzgzMjcgMjAuNzU5NzYyNiw3LjA2NjM5OTM5IDIxLjM1NzQyMTksOC40Mzc1IEMyMS45MTk5MjQ3LDkuNzczNDQ0MTggMjIuMjAxMTcxOSwxMS4xNDQ1MjQyIDIyLjIwMTE3MTksMTIuNTUwNzgxMiBDMjIuMjAxMTcxOSwxNC43NjU2MzYxIDIxLjU2ODM2NTcsMTYuNzY5NTIyMyAyMC4zMDI3MzQ0LDE4LjU2MjUgTDI1LjQ3MDcwMzEsMjMuNzMwNDY4OCBDMjUuODU3NDIzOCwyNC4xMTcxODk0IDI2LjA1MDc4MTIsMjQuNTU2NjM4MiAyNi4wNTA3ODEyLDI1LjA0ODgyODEgWiIvPgogIDwvZGVmcz4KICA8ZyBmaWxsPSIjNEQ1QzZCIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTEpIj4KICAgIDx1c2UgeGxpbms6aHJlZj0iI2EiLz4KICAgIDx1c2UgeGxpbms6aHJlZj0iI2EiLz4KICA8L2c+Cjwvc3ZnPgo=);
   pointer-events: none;
 }
 
@@ -16978,6 +16978,124 @@ sup.footnote a {
   }
 }
 
+/* line 2, resources/assets/styles/components/_search.scss */
+
+header .search-form {
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
+  height: auto;
+  width: 2.2em;
+}
+
+/* line 7, resources/assets/styles/components/_search.scss */
+
+header .search-form label {
+  width: 0;
+}
+
+/* line 11, resources/assets/styles/components/_search.scss */
+
+header .search-form .search-field {
+  overflow: hidden;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  height: 0;
+  padding: 0;
+  border: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+}
+
+/* line 22, resources/assets/styles/components/_search.scss */
+
+header .search-form input.search-submit {
+  height: 100%;
+  background: none;
+}
+
+/* line 26, resources/assets/styles/components/_search.scss */
+
+header .search-form input.search-submit:hover,
+header .search-form input.search-submit:focus,
+header .search-form input.search-submit:active {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* line 31, resources/assets/styles/components/_search.scss */
+
+header .search-form::after {
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+          transform: translate3d(-50%, -50%, 0);
+}
+
+/* line 38, resources/assets/styles/components/_search.scss */
+
+header .search-form.active .search-field {
+  width: 200px;
+  padding: 0 10px;
+  background: #FFF;
+  height: 2.2em;
+  border: 3px solid #4D5C6B !important;
+}
+
+@media only screen and (max-width: 768px) {
+  /* line 48, resources/assets/styles/components/_search.scss */
+
+  header .search-form .search-field {
+    width: 250px;
+    padding: 0 10px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  /* line 2, resources/assets/styles/components/_search.scss */
+
+  header .search-form {
+    margin-left: 0;
+  }
+
+  /* line 56, resources/assets/styles/components/_search.scss */
+
+  header .search-form .label {
+    display: none;
+  }
+
+  /* line 60, resources/assets/styles/components/_search.scss */
+
+  header .search-form .search-field {
+    width: 225px;
+  }
+}
+
+/* line 66, resources/assets/styles/components/_search.scss */
+
+html[data-contrast="true"] header .search-form .label {
+  color: #FFF;
+}
+
+/* line 73, resources/assets/styles/components/_search.scss */
+
+.searchwp-highlight {
+  background: #8194AA;
+}
+
+/* line 78, resources/assets/styles/components/_search.scss */
+
+.search-results .main {
+  margin-bottom: 2rem;
+}
+
+/* line 83, resources/assets/styles/components/_search.scss */
+
+.search-results .entry-summary p {
+  display: inline;
+  margin: 0;
+}
+
 /* line 2, resources/assets/styles/layouts/_directory.scss */
 
 .archive-ff-company-data .content {
@@ -17207,6 +17325,14 @@ sup.footnote a {
 
 .banner {
   z-index: 4;
+}
+
+/* line 14, resources/assets/styles/layouts/_header.scss */
+
+.navbar-menu {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
 }
 
 

@@ -287,14 +287,14 @@ ClassList.prototype.contains = function(name){
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var naturalSort = __webpack_require__(16),
+var naturalSort = __webpack_require__(17),
   getByClass = __webpack_require__(4),
   extend = __webpack_require__(5),
   indexOf = __webpack_require__(6),
   events = __webpack_require__(1),
   toString = __webpack_require__(8),
   classes = __webpack_require__(2),
-  getAttribute = __webpack_require__(17),
+  getAttribute = __webpack_require__(18),
   toArray = __webpack_require__(7);
 
 module.exports = function(id, options, values) {
@@ -302,8 +302,8 @@ module.exports = function(id, options, values) {
   var self = this,
     init,
     Item = __webpack_require__(9)(self),
-    addAsync = __webpack_require__(18)(self),
-    initPagination = __webpack_require__(19)(self);
+    addAsync = __webpack_require__(19)(self),
+    initPagination = __webpack_require__(20)(self);
 
   init = {
     start: function() {
@@ -338,12 +338,12 @@ module.exports = function(id, options, values) {
       if (!self.listContainer) { return; }
       self.list       = getByClass(self.listContainer, self.listClass, true);
 
-      self.parse        = __webpack_require__(20)(self);
-      self.templater    = __webpack_require__(21)(self);
-      self.search       = __webpack_require__(22)(self);
-      self.filter       = __webpack_require__(23)(self);
-      self.sort         = __webpack_require__(24)(self);
-      self.fuzzySearch  = __webpack_require__(25)(self, options.fuzzySearch);
+      self.parse        = __webpack_require__(21)(self);
+      self.templater    = __webpack_require__(22)(self);
+      self.search       = __webpack_require__(23)(self);
+      self.filter       = __webpack_require__(24)(self);
+      self.sort         = __webpack_require__(25)(self);
+      self.fuzzySearch  = __webpack_require__(26)(self, options.fuzzySearch);
 
       this.handlers();
       this.items();
@@ -781,7 +781,7 @@ module.exports = function(list) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(29);
+module.exports = __webpack_require__(30);
 
 
 /***/ }),
@@ -793,20 +793,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__unity_core_dist_scripts_main_js__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__unity_core_dist_scripts_main_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__unity_core_dist_scripts_main_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_Router__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__routes_directory__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__routes_common__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__routes_directory__ = __webpack_require__(16);
 // Import parent JS
 
 
 /** Import local dependencies */
 
 
-// import home from './routes/home';
-// import aboutUs from './routes/about';
-// import archive from './routes/archive';
+
 
 /** Populate Router instance with DOM routes */
 var routes = new __WEBPACK_IMPORTED_MODULE_1__util_Router__["a" /* default */]({
-  archiveFfCompanyData: __WEBPACK_IMPORTED_MODULE_2__routes_directory__["a" /* default */],
+  common: __WEBPACK_IMPORTED_MODULE_2__routes_common__["a" /* default */],
+  archiveFfCompanyData: __WEBPACK_IMPORTED_MODULE_3__routes_directory__["a" /* default */],
 });
 
 /** Load Events */
@@ -1463,9 +1463,61 @@ Router.prototype.loadEvents = function loadEvents () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function($) {/* harmony default export */ __webpack_exports__["a"] = ({
+  init: function init() {
+    // JavaScript to be fired on all pages
+  },
+  finalize: function finalize() {
+    // Activate search box
+    function activateSearch() {
+      $('.navbar .search-form').addClass('active');
+      $('.navbar .search-form .search-submit').removeClass('disabled');
+    }
+
+    // Deactivate search box
+    function deactivateSearch() {
+      $('.navbar .search-form').removeClass('active');
+      $('.navbar .search-form .search-submit').addClass('disabled');
+    }
+
+    // Only show search if element inside is receiving focus
+    $('.navbar .search-form').on('click', 'input', function(e) {
+      e.preventDefault();
+
+      // Only allow default action (submit) if the search field has content
+      // If not, switch focus to search field instead
+      if ($(this).hasClass('search-submit')) {
+        if ($('.navbar .search-field').val().length > 0) {
+          $('.navbar .search-form').submit();
+        } else {
+          $('.navbar .search-form .search-field').focus();
+        }
+      }
+
+      return false;
+    }).on('focus', 'input', function() {
+      activateSearch();
+    }).on('focusout', function() {
+      setTimeout(function () {
+        if ($(':focus').closest('.navbar').length == 0) {
+          deactivateSearch();
+        }
+      }, 200);
+    });
+
+  },
+});
+
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
+
+/***/ }),
+/* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_list_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_list_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_list_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_materialize_css__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_materialize_css__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_materialize_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_materialize_css__);
 
 
@@ -1541,7 +1593,7 @@ Router.prototype.loadEvents = function loadEvents () {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1672,7 +1724,7 @@ module.exports = naturalCompare;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 /**
@@ -1704,7 +1756,7 @@ module.exports = function(el, attr) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = function(list) {
@@ -1726,7 +1778,7 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var classes = __webpack_require__(2),
@@ -1825,7 +1877,7 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function(list) {
@@ -1878,7 +1930,7 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 var Templater = function(list) {
@@ -2058,7 +2110,7 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = function(list) {
@@ -2184,7 +2236,7 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = function(list) {
@@ -2219,7 +2271,7 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = function(list) {
@@ -2331,7 +2383,7 @@ module.exports = function(list) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -2340,7 +2392,7 @@ var classes = __webpack_require__(2),
   extend = __webpack_require__(5),
   toString = __webpack_require__(8),
   getByClass = __webpack_require__(4),
-  fuzzy = __webpack_require__(26);
+  fuzzy = __webpack_require__(27);
 
 module.exports = function(list, options) {
   options = options || {};
@@ -2404,7 +2456,7 @@ module.exports = function(list, options) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = function(text, pattern, options) {
@@ -2533,7 +2585,7 @@ module.exports = function(text, pattern, options) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery, jQuery, $, global) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -14912,10 +14964,10 @@ $jscomp.polyfill = function (e, r, p, m) {
   Range.init($('input[type=range]'));
 })(cash, M.anime);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(0), __webpack_require__(0), __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(0), __webpack_require__(0), __webpack_require__(29)))
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 var g;
@@ -14942,7 +14994,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

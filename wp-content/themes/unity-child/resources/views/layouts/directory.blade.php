@@ -22,12 +22,7 @@
       </div>
     <![endif]-->
     @php do_action('get_header') @endphp
-    @php $logo_align = get_theme_mod( 'header_logo_align' ) @endphp
-    @if ($logo_align == 'inline-left')
-      @include('partials.header-inline')
-    @else
-      @include('partials.header-float')
-    @endif
+    @include('partials.header')
     <div id="content" class="" role="document">
       <div class="wrap">
         @if (App\display_sidebar())

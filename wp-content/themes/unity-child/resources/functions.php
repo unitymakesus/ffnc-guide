@@ -164,6 +164,7 @@ function add_post_type() {
    'publicly_queryable' => true,
    'show_ui' => true,
    'show_in_nav_menus' => false,
+   'show_in_rest' => true,
    'menu_position' => 20,
    'menu_icon' => 'dashicons-megaphone',
    'capability_type' => 'page',
@@ -175,7 +176,7 @@ function add_post_type() {
      'page-attributes',
      'thumbnail'
    ),
-   'has_archive' => false,
+   'has_archive' => 'case-studies',
    'rewrite' => array(
      'slug' => 'case-study'
    )
@@ -244,3 +245,55 @@ add_filter('pre_get_posts', function($query) {
     return;
   }
 });
+
+
+// Get rid of archive title label
+add_filter( 'get_the_archive_title', function( $title ) {
+  if ( is_category() ) {
+    $title = single_cat_title( '', false );
+  } elseif ( is_tag() ) {
+    $title = single_tag_title( '', false );
+  } elseif ( is_author() ) {
+    $title = '<span class="vcard">' . get_the_author() . '</span>';
+  } elseif ( is_post_type_archive() ) {
+    $title = post_type_archive_title( '', false );
+  } elseif ( is_tax() ) {
+    $title = single_term_title( '', false );
+  }
+
+  return $title;
+});
+
+/**
+ * Generate custom search form
+ *
+ * @param string $form Form HTML.
+ * @return string Modified form HTML.
+ */
+add_filter( 'get_search_form', function( $form ) {
+    $form = '<form role="search" method="get" class="search-form" action="' . home_url( '/' ) . '" >
+			<label>
+				<span class="screen-reader-text">Search Site:</span>
+				<input type="search" class="search-field" placeholder="Keyword …" value="" name="s">
+			</label>
+			<input type="submit" class="search-submit disabled" value="Search">
+		</form>';
+    return $form;
+} );
+
+/**
+ * Filter search results to show highlighted terms
+ */
+
+function searchwp_term_highlight_auto_excerpt( $excerpt ) {
+ 	global $post;
+ 	if ( ! is_search() ) {
+ 		return $excerpt;
+ 	}
+ 	// prevent recursion
+ 	remove_filter( 'get_the_excerpt', __NAMESPACE__ . '\\searchwp_term_highlight_auto_excerpt' );
+ 	$global_excerpt = searchwp_term_highlight_get_the_excerpt_global( $post->ID, null, get_search_query() );
+ 	add_filter( 'get_the_excerpt', __NAMESPACE__ . '\\searchwp_term_highlight_auto_excerpt' );
+ 	return wp_kses_post( $global_excerpt );
+}
+add_filter( 'get_the_excerpt', __NAMESPACE__ . '\\searchwp_term_highlight_auto_excerpt' );
