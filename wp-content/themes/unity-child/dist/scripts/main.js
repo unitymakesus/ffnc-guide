@@ -1536,7 +1536,7 @@ Router.prototype.loadEvents = function loadEvents () {
   finalize: function finalize() {
     // Initialize List.JS
     var options = {
-      valueNames: [ 'name', 'city', 'region', 'industry', 'employees' ],
+      valueNames: [ 'name', 'city', 'region', 'industry', 'employees', 'policies' ],
     };
 
     var directoryList = new __WEBPACK_IMPORTED_MODULE_0_list_js___default.a('directory-list', options);  // eslint-disable-line no-unused-vars

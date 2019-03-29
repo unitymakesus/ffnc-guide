@@ -15,7 +15,7 @@ export default {
   finalize() {
     // Initialize List.JS
     var options = {
-      valueNames: [ 'name', 'city', 'region', 'industry', 'employees' ],
+      valueNames: [ 'name', 'city', 'region', 'industry', 'employees', 'policies' ],
     };
 
     var directoryList = new List('directory-list', options);  // eslint-disable-line no-unused-vars
