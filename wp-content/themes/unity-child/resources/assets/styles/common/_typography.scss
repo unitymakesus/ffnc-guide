@@ -115,7 +115,7 @@ html {
   h1, .h1 {
     font-size: rem-calc(50px);
     font-weight: 600;
-    color: $color-ff-gray-dark;
+    color: $color-ff-gray-dark !important;
   }
 
   h2, .h2 {
@@ -148,6 +148,14 @@ html {
 
   a {
     color: $color-ff-blue;
+  }
+
+  p {
+    color: black;
+  }
+
+  strong {
+    color: $color-ff-gray-dark;
   }
 
   ul {
