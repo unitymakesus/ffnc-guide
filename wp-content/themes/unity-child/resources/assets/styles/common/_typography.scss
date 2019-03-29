@@ -150,19 +150,21 @@ html {
     color: $color-ff-blue;
   }
 
-  p {
-    color: black;
-  }
-
-  strong {
-    color: $color-ff-gray-dark;
-  }
-
   ul {
     li {
       &::before {
         color: $color-ff-orange;
       }
+    }
+  }
+
+  &.content {
+    p {
+      color: black;
+    }
+
+    strong {
+      color: $color-ff-gray-dark;
     }
   }
 }
