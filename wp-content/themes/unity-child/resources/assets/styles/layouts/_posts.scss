@@ -1,0 +1,24 @@
+.excerpt .overlay {
+  background: $color-ff-orange;
+}
+
+.wp-block-image figure {
+  width: 100%;
+
+  @media #{$medium-and-up} {
+    width: auto;
+    max-width: 50%;
+  }
+}
+
+.content.content .wp-block-pullquote {
+  border-color: $color-ff-gray-med;
+
+  p {
+    color: $color-ff-gray-dark;
+  }
+}
+
+.single-ff-case-study .entry-content {
+  margin-bottom: 6em;
+}

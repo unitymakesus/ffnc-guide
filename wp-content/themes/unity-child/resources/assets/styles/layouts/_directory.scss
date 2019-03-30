@@ -29,10 +29,12 @@
       flex-shrink: 1;
       padding: 20px;
       text-align: left;
+      color: $color-ff-green;
     }
 
     .header-card-title {
       margin: 0 0 10px;
+      color: $color-ff-gray-dark;
     }
   }
 }
@@ -132,6 +134,10 @@
 
   .name {
     margin: 0;
+
+    a {
+      color: $color-ff-green;
+    }
   }
 
   .meta {

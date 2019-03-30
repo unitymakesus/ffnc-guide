@@ -122,6 +122,10 @@ html {
     font-size: rem-calc(36px);
     font-weight: 600;
     color: $color-ff-green;
+
+    a {
+      color: $color-ff-green;
+    }
   }
 
   h3, .h3 {
@@ -212,4 +216,8 @@ sup.footnote {
     font-size: 0.7em !important;
     color: $color-ff-blue;
   }
+}
+
+.uabb-infobox-title-prefix.uabb-infobox-title-prefix {
+  color: $color-ff-green;
 }

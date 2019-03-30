@@ -16768,7 +16768,14 @@ html[data-text-size="large"] {
   color: #81BC41;
 }
 
-/* line 127, resources/assets/styles/common/_typography.scss */
+/* line 126, resources/assets/styles/common/_typography.scss */
+
+.content h2 a,
+.content .h2 a {
+  color: #81BC41;
+}
+
+/* line 131, resources/assets/styles/common/_typography.scss */
 
 .content h3,
 .content .h3 {
@@ -16778,14 +16785,14 @@ html[data-text-size="large"] {
   color: #81BC41;
 }
 
-/* line 133, resources/assets/styles/common/_typography.scss */
+/* line 137, resources/assets/styles/common/_typography.scss */
 
 .content h3 a,
 .content .h3 a {
   color: #81BC41;
 }
 
-/* line 138, resources/assets/styles/common/_typography.scss */
+/* line 142, resources/assets/styles/common/_typography.scss */
 
 .content h4,
 .content .h4 {
@@ -16793,7 +16800,7 @@ html[data-text-size="large"] {
   color: #4D5C6B;
 }
 
-/* line 143, resources/assets/styles/common/_typography.scss */
+/* line 147, resources/assets/styles/common/_typography.scss */
 
 .content h5,
 .content .h5 {
@@ -16802,31 +16809,31 @@ html[data-text-size="large"] {
   color: #4D5C6B;
 }
 
-/* line 149, resources/assets/styles/common/_typography.scss */
+/* line 153, resources/assets/styles/common/_typography.scss */
 
 .content a {
   color: #4597CB;
 }
 
-/* line 155, resources/assets/styles/common/_typography.scss */
+/* line 159, resources/assets/styles/common/_typography.scss */
 
 .content ul li::before {
   color: #F89C24;
 }
 
-/* line 162, resources/assets/styles/common/_typography.scss */
+/* line 166, resources/assets/styles/common/_typography.scss */
 
 .content.content p {
   color: black;
 }
 
-/* line 166, resources/assets/styles/common/_typography.scss */
+/* line 170, resources/assets/styles/common/_typography.scss */
 
 .content.content strong {
   color: #4D5C6B;
 }
 
-/* line 172, resources/assets/styles/common/_typography.scss */
+/* line 176, resources/assets/styles/common/_typography.scss */
 
 a {
   text-decoration: underline;
@@ -16836,7 +16843,7 @@ a {
   transition: all 0.3s;
 }
 
-/* line 177, resources/assets/styles/common/_typography.scss */
+/* line 181, resources/assets/styles/common/_typography.scss */
 
 a:hover,
 a:active {
@@ -16844,20 +16851,20 @@ a:active {
           text-decoration-style: double;
 }
 
-/* line 181, resources/assets/styles/common/_typography.scss */
+/* line 185, resources/assets/styles/common/_typography.scss */
 
 html[data-contrast="true"] a:hover,
 html[data-contrast="true"] a:active {
   color: #FFF;
 }
 
-/* line 187, resources/assets/styles/common/_typography.scss */
+/* line 191, resources/assets/styles/common/_typography.scss */
 
 blockquote {
   border-left: 0;
 }
 
-/* line 190, resources/assets/styles/common/_typography.scss */
+/* line 194, resources/assets/styles/common/_typography.scss */
 
 blockquote.wp-block-pullquote {
   clear: both;
@@ -16865,29 +16872,35 @@ blockquote.wp-block-pullquote {
   padding-right: 3em;
 }
 
-/* line 197, resources/assets/styles/common/_typography.scss */
+/* line 201, resources/assets/styles/common/_typography.scss */
 
 .label {
   font-weight: 600;
 }
 
-/* line 202, resources/assets/styles/common/_typography.scss */
+/* line 206, resources/assets/styles/common/_typography.scss */
 
 strong {
   font-weight: 700;
 }
 
-/* line 206, resources/assets/styles/common/_typography.scss */
+/* line 210, resources/assets/styles/common/_typography.scss */
 
 abbr[title] {
   border-bottom: 0;
 }
 
-/* line 211, resources/assets/styles/common/_typography.scss */
+/* line 215, resources/assets/styles/common/_typography.scss */
 
 sup.footnote a {
   font-size: 0.7em !important;
   color: #4597CB;
+}
+
+/* line 221, resources/assets/styles/common/_typography.scss */
+
+.uabb-infobox-title-prefix.uabb-infobox-title-prefix {
+  color: #81BC41;
 }
 
 /* line 3, resources/assets/styles/components/_nav.scss */
@@ -16988,6 +17001,34 @@ sup.footnote a {
     font-size: 0.9em;
     line-height: 1.2em;
   }
+}
+
+/* line 1, resources/assets/styles/components/_pagination.scss */
+
+.pagination a,
+.pagination span {
+  background: #81BC41;
+  border: 2px solid #81BC41;
+}
+
+/* line 5, resources/assets/styles/components/_pagination.scss */
+
+.pagination a:hover,
+.pagination a:focus,
+.pagination span:hover,
+.pagination span:focus {
+  background: #5a832d;
+  color: #FFF;
+}
+
+/* line 12, resources/assets/styles/components/_pagination.scss */
+
+.pagination a.active,
+.pagination a.current,
+.pagination span.active,
+.pagination span.current {
+  background: #a7d179;
+  color: #FFF;
 }
 
 /* line 2, resources/assets/styles/components/_search.scss */
@@ -17155,28 +17196,30 @@ html[data-contrast="true"] header .search-form .label {
       flex-shrink: 1;
   padding: 20px;
   text-align: left;
+  color: #81BC41;
 }
 
-/* line 34, resources/assets/styles/layouts/_directory.scss */
+/* line 35, resources/assets/styles/layouts/_directory.scss */
 
 .archive-ff-company-data .page-header .header-card-title {
   margin: 0 0 10px;
+  color: #4D5C6B;
 }
 
-/* line 40, resources/assets/styles/layouts/_directory.scss */
+/* line 42, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap {
   background: #8194AA;
   padding: 1em;
 }
 
-/* line 44, resources/assets/styles/layouts/_directory.scss */
+/* line 46, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap .input-field {
   margin-bottom: 0;
 }
 
-/* line 47, resources/assets/styles/layouts/_directory.scss */
+/* line 49, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap .input-field > label {
   -webkit-transform: translateY(1rem);
@@ -17184,7 +17227,7 @@ html[data-contrast="true"] header .search-form .label {
           transform: translateY(1rem);
 }
 
-/* line 50, resources/assets/styles/layouts/_directory.scss */
+/* line 52, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap .input-field > label.active {
   -webkit-transform: translateY(-1rem) scale(0.8);
@@ -17192,27 +17235,27 @@ html[data-contrast="true"] header .search-form .label {
           transform: translateY(-1rem) scale(0.8);
 }
 
-/* line 56, resources/assets/styles/layouts/_directory.scss */
+/* line 58, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap input.search {
   background: #FFF;
   margin-bottom: 0;
 }
 
-/* line 61, resources/assets/styles/layouts/_directory.scss */
+/* line 63, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap input.search:focus + label {
   color: #FFF !important;
 }
 
-/* line 67, resources/assets/styles/layouts/_directory.scss */
+/* line 69, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap span.label {
   color: #FFF;
   font-weight: normal;
 }
 
-/* line 72, resources/assets/styles/layouts/_directory.scss */
+/* line 74, resources/assets/styles/layouts/_directory.scss */
 
 .filter-wrap select.filter {
   height: 2rem;
@@ -17220,7 +17263,7 @@ html[data-contrast="true"] header .search-form .label {
   width: auto;
 }
 
-/* line 83, resources/assets/styles/layouts/_directory.scss */
+/* line 85, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .list .expandable-body {
   padding: 0.75rem;
@@ -17229,20 +17272,20 @@ html[data-contrast="true"] header .search-form .label {
   position: relative;
 }
 
-/* line 89, resources/assets/styles/layouts/_directory.scss */
+/* line 91, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .list .expandable-body .expandable-body-inner {
   overflow: hidden;
   position: relative;
 }
 
-/* line 94, resources/assets/styles/layouts/_directory.scss */
+/* line 96, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .list .expandable-body.closed {
   padding-bottom: 60px;
 }
 
-/* line 97, resources/assets/styles/layouts/_directory.scss */
+/* line 99, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .list .expandable-body.closed::after {
   bottom: 0;
@@ -17262,13 +17305,13 @@ html[data-contrast="true"] header .search-form .label {
   width: 100%;
 }
 
-/* line 115, resources/assets/styles/layouts/_directory.scss */
+/* line 117, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .list .expandable-body.closed .expandable-body-inner {
   height: 230px;
 }
 
-/* line 118, resources/assets/styles/layouts/_directory.scss */
+/* line 120, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .list .expandable-body.closed .expandable-body-inner::after {
   content: '';
@@ -17285,13 +17328,19 @@ html[data-contrast="true"] header .search-form .label {
   background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFF 100%);
 }
 
-/* line 133, resources/assets/styles/layouts/_directory.scss */
+/* line 135, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .name {
   margin: 0;
 }
 
-/* line 137, resources/assets/styles/layouts/_directory.scss */
+/* line 138, resources/assets/styles/layouts/_directory.scss */
+
+.magic-list .name a {
+  color: #81BC41;
+}
+
+/* line 143, resources/assets/styles/layouts/_directory.scss */
 
 .magic-list .meta {
   font-size: 0.8em;
@@ -17339,12 +17388,57 @@ html[data-contrast="true"] header .search-form .label {
   z-index: 4;
 }
 
-/* line 14, resources/assets/styles/layouts/_header.scss */
+/* line 13, resources/assets/styles/layouts/_header.scss */
+
+.fl-builder-edit .banner {
+  z-index: auto;
+}
+
+/* line 18, resources/assets/styles/layouts/_header.scss */
 
 .navbar-menu {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
+}
+
+/* line 1, resources/assets/styles/layouts/_posts.scss */
+
+.excerpt .overlay {
+  background: #F89C24;
+}
+
+/* line 5, resources/assets/styles/layouts/_posts.scss */
+
+.wp-block-image figure {
+  width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  /* line 5, resources/assets/styles/layouts/_posts.scss */
+
+  .wp-block-image figure {
+    width: auto;
+    max-width: 50%;
+  }
+}
+
+/* line 14, resources/assets/styles/layouts/_posts.scss */
+
+.content.content .wp-block-pullquote {
+  border-color: #8194AA;
+}
+
+/* line 17, resources/assets/styles/layouts/_posts.scss */
+
+.content.content .wp-block-pullquote p {
+  color: #4D5C6B;
+}
+
+/* line 22, resources/assets/styles/layouts/_posts.scss */
+
+.single-ff-case-study .entry-content {
+  margin-bottom: 6em;
 }
 
 

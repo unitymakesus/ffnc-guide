@@ -297,3 +297,16 @@ function searchwp_term_highlight_auto_excerpt( $excerpt ) {
  	return wp_kses_post( $global_excerpt );
 }
 add_filter( 'get_the_excerpt', __NAMESPACE__ . '\\searchwp_term_highlight_auto_excerpt' );
+
+
+// Before cast studies are displayed
+add_action( 'pre_get_posts', function($query){
+  if ( is_admin() || ! $query->is_main_query() )
+        return;
+
+  if ( is_post_type_archive( 'ff-case-study' ) ) {
+      // Display 50 posts for a custom post type called 'movie'
+      $query->set( 'posts_per_page', 20 );
+      return;
+  }
+} );

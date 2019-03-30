@@ -9,6 +9,10 @@
 
 .banner {
   z-index: 4;
+
+  .fl-builder-edit & {
+    z-index: auto;
+  }
 }
 
 .navbar-menu {

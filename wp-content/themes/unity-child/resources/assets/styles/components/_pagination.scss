@@ -1,0 +1,18 @@
+.pagination a, .pagination span {
+  background: $color-ff-green;
+  border: 2px solid $color-ff-green;
+
+  &:hover, &:focus {
+    background: darken($color-ff-green, 15%);
+    color: $color-white;
+
+    @extend .z-depth-2;
+  }
+
+  &.active, &.current {
+    background: lighten($color-ff-green, 15%);
+    color: $color-white;
+
+    @extend .z-depth-0;
+  }
+}
