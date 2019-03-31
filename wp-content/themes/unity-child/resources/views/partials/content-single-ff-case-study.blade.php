@@ -1,6 +1,6 @@
 <article class="container" {!! post_class() !!}>
   <header>
-    <h1 class="entry-title">Case Study:<br />{!! get_the_title() !!}</h1>
+    <h1 class="entry-title">Case Study<hr />{!! get_the_title() !!}</h1>
     @include('partials/entry-meta')
   </header>
   <div class="entry-content">

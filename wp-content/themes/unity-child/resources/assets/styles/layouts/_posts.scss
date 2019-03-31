@@ -12,13 +12,26 @@
 }
 
 .content.content .wp-block-pullquote {
-  border-color: $color-ff-gray-med;
+  border-color: $color-ff-gray-light;
 
   p {
     color: $color-ff-gray-dark;
   }
 }
 
-.single-ff-case-study .entry-content {
-  margin-bottom: 6em;
+.single-ff-case-study {
+  .entry-content {
+    margin-bottom: 6em;
+  }
+
+  hr {
+    background-color: $color-ff-gray-light;
+    border: none;
+    margin-top: 0;
+    height: 3px;
+  }
+}
+
+.wp-block-separator {
+  border-color: $color-ff-gray-light;
 }
