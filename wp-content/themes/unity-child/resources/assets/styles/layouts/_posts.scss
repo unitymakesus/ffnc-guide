@@ -12,10 +12,10 @@
 }
 
 .content.content .wp-block-pullquote {
-  border-color: $color-ff-gray-light;
+  border-color: $color-ff-gray-dark;
 
   p {
-    color: $color-ff-gray-dark;
+    color: $color-ff-gray-dark !important;
   }
 }
 
