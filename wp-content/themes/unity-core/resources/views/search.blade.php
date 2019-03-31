@@ -10,9 +10,11 @@
     {!! get_search_form(false) !!}
   @endif
 
-  @while (have_posts()) @php the_post() @endphp
-    @include('partials.content-search')
-  @endwhile
+  <div class="container">
+    @while (have_posts()) @php the_post() @endphp
+      @include('partials.content-search')
+    @endwhile
+  </div>
 
   @php
     the_posts_pagination([

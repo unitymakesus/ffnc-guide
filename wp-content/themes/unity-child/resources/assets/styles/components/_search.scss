@@ -71,12 +71,17 @@ header {
 }
 
 .searchwp-highlight {
-  background: $color-ff-gray-med;
+  background: $color-ff-orange;
 }
 
 .search-results {
   .main {
     margin-bottom: 2rem;
+  }
+
+  .excerpt-title {
+    padding: 20px 20px 0;
+    margin-bottom: 0;
   }
 
   .entry-summary {
