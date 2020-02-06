@@ -66,9 +66,14 @@ class SearchWP_Settings_Implementation_Advanced {
 				break;
 
 			case 'partial_matches':
-				include_once( SWP()->dir . '/includes/class.partial-matches.php' );
-				$partial_matches = new SearchWPPartialMatches();
-				$partial_matches->init();
+				if ( ! version_compare( PHP_VERSION, '5.4', '<' ) ) {
+					SWP()->partial_matches->init();
+
+					// Partial matches can interfere with AND logic.
+					add_filter( 'searchwp_and_logic', '__return_false', 9 );
+				} else {
+					do_action( 'searchwp_log', '! Proper partial term processing not possible, please upgrade to PHP 5.4 or higher' );
+				}
 				break;
 
 			case 'indexer_aggressiveness':
@@ -95,6 +100,18 @@ class SearchWP_Settings_Implementation_Advanced {
 
 			case 'nuke_on_delete':
 				add_filter( 'searchwp_nuke_on_delete', '__return_true', 30 );
+				break;
+
+			case 'do_suggestions':
+				if ( ! version_compare( PHP_VERSION, '5.4', '<' ) ) {
+					add_filter( 'searchwp_do_suggestions', '__return_true', 30 );
+				} else {
+					do_action( 'searchwp_log', '! Proper search suggestion generation is not possible, please upgrade to PHP 5.4 or higher' );
+				}
+				break;
+
+			case 'quoted_search_support':
+				add_filter( 'searchwp_allow_quoted_phrase_search', '__return_true', 30 );
 				break;
 		}
 	}
@@ -234,8 +251,16 @@ class SearchWP_Settings_Implementation_Advanced {
 					'do_stopwords_suggestions' => $do_stopwords_suggestions,
 					'synonyms'                 => SWP()->synonyms->get(),
 					'settings'                 => $this->get_settings(),
+					'min_word_length'          => apply_filters( 'searchwp_minimum_word_length', 3 ),
 				),
 			)
+		);
+
+		wp_enqueue_style(
+			'searchwp-settings-advanced',
+			trailingslashit( SWP()->url ) . 'assets/js/dist/settings-advanced.min.css',
+			array(),
+			SEARCHWP_VERSION
 		);
 	}
 }

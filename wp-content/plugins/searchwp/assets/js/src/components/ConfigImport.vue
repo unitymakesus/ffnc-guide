@@ -9,7 +9,7 @@
 				:question="i18n.canNotBeUndone"
 				:confirm="i18n.importConfig"
 				:placement="'top'"
-				v-on:confirmed="importConfig"/>
+				v-on:confirmed="importConfig"></confirm>
 		</p>
 		<searchwp-notice
 			v-if="imported || importing"
@@ -24,7 +24,7 @@
 				:line-bg-color="'#ffb900'"
 				:line-fg-color="'#fff8e7'"
 				:text-fg-color="'#444444'"
-				:message="i18n.importingEngineConfig" />
+				:message="i18n.importingEngineConfig"></spinner>
 			<span v-else>{{ i18n.engineConfigImported }}</span>
 		</searchwp-notice>
 	</div>

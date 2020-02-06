@@ -1,6 +1,6 @@
 .tooltip {
 	display: block !important;
-	z-index: 10000;
+	z-index: 999999; // Needs to be higher than the Admin Bar.
 
 	.tooltip-inner {
 		background: rgba(0,0,0,0.8);

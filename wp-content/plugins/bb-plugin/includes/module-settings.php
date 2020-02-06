@@ -75,6 +75,7 @@ FLBuilder::register_settings_form('module_advanced', array(
 				'visibility_user_capability' => array(
 					'type'        => 'text',
 					'label'       => __( 'User Capability', 'fl-builder' ),
+					/* translators: %s: wporg docs link */
 					'description' => sprintf( __( 'Optional. Set the <a%s>capability</a> required for users to view this module.', 'fl-builder' ), ' href="http://codex.wordpress.org/Roles_and_Capabilities#Capability_vs._Role_Table" target="_blank"' ),
 					'preview'     => array(
 						'type' => 'none',
@@ -102,6 +103,10 @@ FLBuilder::register_settings_form('module_advanced', array(
 					'type'    => 'select',
 					'label'   => __( 'Container Element', 'fl-builder' ),
 					'default' => 'div',
+					/**
+					 * Filter to add/remove container types.
+					 * @see fl_builder_node_container_element_options
+					 */
 					'options' => apply_filters( 'fl_builder_node_container_element_options', array(
 						'div'     => '&lt;div&gt;',
 						'section' => '&lt;section&gt;',
@@ -130,6 +135,23 @@ FLBuilder::register_settings_form('module_advanced', array(
 					'preview' => array(
 						'type' => 'none',
 					),
+				),
+			),
+		),
+		'export_import' => array(
+			'title'  => __( 'Export/Import', 'fl-builder' ),
+			'fields' => array(
+				'export' => array(
+					'type'    => 'raw',
+					'label'   => __( 'Export', 'fl-builder' ),
+					'preview' => 'none',
+					'content' => '<button style="margin-right:10px" class="fl-builder-button fl-builder-button-small module-export-all" title="Copy Settings">Copy Settings</button><button class="fl-builder-button fl-builder-button-small module-export-style" title="Copy Styles">Copy Styles</button>',
+				),
+				'import' => array(
+					'type'    => 'raw',
+					'label'   => __( 'Import', 'fl-builder' ),
+					'preview' => 'none',
+					'content' => '<div class="module-import-wrap"><input type="text" class="module-import-input" placeholder="Paste settings or styles here..." /><button class="fl-builder-button fl-builder-button-small module-import-apply">Import</button></div><div class="module-import-error"></div>',
 				),
 			),
 		),

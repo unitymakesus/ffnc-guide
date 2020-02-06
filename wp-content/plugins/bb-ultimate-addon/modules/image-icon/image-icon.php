@@ -48,7 +48,7 @@ class ImageIconModule extends FLBuilderModule {
 			)
 		);
 
-		$this->add_css( 'font-awesome' );
+		$this->add_css( 'font-awesome-5' );
 	}
 
 	/**
@@ -61,9 +61,9 @@ class ImageIconModule extends FLBuilderModule {
 	 */
 	public function filter_settings( $settings, $helper ) {
 
-		$version_bb_check        = UABB_Compatibility::check_bb_version();
-		$page_migrated           = UABB_Compatibility::check_old_page_migration();
-		$stable_version_new_page = UABB_Compatibility::check_stable_version_new_page();
+		$version_bb_check        = UABB_Compatibility::$version_bb_check;
+		$page_migrated           = UABB_Compatibility::$uabb_migration;
+		$stable_version_new_page = UABB_Compatibility::$stable_version_new_page;
 
 		if ( $version_bb_check && ( 'yes' == $page_migrated || 'yes' == $stable_version_new_page ) ) {
 
@@ -284,7 +284,6 @@ class ImageIconModule extends FLBuilderModule {
 	 */
 	public function get_alt() {
 		$photo = $this->get_data();
-
 		if ( ! empty( $photo->alt ) ) {
 			return htmlspecialchars( $photo->alt );
 		} elseif ( ! empty( $photo->description ) ) {
@@ -295,7 +294,19 @@ class ImageIconModule extends FLBuilderModule {
 			return htmlspecialchars( $photo->title );
 		}
 	}
-
+	/**
+	 * Function that gets the title value of the Image
+	 *
+	 * @since 1.23.0
+	 *
+	 * @method get_title
+	 */
+	public function get_title() {
+		$photo = $this->get_data();
+		if ( isset( $photo->title ) && ! empty( $photo->title ) ) {
+			return htmlspecialchars( $photo->title );
+		}
+	}
 	/**
 	 * Function that checks for the source
 	 *
@@ -406,7 +417,7 @@ class ImageIconModule extends FLBuilderModule {
  *
  */
 
-if ( UABB_Compatibility::check_bb_version() ) {
+if ( UABB_Compatibility::$version_bb_check ) {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/image-icon/image-icon-bb-2-2-compatibility.php';
 } else {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/image-icon/image-icon-bb-less-than-2-2-compatibility.php';

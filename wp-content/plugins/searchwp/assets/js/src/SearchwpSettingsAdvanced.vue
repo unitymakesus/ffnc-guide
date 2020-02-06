@@ -23,13 +23,13 @@
 					<div class="searchwp-settings-advanced-stopwords" id="stopwords">
 						<div class="inside">
 							<component :is="translatedStopwordsNote"></component>
-							<searchwp-stopwords/>
+							<searchwp-stopwords></searchwp-stopwords>
 						</div>
 					</div>
 					<div class="searchwp-settings-advanced-synonyms" id="synonyms">
 						<div class="inside">
 							<component :is="translatedSynonymsNote"></component>
-							<searchwp-synonyms/>
+							<searchwp-synonyms></searchwp-synonyms>
 						</div>
 					</div>
 				</div>
@@ -44,8 +44,8 @@
 
 				<h3 class="hndle"><span>{{ i18n.actionsSettings }}</span></h3>
 				<div class="inside">
-					<searchwp-actions/>
-					<searchwp-settings/>
+					<searchwp-actions></searchwp-actions>
+					<searchwp-settings></searchwp-settings>
 				</div>
 
 			</div>
@@ -67,12 +67,12 @@
 				<div v-bind:class="[ 'searchwp-settings-tab-container', 'searchwp-settings-is-tabbed-' + exportImportState ]">
 					<div class="searchwp-settings-config-import" id="import">
 						<div class="inside">
-							<searchwp-config-import/>
+							<searchwp-config-import></searchwp-config-import>
 						</div>
 					</div>
 					<div class="searchwp-settings-config-export" id="export">
 						<div class="inside">
-							<searchwp-config-export/>
+							<searchwp-config-export></searchwp-config-export>
 						</div>
 					</div>
 				</div>

@@ -17,14 +17,49 @@ class FLBuilderUISettingsForms {
 	static private $form_templates = array();
 
 	/**
+	 * An array of core fields that are used for style settings.
+	 *
+	 * @since 2.3
+	 * @var int $style_fields
+	 */
+	static private $style_fields = array(
+		'align',
+		'animation',
+		'border',
+		'button-group',
+		'color',
+		'dimension',
+		'font',
+		'gradient',
+		'photo-sizes',
+		'select',
+		'shadow',
+		'shape-transform',
+		'typography',
+		'unit',
+	);
+
+	/**
 	 * @since 2.0
 	 * @return void
 	 */
 	static public function init() {
+		add_action( 'init', __CLASS__ . '::init_style_fields' );
 		add_action( 'wp', __CLASS__ . '::render_settings_config' );
 		add_action( 'wp_enqueue_scripts', __CLASS__ . '::enqueue_settings_config', 11 );
 		add_action( 'wp_footer', __CLASS__ . '::init_js_config', 1 );
 		add_action( 'wp_footer', __CLASS__ . '::render_js_templates', 11 );
+		add_filter( 'fl_builder_ui_js_config', __CLASS__ . '::layout_css_js' );
+	}
+
+	/**
+	 * Allow developers to filter style fields and add their own.
+	 *
+	 * @since 2.3
+	 * @return void
+	 */
+	static public function init_style_fields() {
+		self::$style_fields = apply_filters( 'fl_builder_style_fields', self::$style_fields );
 	}
 
 	/**
@@ -39,10 +74,17 @@ class FLBuilderUISettingsForms {
 
 		if ( FLBuilderModel::is_builder_active() ) {
 
-			$url     = FLBuilderModel::get_edit_url( $wp_the_query->post->ID ) . '&fl_builder_load_settings_config';
-			$script  = 'var s = document.createElement("script");s.type = "text/javascript";s.src = "%s";document.head.appendChild(s);';
-			$config  = sprintf( $script, $url );
-			$modules = sprintf( $script, $url . '=modules' );
+			$script_url  = add_query_arg( array(
+				'fl_builder_load_settings_config' => true,
+				'ver'                             => rand(),
+			), FLBuilderModel::get_edit_url( $wp_the_query->post->ID ) );
+			$modules_url = add_query_arg( array(
+				'fl_builder_load_settings_config' => 'modules',
+				'ver'                             => rand(),
+			), FLBuilderModel::get_edit_url( $wp_the_query->post->ID ) );
+			$script      = 'var s = document.createElement("script");s.type = "text/javascript";s.src = "%s";document.head.appendChild(s);';
+			$config      = sprintf( $script, $script_url );
+			$modules     = sprintf( $script, $modules_url );
 
 			wp_add_inline_script( 'fl-builder', $config );
 			wp_add_inline_script( 'fl-builder-min', $config );
@@ -66,8 +108,7 @@ class FLBuilderUISettingsForms {
 				wp_raise_memory_limit( 'bb-plugin' );
 			}
 
-			$type    = sanitize_key( $_GET['fl_builder_load_settings_config'] );
-			$handler = 'FLBuilderUISettingsForms::compress_settings_config';
+			$type = sanitize_key( $_GET['fl_builder_load_settings_config'] );
 
 			if ( 'modules' === $type ) {
 				$settings = FLBuilderUISettingsForms::get_modules_js_config();
@@ -75,13 +116,9 @@ class FLBuilderUISettingsForms {
 				$settings = FLBuilderUISettingsForms::get_js_config();
 			}
 
-			if ( @ini_get( 'zlib.output_compression' ) ) { // @codingStandardsIgnoreLine
-				@ini_set( 'zlib.output_compression', 'Off' ); // @codingStandardsIgnoreLine
-				$handler = null;
-			}
 			header( 'Content-Type: application/javascript' );
 
-			ob_start( $handler );
+			ob_start();
 			include FL_BUILDER_DIR . 'includes/ui-settings-config.php';
 			ob_end_flush();
 
@@ -93,7 +130,7 @@ class FLBuilderUISettingsForms {
 	 * Attempts to use the output buffer gzip handler to compress
 	 * the settings config. We have to do it this way to prevent
 	 * errors we were running into on some hosts.
-	 *
+	 * @deprecated 2.2.2
 	 * @since 2.1.0.2
 	 * @param string $buffer $mode
 	 * @return string
@@ -189,7 +226,6 @@ class FLBuilderUISettingsForms {
 		return $defaults;
 	}
 
-
 	/**
 	 * Prepares forms for the JS config.
 	 *
@@ -282,6 +318,11 @@ class FLBuilderUISettingsForms {
 				$field['options'] = (array) $field['options'];
 			}
 		}
+
+		// Mark fields as style fields.
+		if ( ! isset( $field['is_style'] ) ) {
+			$field['is_style'] = in_array( $field['type'], self::$style_fields );
+		}
 	}
 
 	/**
@@ -314,8 +355,9 @@ class FLBuilderUISettingsForms {
 				'title'  => $module->name,
 				'tabs'   => $module->form,
 				'assets' => array(
-					'css' => $css,
-					'js'  => $js,
+					'css'   => $css,
+					'js'    => $js,
+					'jsurl' => $js_file_uri,
 				),
 			);
 		}
@@ -918,7 +960,7 @@ class FLBuilderUISettingsForms {
 				} else {
 					echo '<td>&nbsp;</td><td>';
 				}
-
+				/* translators: %s: field name to add */
 				echo '<a href="javascript:void(0);" onclick="return false;" class="fl-builder-field-add fl-builder-button" data-field="' . $arr_name . '">' . sprintf( _x( 'Add %s', 'Field name to add.', 'fl-builder' ), $field['label'] ) . '</a>';
 				echo '</td>';
 				echo '</tr>';
@@ -947,6 +989,15 @@ class FLBuilderUISettingsForms {
 		return array(
 			'html' => $html,
 		);
+	}
+
+	static public function layout_css_js( $config ) {
+
+		$post_id  = $config['postId'];
+		$settings = get_post_meta( $post_id, '_fl_builder_data_settings', true );
+
+		$config['layout_css_js'] = ( ( isset( $settings->css ) && '' !== $settings->css ) || ( isset( $settings->js ) && '' !== $settings->js ) ) ? true : false;
+		return $config;
 	}
 }
 

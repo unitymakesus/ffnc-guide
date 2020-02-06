@@ -29,7 +29,7 @@ class ModalPopupModule extends FLBuilderModule {
 			)
 		);
 
-		$this->add_css( 'font-awesome' );
+		$this->add_css( 'font-awesome-5' );
 		$this->add_js( 'jquery-fitvids' );
 		$this->add_js( 'uabbpopup-cookies', $this->url . 'js/js_cookie.js', array(), '', true );
 	}
@@ -77,6 +77,9 @@ class ModalPopupModule extends FLBuilderModule {
 
 			'a_data'                     => 'data-modal=' . $module_id . ' ',
 			'a_class'                    => 'uabb-trigger',
+			'button_padding_dimension'   => ( isset( $this->settings->button_padding_dimension ) ) ? $this->settings->button_padding_dimension : '',
+			'button_border'              => ( isset( $this->settings->button_border ) ) ? $this->settings->button_border : '',
+			'border_hover_color'         => ( isset( $this->settings->border_hover_color ) ) ? $this->settings->border_hover_color : '',
 		);
 		FLBuilder::render_module_html( 'uabb-button', $btn_settings );
 	}
@@ -95,7 +98,9 @@ class ModalPopupModule extends FLBuilderModule {
 			break;
 			case 'photo':
 				if ( isset( $settings->ct_photo_src ) ) {
-					return '<img src="' . $settings->ct_photo_src . '" />';
+					$image_data = FLBuilderPhoto::get_attachment_data( $settings->ct_photo );
+					$image_alt  = isset( $image_data->alt ) ? $image_data->alt : '';
+					return '<img src="' . $settings->ct_photo_src . '" alt="' . $image_alt . '"/>';
 				}
 				return '<img src="" />';
 			break;
@@ -163,11 +168,9 @@ class ModalPopupModule extends FLBuilderModule {
 			$vid_id = preg_replace( '/[^\/]+[^0-9]|(\/)/', '', rtrim( $url, '/' ) );
 			$thumb  = '';
 			if ( '' !== $vid_id && 0 !== $vid_id ) {
-				if ( file_exists( "https://vimeo.com/api/v2/video/$vid_id.php" ) ) {
-					$vimeo = unserialize( file_get_contents( "https://vimeo.com/api/v2/video/$vid_id.php" ) );
+					$vimeo = unserialize( @file_get_contents( "https://vimeo.com/api/v2/video/$vid_id.php" ) );// @codingStandardsIgnoreStart
 					$thumb = $vimeo[0]['thumbnail_large'];
-				}
-				$html .= '<div class="uabb-modal-iframe uabb-video-player" data-src="vimeo" data-id="' . $vid_id . '" data-append="?title=0&byline=0&portrait=0&badge=0" data-thumb="' . $thumb . '"></div>';
+				$html     .= '<div class="uabb-modal-iframe uabb-video-player" data-src="vimeo" data-id="' . $vid_id . '" data-append="?title=0&byline=0&portrait=0&badge=0" data-thumb="' . $thumb . '"></div>';
 			}
 		}
 		$html .= '</div>';
@@ -207,9 +210,9 @@ class ModalPopupModule extends FLBuilderModule {
 	 */
 	public function filter_settings( $settings, $helper ) {
 
-		$version_bb_check        = UABB_Compatibility::check_bb_version();
-		$page_migrated           = UABB_Compatibility::check_old_page_migration();
-		$stable_version_new_page = UABB_Compatibility::check_stable_version_new_page();
+		$version_bb_check        = UABB_Compatibility::$version_bb_check;
+		$page_migrated           = UABB_Compatibility::$uabb_migration;
+		$stable_version_new_page = UABB_Compatibility::$stable_version_new_page;
 
 		if ( $version_bb_check && ( 'yes' == $page_migrated || 'yes' == $stable_version_new_page ) ) {
 
@@ -996,7 +999,7 @@ $iframe_desc = sprintf( /* translators: %1$s: search term, %2$s: search term */
  *
  */
 
-if ( UABB_Compatibility::check_bb_version() ) {
+if ( UABB_Compatibility::$version_bb_check ) {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/modal-popup/modal-popup-bb-2-2-compatibility.php';
 } else {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/modal-popup/modal-popup-bb-less-than-2-2-compatibility.php';

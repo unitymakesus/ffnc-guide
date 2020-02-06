@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit9c83d3523e3d49b9e2e55b727a9e0465
 {
     public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'Wamania\\Snowball\\' => 17,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
@@ -18,6 +22,10 @@ class ComposerStaticInit9c83d3523e3d49b9e2e55b727a9e0465
     );
 
     public static $prefixDirsPsr4 = array (
+        'Wamania\\Snowball\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wamania/php-stemmer/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',

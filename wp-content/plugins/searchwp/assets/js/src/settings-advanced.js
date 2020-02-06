@@ -13,7 +13,7 @@ Vue.use(SearchwpAjax);
 new Vue({
   el: "#searchwp-settings-advanced",
   data: _SEARCHWP_VARS.data ? _SEARCHWP_VARS.data : {},
-  template: "<searchwp-settings-advanced/>",
+  template: "<searchwp-settings-advanced></searchwp-settings-advanced>",
   components: {
     "searchwp-settings-advanced": SearchwpSettingsAdvanced
   }

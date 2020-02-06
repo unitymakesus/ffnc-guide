@@ -9,7 +9,7 @@ Vue.use(VTooltip);
 new Vue({
   el: "#searchwp-statistics",
   data: _SEARCHWP_VARS.data ? _SEARCHWP_VARS.data : {},
-  template: "<searchwp-statistics/>",
+  template: "<searchwp-statistics></searchwp-statistics>",
   components: {
     "searchwp-statistics": SearchwpStatistics
   }

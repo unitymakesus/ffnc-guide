@@ -77,15 +77,17 @@ class SearchWP_Synonyms {
 	 *
 	 * @return array
 	 */
-	function find( $term ) {
+	function find( $term, $engine = 'default' ) {
 		if ( empty( $term ) || empty( $this->synonyms ) ) {
 			return $term;
 		}
 
+		$engine = SWP()->is_valid_engine( $engine ) ? $engine : 'default';
+
 		$synonyms = $this->synonyms;
 
-		// convert everything to lowercase
-		if ( ! empty( $synonyms ) ) {
+		// Convert everything to lowercase.
+		if ( is_array( $synonyms ) && ! empty( $synonyms ) ) {
 			foreach ( $synonyms as $synonym_id => $synonym ) {
 				if ( ! empty( $synonyms[ $synonym_id ]['term'] ) ) {
 					if ( function_exists( 'mb_strtolower' ) ) {
@@ -105,52 +107,167 @@ class SearchWP_Synonyms {
 			}
 		}
 
-		// we expect $term to be an array
+		// We expect $term to be an array.
 		if ( is_string( $term ) ) {
 			$term = array( $term );
 		}
 
-		if ( is_array( $term ) && is_array( $synonyms ) && ! empty( $synonyms ) ) {
-			foreach ( $synonyms as $synonym ) {
-				if ( in_array( $synonym['term'], $term ) ) {
+		if ( ! is_array( $term ) || ! is_array( $synonyms ) || empty( $synonyms ) ) {
+			return $term;
+		}
 
-					// there is a match, handle it
+		$original_term_hash = md5( serialize( $term ) );
 
-					// break out where applicable
-					if ( is_array( $synonym['synonyms'] ) && ! empty( $synonym['synonyms'] ) ) {
-						foreach ( $synonym['synonyms'] as $maybe_synonym ) {
-							if ( false !== strpos( $maybe_synonym, ' ' ) ) {
-								$maybe_synonym = explode( ' ', $maybe_synonym );
-								$synonym['synonyms'] = $maybe_synonym;
-							}
-						}
-					}
+		$aggressive = apply_filters( 'searchwp_synonyms_aggressive', false );
 
-					// merge everything together
-					$term = array_merge( $term, $synonym['synonyms'] );
-				}
+		$term = $aggressive
+				? $this->process_aggressive( $term, $synonyms, $engine )
+				: $this->process( $term, $synonyms, $engine );
+
+		$term = SWP()->sanitize_terms( $term, $engine );
+
+		do_action( 'searchwp_log', 'Query after synonym application: ' . implode( ' ', $term ) );
+
+		// If synonyms have been applied it can interfere with AND logic.
+		if ( md5( serialize( $term ) ) !== $original_term_hash ) {
+			add_filter( 'searchwp_and_logic', '__return_false', 9 );
+		}
+
+		return $term;
+	}
+
+	/**
+	 * Process synonyms in a more lax way (default)
+	 *
+	 * @since 3.1
+	 *
+	 * @param Array $term     The query to process.
+	 * @param Array $synonyms The synonyms to consider.
+	 *
+	 * @return Array The resulting query after synonyms have been processed.
+	 */
+	private function process( $term, $synonyms, $engine = 'default' ) {
+		$search_query       = implode( ' ', $term );
+		$generated_synonyms = array();
+
+		$partial_matches = apply_filters( 'searchwp_synonyms_use_partial_match', false );
+
+		// Step 1: Add applicable synonyms.
+		foreach ( $synonyms as $key => $synonym ) {
+			// Is there any match?
+			if ( false === stripos( trim( $search_query ), trim( $synonym['term'] ) ) ) {
+				continue;
+			}
+
+			// Do partial matches apply?
+			if (
+				empty( $partial_matches )
+				&& strtolower( trim( $search_query ) ) !== strtolower( trim( $synonym['term'] ) )
+			) {
+				continue;
+			}
+
+			$generated_synonyms = array_merge(
+				$generated_synonyms,
+				$synonym['synonyms']
+			);
+		}
+
+		// Step 2: Remove applicable removals.
+		foreach ( $synonyms as $key => $synonym ) {
+			if ( empty( $synonym['replace'] ) ) {
+				continue;
+			}
+
+			if ( false === stripos( trim( $search_query ), trim( $synonym['term'] ) ) ) {
+				continue;
+			}
+
+			// Do partial matches apply?
+			if (
+				empty( $partial_matches )
+				&& strtolower( trim( $search_query ) ) !== strtolower( trim( $synonym['term'] ) )
+			) {
+				continue;
+			}
+
+			$search_query = str_ireplace( $synonym['term'], '', $search_query );
+		}
+
+		// Step 3: Rebuild the search query.
+		$revised_search_query = array_merge(
+			explode( ' ', $search_query ),
+			SWP()->sanitize_terms( implode( ' ', $generated_synonyms ), $engine )
+		);
+
+		$revised_search_query = array_map( 'trim', $revised_search_query );
+		$revised_search_query = array_filter( $revised_search_query );
+		$revised_search_query = array_unique( $revised_search_query );
+		$revised_search_query = array_values( $revised_search_query );
+
+		return $revised_search_query;
+	}
+
+	/**
+	 * Aggressive synonym replacement means that when a synonym has replacements enabled
+	 * those replacements will be made as each synonym is processed, which ends up
+	 * being more aggressive when there are 'recursive' synonyms set up that share terms
+	 * and synonyms among one another.
+	 *
+	 * @since 3.1
+	 *
+	 * @param Array $term     The query to process.
+	 * @param Array $synonyms The synonyms to consider.
+	 *
+	 * @return Array The resulting query after synonyms have been processed.
+	 */
+	private function process_aggressive( $term, $synonyms, $engine = 'default' ) {
+		$replace_immediately = apply_filters( 'searchwp_synonyms_aggressive_replace_immediately', false );
+		$to_replace = array();
+
+		$source_search_query = trim( implode( ' ', $term ) );
+
+		foreach ( $synonyms as $key => $synonym ) {
+			$synonym_trigger_term = trim( $synonym['term'] );
+
+			// If there's no match, bail out.
+			if ( false === stripos( $source_search_query, $synonym_trigger_term ) ) {
+				continue;
+			}
+
+			// There is a match, do we need to replace?
+			if ( $replace_immediately ) {
+				$replacement = ! empty( $synonym['replace'] )
+					? implode( ' ', $synonym['synonyms'] ) :
+					$synonym_trigger_term . implode( ' ', $synonym['synonyms'] );
+
+				$source_search_query = str_ireplace(
+					$synonym_trigger_term,
+					implode( ' ', SWP()->sanitize_terms( $replacement, $engine ) ),
+					$source_search_query
+				);
+
+				// Because of the replacement there is a double space somewhere (maybe).
+				$source_search_query = str_replace( '  ', ' ', $source_search_query );
+			} else {
+				$to_replace[] = $synonym_trigger_term;
+				$source_search_query .= ' ' . implode( ' ', $synonym['synonyms'] );
 			}
 		}
 
-		// LASTLY handle any Replacements
-		if ( is_array( $term ) && ! empty( $term ) && is_array( $synonyms ) && ! empty( $synonyms ) ) {
-			foreach ( $term as $key => $potential_replacement ) {
-				foreach ( $synonyms as $synonym ) {
-					if ( ! empty( $synonym['replace'] ) && $synonym['term'] == $potential_replacement ) {
-						unset( $term[ $key ] );
-					}
-				}
+		if ( ! $replace_immediately && ! empty( $to_replace ) ) {
+			// No replacements have been made yet becase we want to replace them late.
+			foreach ( $to_replace as $to_remove ) {
+				$source_search_query = str_ireplace( $to_remove, '', $source_search_query );
+
+				// Because of the replacement there is a double space somewhere (maybe).
+				$source_search_query = str_replace( '  ', ' ', $source_search_query );
 			}
+
+			$to_replace = array();
 		}
 
-		$term = array_values( array_unique( $term ) );
-		$term = array_map( 'sanitize_text_field', $term );
-
-		if ( function_exists( 'mb_strtolower' ) ) {
-			$term = array_map( 'mb_strtolower', $term );
-		} else {
-			$term = array_map( 'strtolower', $term );
-		}
+		$term = explode( ' ', trim( $source_search_query ) );
 
 		return $term;
 	}

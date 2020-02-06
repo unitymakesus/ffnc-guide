@@ -8,3 +8,5 @@ node_modules
 /.sass-cache
 /assets/js/dist/settings.bndl.js
 /hooks.sh
+SearchWP Session.sql
+.vscode

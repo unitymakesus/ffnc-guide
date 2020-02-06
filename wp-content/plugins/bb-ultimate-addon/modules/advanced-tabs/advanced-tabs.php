@@ -44,9 +44,9 @@ class AdvancedTabsModule extends FLBuilderModule {
 	 * @return object
 	 */
 	public function filter_settings( $settings, $helper ) {
-		$version_bb_check        = UABB_Compatibility::check_bb_version();
-		$page_migrated           = UABB_Compatibility::check_old_page_migration();
-		$stable_version_new_page = UABB_Compatibility::check_stable_version_new_page();
+		$version_bb_check        = UABB_Compatibility::$version_bb_check;
+		$page_migrated           = UABB_Compatibility::$uabb_migration;
+		$stable_version_new_page = UABB_Compatibility::$stable_version_new_page;
 
 		if ( $version_bb_check && ( 'yes' == $page_migrated || 'yes' == $stable_version_new_page ) ) {
 
@@ -245,10 +245,6 @@ class AdvancedTabsModule extends FLBuilderModule {
 				$settings->tab_style_align = $settings->tab_style_alignment;
 				unset( $settings->tab_style_alignment );
 			}
-			if ( isset( $settings->content_alignment ) ) {
-				$settings->content_alignment = $settings->content_alignment;
-				unset( $settings->content_alignment );
-			}
 		} elseif ( $version_bb_check && 'yes' != $page_migrated ) {
 			if ( ! isset( $settings->title_font_typo ) || ! is_array( $settings->title_font_typo ) ) {
 
@@ -411,10 +407,6 @@ class AdvancedTabsModule extends FLBuilderModule {
 			if ( isset( $settings->tab_style_alignment ) ) {
 				$settings->tab_style_align = $settings->tab_style_alignment;
 				unset( $settings->tab_style_alignment );
-			}
-			if ( isset( $settings->content_alignment ) ) {
-				$settings->content_alignment = $settings->content_alignment;
-				unset( $settings->content_alignment );
 			}
 			if ( isset( $settings->tab_padding ) ) {
 
@@ -616,7 +608,7 @@ $default_breakpoint = ( trim( UABB_Model_Helper::$bb_global_settings->responsive
  * And accordingly render the required form settings file.
  */
 
-if ( UABB_Compatibility::check_bb_version() ) {
+if ( UABB_Compatibility::$version_bb_check ) {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/advanced-tabs/advanced-tabs-bb-2-2-compatibility.php';
 } else {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/advanced-tabs/advanced-tabs-bb-less-than-2-2-compatibility.php';

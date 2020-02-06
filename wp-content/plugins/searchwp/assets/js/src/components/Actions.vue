@@ -6,7 +6,7 @@
 					:buttonLabel="i18n.resetIndex"
 					:question="i18n.areYouSure"
 					:confirm="i18n.yesResetIndex"
-					v-on:confirmed="resetIndex"/>
+					v-on:confirmed="resetIndex"></confirm>
 			</li>
 			<li><button class="button" @click="wakeIndex">{{ i18n.wakeUpIndexer }}</button></li>
 			<li><button class="button" @click="restoreNotices">{{ i18n.restoreNotices }}</button></li>
@@ -27,7 +27,7 @@
 					:line-bg-color="'#ffb900'"
 					:line-fg-color="'#fff8e7'"
 					:text-fg-color="'#444444'"
-					:message="i18n.indexBeingReset" />
+					:message="i18n.indexBeingReset"></spinner>
 				<span v-else-if="indexerAlternate">{{ i18n.indexResetAlternate }}</span>
 				<span v-else>{{ i18n.indexResetRebuilding }}</span>
 			</searchwp-notice>
@@ -45,7 +45,7 @@
 					:line-bg-color="'#ffb900'"
 					:line-fg-color="'#fff8e7'"
 					:text-fg-color="'#444444'"
-					:message="i18n.indexerWaking" />
+					:message="i18n.indexerWaking"></spinner>
 				<span v-else-if="indexerAlternate">{{ i18n.indexerWokenAlternate }}</span>
 				<span v-else>{{ i18n.indexerWoken }}</span>
 			</searchwp-notice>

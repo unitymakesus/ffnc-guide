@@ -3,12 +3,12 @@
 Plugin Name: SearchWP
 Plugin URI: https://searchwp.com/
 Description: The best WordPress search you can find
-Version: 3.0.5
+Version: 3.1.10
 Author: SearchWP, LLC
 Author URI: https://searchwp.com/
 Text Domain: searchwp
 
-Copyright 2013-2019 SearchWP, LLC
+Copyright 2013-2020 SearchWP, LLC
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -25,11 +25,12 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
 // exit if accessed directly
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SEARCHWP_VERSION', '3.0.5' );
+define( 'SEARCHWP_VERSION', '3.1.10' );
 define( 'SEARCHWP_PREFIX', 'searchwp_' );
 define( 'SEARCHWP_DBPREFIX', 'swp_' );
 define( 'SEARCHWP_EDD_STORE_URL', 'https://searchwp.com' );
@@ -366,6 +367,16 @@ class SearchWP {
 	 */
 	public $synonyms;
 
+	/**
+	 * @var array Suggested Terms
+	 * @since 3.1
+	 */
+	private $suggested_terms;
+
+	private $debug;
+	private $validated_terms = array();
+
+	public $partial_matches;
 
 	/**
 	 * Singleton
@@ -403,6 +414,9 @@ class SearchWP {
 		$this->settings_cap = apply_filters( 'searchwp_settings_cap', $this->settings_cap );
 	}
 
+	public function get_suggested_terms() {
+		return $this->suggested_terms;
+	}
 
 	/**
 	 * Initialization routine. Sets version, directory, url, adds WordPress hooks, includes includes, triggers index
@@ -430,6 +444,7 @@ class SearchWP {
 		include_once( dirname( __FILE__ ) . '/includes/class.upgrade.php' );
 		include_once( dirname( __FILE__ ) . '/includes/class.synonyms.php' );
 		include_once( dirname( __FILE__ ) . '/includes/class.highlighter.php' );
+		include_once( dirname( __FILE__ ) . '/includes/class.partial-matches.php' );
 
 		include_once( dirname( __FILE__ ) . '/admin/class.admin-settings.php' );
 		include_once( dirname( __FILE__ ) . '/admin/class.extensions.php' );
@@ -437,6 +452,15 @@ class SearchWP {
 
 		// Integrations.
 		include_once( dirname( __FILE__ ) . '/includes/class.acf.php' );
+
+		// Implement debugging early if applicable.
+		$early_debug_enabled = apply_filters( 'searchwp_debug_early', false );
+		if ( $early_debug_enabled ) {
+			$advanced_settings_ref = get_option( SEARCHWP_PREFIX . 'advanced' );
+			if ( ! empty( $advanced_settings_ref['debugging'] ) ) {
+				$this->init_debugging();
+			}
+		}
 
 		if ( is_admin() ) {
 			include_once( dirname( __FILE__ ) . '/admin/class.conflicts.php' );
@@ -483,6 +507,9 @@ class SearchWP {
 		// Synonyms
 		$this->synonyms = new SearchWP_Synonyms();
 		$this->synonyms->init();
+
+		// Partial matches.
+		$this->partial_matches = new SearchWPPartialMatches();
 
 		// Implement advanced settings.
 		$legacy_advanced_settings = apply_filters( 'searchwp_legacy_advanced_settings', false );
@@ -540,6 +567,18 @@ class SearchWP {
 
 		// core filter for Media search in the admin
 		add_filter( 'ajax_query_attachments_args', array( $this, 'maybe_admin_media_search' ) );
+	}
+
+	function init_debugging() {
+		// If debugging has already been initialized, bail out.
+		if ( ! empty( $this->debug ) ) {
+			return;
+		}
+
+		$wp_upload_dir = wp_upload_dir();
+		$this->debug   = new SearchWPDebug();
+
+		$this->debug->init( $wp_upload_dir['basedir'] );
 	}
 
 	/**
@@ -631,7 +670,6 @@ class SearchWP {
 		return $args;
 	}
 
-
 	/**
 	 * Perform various environment checks/initializations on wp_loaded
 	 *
@@ -642,11 +680,7 @@ class SearchWP {
 
 		// Proceed with loading SearchWP.
 		if ( apply_filters( 'searchwp_debug', false ) ) {
-
-			$wp_upload_dir = wp_upload_dir();
-
-			$debug = new SearchWPDebug();
-			$debug->init( $wp_upload_dir['basedir'] );
+			$this->init_debugging();
 		}
 
 		$this->prepare_endpoint();
@@ -703,6 +737,11 @@ class SearchWP {
 		// reset short circuit check
 		$this->indexing = false;
 
+		// Set up global highlighter functions.
+		if ( function_exists( 'searchwp_init_global_highlight_functions' ) ) {
+			searchwp_init_global_highlight_functions();
+		}
+
 		do_action( 'searchwp_loaded' );
 	}
 
@@ -713,7 +752,7 @@ class SearchWP {
 		}
 
 		if ( empty( $purge_queue ) ) {
-			return $purge_queue;
+			return (array) $purge_queue;
 		}
 
 		// If there are duplicate purge queue entries we could very well trigger an infinite loop of delta updates
@@ -860,6 +899,9 @@ class SearchWP {
 		}
 
 		add_action( 'save_post', array( $this, 'purge_post_via_edit' ), 999 );
+
+		// Trigger the index when a Scheduled post is Published.
+		add_action( 'publish_future_post', array( $this, 'trigger_index' ), 999 );
 
 		if ( current_user_can( 'edit_posts' ) ) {
 			add_action( 'add_attachment', array( $this, 'purge_post_via_edit' ), 999 );
@@ -1338,10 +1380,10 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		searchwp_check_for_stalled_indexer( 360 );
 
 		// store the purge queue... just in case
-		$toPurge = searchwp_get_option( 'purge_queue' );
-		$validated_purge_queue = $this->validate_purge_queue( $toPurge );
+		$toPurge = (array) searchwp_get_option( 'purge_queue' );
+		$validated_purge_queue = (array) $this->validate_purge_queue( $toPurge );
 
-		if ( count( $toPurge ) !== count( $validated_purge_queue ) ) {
+		if ( is_array( $toPurge ) && count( $toPurge ) !== count( $validated_purge_queue ) ) {
 			searchwp_update_option( 'purge_queue', $validated_purge_queue );
 			$toPurge = $validated_purge_queue;
 			do_action( 'searchwp_log', 'Refined purge queue (' . count( $toPurge ) . '): ' . implode( ', ', $toPurge ) );
@@ -1671,14 +1713,29 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 
 			$args = array(
 				'body'       => array( 'swpnonce' => $hash ),
-				'blocking'   => false,
+				'blocking'   => true,
 				'user-agent' => 'SearchWP',
 				'timeout'    => $timeout,
 				'sslverify'  => false,
 			);
 			$args = apply_filters( 'searchwp_indexer_loopback_args', $args );
 
-			wp_remote_post( $destination, $args );
+			$response = wp_remote_post( $destination, $args );
+
+			// $response will always be an error because of the timeout, but if we get error 6
+			// the issue is likely that the server rejected the loopback, so we'll check for that.
+			$screen = ! searchwp_wp_doing_ajax() && function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if (
+				did_action( 'searchwp_settings_init' ) // Only show on main settings screen.
+				&& (
+					is_object( $screen )
+					&& isset( $screen->base )
+					&& 'settings_page_searchwp' === $screen->base
+				)
+				&& $this->is_loopback_error( $response )
+			) {
+				$this->nags_utils->loopback_failure_nag();
+			}
 		} else {
 			$this->trigger_forced_indexer_chunk();
 			// if the chunk size is less than the number of outstanding posts
@@ -1688,6 +1745,43 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		}
 	}
 
+	/**
+	 * Detect whether a response contains information indicating a loopback error has occurred.
+	 *
+	 * @param mixed $error The variable to inspect.
+	 *
+	 * @since 3.1
+	 *
+	 * @return bool Whether the submitted variable is a loopback error.
+	 */
+	public function is_loopback_error( $error ) {
+		if ( ! is_wp_error( $error ) ) {
+			return false;
+		}
+
+		if ( ! is_array( $error->errors ) ) {
+			return false;
+		}
+
+		if ( ! array_key_exists( 'http_request_failed', $error->errors ) ) {
+			return false;
+		}
+
+		if ( ! isset( $error->errors['http_request_failed'][0] ) ) {
+			return false;
+		}
+
+		$error_message = $error->errors['http_request_failed'][0];
+
+		// Our best guess that this was a loopback error is the cURL error that's returned.
+		if ( false === strpos( strtolower( $error_message ), 'curl error 6: could not resolve' ) ) {
+			return false;
+		}
+
+		do_action( 'searchwp_log', 'Loopback failure detected! ' . $error_message );
+
+		return true;
+	}
 
 	/**
 	 * Checks to see if we're in the main query and stores result as isMainQuery property
@@ -1793,17 +1887,13 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 	 */
 	function search( $engine = 'default', $terms, $page = 1 ) {
 
-		// do_action( 'searchwp_log', ' ' );
-		// do_action( 'searchwp_log', '========== INIT search ' . $this->pid . ' ' . SEARCHWP_VERSION . ' ==========' );
-		// do_action( 'searchwp_log', ' ' );
-
 		do_action( 'searchwp_log', 'search()' );
 
 		$this->active = true;
 		$this->ran = true;
 
 		// at the very least, our terms are the search query
-		$terms = $this->original_query = is_array( $terms ) ? trim( implode( ' ', $terms ) ) : trim( (string) $terms );
+		$terms = $this->original_query = is_array( $terms ) ? urldecode( htmlspecialchars_decode( trim( implode( ' ', $terms ) ) ) ) : urldecode( htmlspecialchars_decode( trim( (string) $terms ) ) );
 
 		// facilitate filtering the actual terms
 		$terms = apply_filters( 'searchwp_terms', $terms, $engine );
@@ -1818,6 +1908,12 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		// whitelist search terms
 		$pre_whitelist_terms = is_array( $terms ) ? implode( ' ', $terms ) : ' ' . $terms . ' ';
 		$whitelisted_terms = $this->extract_terms_using_pattern_whitelist( $pre_whitelist_terms, false );
+
+		$apply_rules_to_whitelist = apply_filters( 'searchwp_apply_rules_to_whitelisted_terms', true );
+
+		if ( $apply_rules_to_whitelist ) {
+			$whitelisted_terms = $this->apply_rules_to_terms( $whitelisted_terms, $engine );
+		}
 
 		if ( apply_filters( 'searchwp_exclusive_regex_matches', false ) && ! empty( $whitelisted_terms ) ) {
 			$terms = $this->process_exclusive_regex_matches( $terms, $whitelisted_terms );
@@ -1878,7 +1974,7 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 
 		// perform the search
 		$profiler = array( 'before' => microtime() );
-		$searchwp = new SearchWPSearch( $args );
+		$searchwp = $this->do_search( $args );
 		$profiler['after'] = microtime();
 
 		$this->foundPosts       = intval( $searchwp->foundPosts );
@@ -1957,6 +2053,140 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		return $this->search_sql;
 	}
 
+	public function validate_terms_in_index_by_id( $term_ids, $engine = 'default' ) {
+		global $wpdb;
+
+		// There's a chance this engine doesn't exist. If the engine doesn't exist
+		// instead of assuming the term is invalid, we're going to assume it IS valid
+		// because term validation is new as of version 3.1 and there is other code
+		// that can end up here and break because we're invalidating what was once valid.
+		if ( ! SWP()->is_valid_engine( $engine ) ) {
+			return $term_ids;
+		}
+
+		$hash = md5( $engine . json_encode( $term_ids ) );
+
+		if ( array_key_exists( $hash, $this->validated_terms ) ) {
+			return $this->validated_terms[ $hash ];
+		}
+
+		$term_ids           = array_map( 'absint', $term_ids );
+		$algorithm          = new SearchWPSearch();
+		$post_status_clause = $algorithm->post_status_limiter_sql( SWP()->settings['engines'][ $engine ] );
+		$swp_db_prefix      = $wpdb->prefix . SEARCHWP_DBPREFIX;
+		$placeholders       = implode( ', ', array_fill( 0, count( $term_ids ), '%d' ) );
+
+		$main_table_present = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT term
+					FROM {$swp_db_prefix}index
+					LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$swp_db_prefix}index.post_id
+					WHERE term IN ( $placeholders )
+					{$post_status_clause}
+					GROUP BY term",
+				$term_ids
+			)
+		);
+
+		$meta_table_present = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT term
+					FROM {$swp_db_prefix}cf
+					LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$swp_db_prefix}cf.post_id
+					WHERE term IN ( $placeholders )
+					{$post_status_clause}",
+				$term_ids
+			)
+		);
+
+		$tax_table_present = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT term
+					FROM {$swp_db_prefix}tax
+					LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$swp_db_prefix}tax.post_id
+					WHERE term IN ( $placeholders )
+					{$post_status_clause}",
+				$term_ids
+			)
+		);
+
+		$valid_term_ids = array_merge(
+			$main_table_present,
+			$meta_table_present,
+			$tax_table_present
+		);
+
+		$valid_term_ids = array_map( 'absint', $valid_term_ids );
+		$valid_term_ids = array_unique( $valid_term_ids );
+
+		$this->validated_terms[ $hash ] = $valid_term_ids;
+
+		return $valid_term_ids;
+	}
+
+	/**
+	 * Determines whether the submitted term ID is present in the index given the submitted engine.
+	 *
+	 * @since 3.1
+	 */
+	public function validate_term_in_index_by_id( $term_id, $engine ) {
+		global $wpdb;
+
+		// There's a chance this engine doesn't exist. If the engine doesn't exist
+		// instead of assuming the term is invalid, we're going to assume it IS valid
+		// because term validation is new as of version 3.1 and there is other code
+		// that can end up here and break because we're invalidating what was once valid.
+		if ( ! SWP()->is_valid_engine( $engine ) ) {
+			return true;
+		}
+
+		$term_id            = absint( $term_id );
+		$algorithm          = new SearchWPSearch();
+		$post_status_clause = $algorithm->post_status_limiter_sql( SWP()->settings['engines'][ $engine ] );
+		$swp_db_prefix      = $wpdb->prefix . SEARCHWP_DBPREFIX;
+
+		$main_table_present = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT *
+					FROM {$swp_db_prefix}index
+					LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$swp_db_prefix}index.post_id
+					WHERE term = %d
+					{$post_status_clause}
+					LIMIT 1",
+				$term_id
+			)
+		);
+
+		if ( empty( $main_table_present ) ) {
+			$meta_table_present = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+						FROM {$swp_db_prefix}cf
+						LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$swp_db_prefix}cf.post_id
+						WHERE term = %d
+						{$post_status_clause}
+						LIMIT 1",
+					$term_id
+				)
+			);
+		}
+
+		if ( empty( $main_table_present ) && empty( $meta_table_present ) ) {
+			$tax_table_present = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+						FROM {$swp_db_prefix}tax
+						LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$swp_db_prefix}tax.post_id
+						WHERE term = %d
+						{$post_status_clause}
+						LIMIT 1",
+					$term_id
+				)
+			);
+		}
+
+		return $main_table_present || $meta_table_present || $tax_table_present;
+	}
 
 	/**
 	 * Determines if an engine name is considered valid (e.g. stored in the settings)
@@ -2090,6 +2320,12 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 				// first check the term for a whitelist match
 				$whitelist_matches = $this->extract_terms_using_pattern_whitelist( $term );
 
+				$apply_rules_to_whitelist = apply_filters( 'searchwp_apply_rules_to_whitelisted_terms', true );
+
+				if ( $apply_rules_to_whitelist ) {
+					$whitelist_matches = $this->apply_rules_to_terms( $whitelist_matches, $engine );
+				}
+
 				if ( ! empty( $whitelist_matches ) ) {
 
 					// if there were matches (but it wasn't a complete match) append it to the array for further processing
@@ -2139,7 +2375,7 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 						}
 
 						$common_words_for_engine = apply_filters_deprecated( "searchwp_common_words_{$engine}", array( $this->common ), '3.0', "searchwp_stopwords_{$engine}" );
-						$common_words_for_engine = apply_filters( "searchwp_stopwords_{$engine}", $common_words_for_engine );
+						$common_words_for_engine = (array) apply_filters( "searchwp_stopwords_{$engine}", $common_words_for_engine );
 
 						if ( ( $excludeCommon && ! in_array( $term, $common_words_for_engine ) ) || ! $excludeCommon ) {
 							$minLength = absint( apply_filters( 'searchwp_minimum_word_length', 3 ) );
@@ -2165,6 +2401,36 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		return $validTerms;
 	}
 
+	function apply_rules_to_terms( $terms, $engine = 'default' ) {
+		$excludeCommon = apply_filters_deprecated( 'searchwp_exclude_common', array( true ), '3.0', 'searchwp_exclude_stopwords' );
+		$excludeCommon = apply_filters( 'searchwp_exclude_stopwords', $excludeCommon );
+
+		if ( ! is_bool( $excludeCommon ) ) {
+			$excludeCommon = true;
+		}
+
+		$common_words_for_engine = apply_filters_deprecated( "searchwp_common_words_{$engine}", array( $this->common ), '3.0', "searchwp_stopwords_{$engine}" );
+		$common_words_for_engine = apply_filters( "searchwp_stopwords_{$engine}", $common_words_for_engine );
+
+		$minLength = absint( apply_filters( 'searchwp_minimum_word_length', 3 ) );
+
+		foreach ( (array) $terms as $key => $term ) {
+			// Check for minimum word length.
+			if ( strlen( $term ) < $minLength ) {
+				$this->register_search_query_modification( 'min_word_length' );
+				unset( $terms[ $key ] );
+			}
+
+			// Check for stopword.
+			if ( $excludeCommon && in_array( $term, $common_words_for_engine ) ) {
+				$this->register_search_query_modification( 'stopword' );
+				unset( $terms[ $key ] );
+			}
+		}
+
+		return array_values( $terms );
+	}
+
 	/**
 	 * Determine whether to short circuit SearchWP by circumstance
 	 *
@@ -2186,6 +2452,20 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 			return true;
 		}
 
+		// Admin search but the current post type is not added to the admin engine.
+		if (
+			! empty( $_REQUEST['s'] )
+			&& is_admin()
+			&& searchwp_get_setting_advanced( 'admin_search' ) // Admin search enabled?
+			&& ! $this->is_applicable_admin_search()
+		) {
+			if ( ! searchwp_wp_doing_ajax() ) {
+				$this->nags_utils->admin_search_post_type_nag();
+			}
+
+			return true;
+		}
+
 		// for native searches SearchWP should short-circuit on empty searches so as to match WP default behavior
 		// (SearchWP will return no results on empty searches, WordPress returns everything)
 		$return = is_search()
@@ -2202,6 +2482,47 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		return $return;
 	}
 
+	public function is_applicable_admin_search() {
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		if ( ! class_exists( 'WP_Screen' ) || ! function_exists( 'get_current_screen') ) {
+			return false;
+		}
+
+		$current_screen = get_current_screen();
+
+		if ( ! $current_screen instanceof WP_Screen ) {
+			return false;
+		}
+
+		$post_type = null;
+
+		if ( isset( $current_screen->id ) ) {
+			if ( 'upload' == $current_screen->id ) {
+				$post_type = 'attachment';
+			} elseif ( isset( $current_screen->post_type ) ) {
+				$post_type = sanitize_text_field( $current_screen->post_type );
+			}
+		}
+
+		if ( is_null( $post_type ) ) {
+			return false;
+		}
+
+		$admin_engine = $this->get_admin_engine();
+
+		if ( empty( $admin_engine ) ) {
+			return false;
+		}
+
+		if ( ! $this->is_post_type_enabled_in_engine( $post_type, $admin_engine ) ) {
+			return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * Prevent WordPress from performing it's own search database call
@@ -2375,6 +2696,48 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 	}
 
 	/**
+	 * Retrieves the admin engine name
+	 *
+	 * @since 3.0.6
+	 *
+	 * @return string|boolean
+	 */
+	public function get_admin_engine() {
+		$advanced_options = searchwp_get_option( 'advanced' );
+		$advanced_engine  = is_array( $advanced_options ) && array_key_exists( 'admin_engine', $advanced_options ) ? $advanced_options['admin_engine'] : '';
+
+		return $this->is_valid_engine( $advanced_engine ) ? $advanced_engine : false;
+	}
+
+	/**
+	 * Determine whether a particular post type is enabled in a particular engine.
+	 *
+	 * @since 3.0.6
+	 *
+	 * @param string $post_type The post type.
+	 * @param string $engine    The engine.
+	 *
+	 * @return bool
+	 */
+	function is_post_type_enabled_in_engine( $post_type = 'post', $engine = 'default' ) {
+		if ( ! $this->is_valid_engine( $engine ) ) {
+			return false;
+		}
+
+		if ( ! is_array( $this->settings['engines'] ) || ! array_key_exists( $engine, $this->settings['engines'] ) ) {
+			return false;
+		}
+
+		$engine_settings = $this->settings['engines'][ $engine ];
+
+		if ( ! is_array( $engine_settings ) || ! array_key_exists( $post_type, $engine_settings ) ) {
+			return false;
+		}
+
+		return ! empty( $engine_settings[ $post_type ]['enabled'] );
+	}
+
+	/**
 	 * Callback for Media Grid Admin searches
 	 *
 	 * @since 2.8
@@ -2385,9 +2748,10 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 	 */
 	function maybe_admin_media_search( $args ) {
 
-		$in_admin = apply_filters( 'searchwp_in_admin', false );
+		$in_admin     = apply_filters( 'searchwp_in_admin', false );
+		$admin_engine = $this->get_admin_engine();
 
-		if ( empty( $in_admin ) ) {
+		if ( empty( $in_admin ) || ! $this->is_post_type_enabled_in_engine( 'attachment', $admin_engine ) ) {
 			return $args;
 		}
 
@@ -2400,9 +2764,10 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		}
 
 		$query_args = array(
-			's'             => sanitize_text_field( $args['s'] ),
-			'post_type'     => 'attachment',
-			'fields'        => 'ids',
+			's'         => sanitize_text_field( $args['s'] ),
+			'engine'    => $admin_engine,
+			'post_type' => 'attachment',
+			'fields'    => 'ids',
 		);
 
 		if ( ! empty( $args['posts_per_page'] ) ) {
@@ -2428,7 +2793,7 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 			$args['posts_per_page'] = absint( $query_args['posts_per_page'] );
 		}
 
-		if ( ! empty( $query_args['page'] ) ) {
+		if ( ! empty( $query_args['page'] ) && ! empty( $query_args['paged'] ) ) {
 			$args['paged'] = absint( $query_args['paged'] );
 		}
 
@@ -2493,12 +2858,6 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 			return $posts;
 		}
 
-		// do_action( 'searchwp_log', ' ' );
-		// do_action( 'searchwp_log', '========== INIT search (native) ' . $this->pid . ' ' . SEARCHWP_VERSION . ' ==========' );
-		// do_action( 'searchwp_log', ' ' );
-
-		do_action( 'searchwp_log', 'wp_search()' );
-
 		// TODO: This nested conditional nest has become crazy
 		if ( ! $this->force_run ) {
 			// make sure we're not in the admin, that we are searching, that it is the main query, and that SearchWP is not active
@@ -2519,7 +2878,7 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 								if ( 'upload' == $current_screen->id ) {
 									// we want to search Media only
 									$limit_results_to_post_type = 'attachment';
-								} elseif ( isset( $current_screen->post_type ) ) {
+								} elseif ( isset( $current_screen->post_type ) && ! empty( $current_screen->post_type ) ) {
 									// we want to limit to the current post type
 									$limit_results_to_post_type = sanitize_text_field( $current_screen->post_type );
 								}
@@ -2528,13 +2887,23 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 								// we have a valid post type and we're on a valid screen, so let's proceed
 								$proceedIfInAdmin = true;
 
-								// for this search, disable all post types except the one we're viewing so we don't cross-pollinate
-								//    (e.g. see Pages when searching in Posts because that was enabled in our search engine config)
+								// We need to verify that this post type is enabled in the admin search engine.
+								$admin_engine = $this->get_admin_engine();
+								if ( ! empty( $admin_engine ) && ! $this->is_post_type_enabled_in_engine( $limit_results_to_post_type, $admin_engine ) ) {
+									$proceedIfInAdmin = false;
+									$admin_engine     = false;
+									// @since 3.1 the short circuit and nag is placed in maybe_short_circuit()
+								}
+
+								// Disable all post types except the one we're searching so as to not pollute the results set.
 								foreach ( $this->settings['engines'] as $engine_name => $engine_settings ) {
 									foreach ( $engine_settings as $engine_settings_post_type => $engine_settings_post_type_settings ) {
 										if ( $limit_results_to_post_type == $engine_settings_post_type && isset( $this->settings['engines'][ $engine_name ][ $engine_settings_post_type ] ) ) {
 											if ( isset( $this->settings['engines'][ $engine_name ][ $engine_settings_post_type ]['enabled'] ) && false === $this->settings['engines'][ $engine_name ][ $engine_settings_post_type ]['enabled'] ) {
 												$this->settings['engines'][ $engine_name ][ $engine_settings_post_type ]['enabled'] = true;
+
+												// Also prevent attribution else we'll have no results.
+												$this->settings['engines'][ $engine_name ][ $engine_settings_post_type ]['options']['attribute_to'] = '';
 											}
 										} else {
 											if ( isset( $this->settings['engines'][ $engine_name ][ $engine_settings_post_type ]['enabled'] ) && true === $this->settings['engines'][ $engine_name ][ $engine_settings_post_type ]['enabled'] ) {
@@ -2550,7 +2919,7 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 			}
 		}
 
-		do_action( 'searchwp_log', 'wp_search()' );
+		do_action( 'searchwp_log', 'Native WordPress search detected' );
 
 		// a search is currently taking place, let's provide some wicked better results
 		$this->active = true;
@@ -2560,13 +2929,13 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		do_action( 'searchwp_log', '$wpPaged = ' . $wpPaged );
 
 		// at the very least, our terms are the search query
-		$wp_query_s = get_query_var( 's' );
+		$wp_query_s = urldecode( htmlspecialchars_decode( stripslashes( get_query_var( 's' ) ) ) );
 
 		if ( empty( $wp_query_s ) ) {
 			$wp_query_s = isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : '';
 		}
 
-		$this->original_query = stripslashes( $wp_query_s );
+		$this->original_query = $wp_query_s;
 		$terms_trimmed = trim( $wp_query_s );
 
 		// This is redundant, but legacy because stripslashes() used to be called here which is late
@@ -2602,6 +2971,12 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 
 		if ( is_array( $whitelisted_terms ) ) {
 			$whitelisted_terms = array_filter( array_map( 'trim', $whitelisted_terms ), 'strlen' );
+
+			$apply_rules_to_whitelist = apply_filters( 'searchwp_apply_rules_to_whitelisted_terms', true );
+
+			if ( $apply_rules_to_whitelist ) {
+				$whitelisted_terms = $this->apply_rules_to_terms( $whitelisted_terms, 'default' );
+			}
 		}
 
 		if ( is_array( $terms ) ) {
@@ -2664,9 +3039,14 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 				'offset'            => apply_filters( 'searchwp_query_offset', intval( $offset ), 'default', $terms, $wpPaged ),
 			);
 
+			// @since 3.0.6 admin searching requires an engine.
+			if ( isset( $admin_engine ) && ! empty( $admin_engine ) ) {
+				$args['engine'] = $admin_engine;
+			}
+
 			// perform the search
 			$profiler = array( 'before' => microtime() );
-			$searchwp = new SearchWPSearch( $args );
+			$searchwp = $this->do_search( $args );
 			$profiler['after'] = microtime();
 
 			$this->active           = false;
@@ -2717,7 +3097,147 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		}
 
 		return $posts;
+	}
 
+	private function do_search( $args ) {
+		// Reset the suggested terms.
+		$this->suggested_terms = array();
+
+		$searchwp = new SearchWPSearch( $args );
+
+		$found_posts = isset( $searchwp->foundPosts ) ? absint( $searchwp->foundPosts ) : 0;
+
+		// If no results were found, trigger 'did you mean?' functionality.
+		if (
+			empty( $found_posts )
+			&& apply_filters( 'searchwp_do_suggestions', false, array( $args ) )
+		) {
+			do_action( 'searchwp_log', 'No results for original query, finding closest match' );
+
+			$engine = ! empty( $args['engine'] ) ? $args['engine'] : 'default';
+
+			$this->suggested_terms = $this->get_search_suggestion( $args['terms'], $engine );
+
+			// If there are suggested terms that differ from the original query...
+			if (
+				strtolower( implode( ' ', $this->suggested_terms ) ) !== strtolower( $this->original_query )
+				&& ! empty( $this->suggested_terms )
+			) {
+				// The suggested terms are a key-by-key replacement of suggestions.
+				$args['original_terms'] = $args['terms'];
+				$args['terms'] = $this->suggested_terms;
+
+				do_action( 'searchwp_log', 'Found search suggestion, re-running search' );
+
+				// TODO: To consider: should this search be logged?
+				$searchwp = new SearchWPSearch( $args );
+
+				// Adds a flag for subsequent handling.
+				$args['type'] = 'did-you-mean';
+
+				// Let developers control the output if they want.
+				do_action( 'searchwp_revised_search_query', $args );
+
+				// Re-set the found posts.
+				$found_posts = isset( $searchwp->foundPosts ) ? absint( $searchwp->foundPosts ) : 0;
+
+				// Default behavior is to output a notice before The Loop.
+				if (
+					! empty( $found_posts )
+					&& apply_filters( 'searchwp_auto_output_revised_search_query', true, $args )
+				) {
+					if ( ! version_compare( PHP_VERSION, '5.4', '<' ) ) {
+						// Prevent PHP Fatal by including the closure.
+						include SWP()->dir . '/includes/closure.output-revised-search.php';
+					} else {
+						do_action( 'searchwp_log', '! Search suggestion output disabled: please upgrade to PHP 5.4 or higher' );
+					}
+				}
+			} else {
+				do_action( 'searchwp_log', 'No search suggestions found' );
+			}
+		} else {
+			do_action( 'searchwp_log', 'Skipping search suggestions' );
+		}
+
+		return $searchwp;
+	}
+
+	public function get_search_suggestion( $terms, $engine = 'default' ) {
+		$suggested_terms = array();
+
+		if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
+			do_action( 'searchwp_log', '! Proper search suggestion generation is not possible, please upgrade to PHP 5.4 or higher' );
+
+			return $suggested_terms;
+		}
+
+		$engine = $this->is_valid_engine( $engine ) ? $engine : 'default';
+
+		if ( ! is_array( $terms ) ) {
+			$terms = explode( ' ', $terms );
+		}
+
+		include_once SWP()->dir . '/includes/class.partial-matches.php';
+		$suggestion_engine = new SearchWPPartialMatches();
+
+		// We're going to loop through the search terms and find
+		// the best suggestion for each term that's not in the index
+		foreach ( (array) $terms as $original_term ) {
+			$fuzzy_terms = $suggestion_engine->find_fuzzy_matches(
+				array( $original_term ),
+				$engine,
+				$original_term
+			);
+
+			$suggested_term = '';
+			$shortest = -1;
+
+			// Loop through search query and replace anything without a match with the closest match.
+			if ( ! empty( $fuzzy_terms ) ) {
+				foreach ( $fuzzy_terms as $fuzzy_term ) {
+					$lev = levenshtein( $fuzzy_term, $original_term );
+
+					if ( 0 === $lev ) {
+						// Exact match...
+						$suggested_term = $fuzzy_term;
+						$shortest = $lev;
+						break;
+					}
+
+					if ( $lev <= $shortest || $shortest < 0 ) {
+						$suggested_term  = $fuzzy_term;
+						$shortest = $lev;
+					}
+				}
+
+				if ( ! empty( $suggested_term ) ) {
+					$suggested_terms[] = $suggested_term;
+				}
+
+				$suggested_term = '';
+				$shortest = -1;
+			}
+		}
+
+		return $suggested_terms;
+	}
+
+	public function output_revised_search( $args ) {
+		echo '<p class="searchwp-revised-search-notice">';
+		echo wp_kses(
+			sprintf(
+				// Translators: Placeholder is the revised search string.
+				__( 'Showing results for <em class="searchwp-suggested-revision-query">%s</em>', 'searchwp' ),
+				esc_html( implode( ' ', $args['terms'] ) )
+			),
+			array(
+				'em' => array(
+					'class' => array(),
+				),
+			)
+		);
+		echo '</p>';
 	}
 
 	/**
@@ -2782,13 +3302,11 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 	function assets( $hook ) {
 		$base_url = trailingslashit( $this->url );
 
-		wp_register_style( 'swp_stats_css', $base_url . 'assets/css/searchwp-stats.css', false, $this->version );
-
-		// chartist
-		wp_register_style( 'chartist', $base_url . 'assets/vendor/chartist/chartist.min.css', false, '0.1.15' );
-		wp_register_script( 'chartist', $base_url . 'assets/vendor/chartist/chartist.min.js', array(), '0.1.15' );
-
 		if ( 'dashboard_page_searchwp-stats' == $hook ) {
+			wp_register_style( 'swp_stats_css', $base_url . 'assets/css/searchwp-stats.css', false, $this->version );
+			wp_register_style( 'chartist', $base_url . 'assets/vendor/chartist/chartist.min.css', false, '0.1.15' );
+			wp_register_script( 'chartist', $base_url . 'assets/vendor/chartist/chartist.min.js', array(), '0.1.15' );
+
 			wp_enqueue_script( 'chartist' );
 			wp_enqueue_style( 'chartist' );
 			wp_enqueue_style( 'swp_stats_css' );
@@ -2947,6 +3465,20 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		$wpdb->delete( $wpdb->prefix . 'postmeta', array( 'meta_key' => '_' . SEARCHWP_PREFIX . 'skip' ) );
 		$wpdb->delete( $wpdb->prefix . 'postmeta', array( 'meta_key' => '_' . SEARCHWP_PREFIX . 'skip_doc_processing' ) );
 		$wpdb->delete( $wpdb->prefix . 'postmeta', array( 'meta_key' => '_' . SEARCHWP_PREFIX . 'review' ) );
+
+		// Remove any persisted extra metadata.
+		$persisted_extra_metadata = searchwp_get_persisted_extra_metadata_keys();
+
+		if ( ! empty( $persisted_extra_metadata ) ) {
+			foreach ( $persisted_extra_metadata as $persisted_extra_metadata_key ) {
+				$wpdb->delete(
+					$wpdb->prefix . 'postmeta',
+					array(
+						'meta_key' => $persisted_extra_metadata_key
+					)
+				);
+			}
+		}
 
 		// Don't use this filter anymore, use searchwp_purge_document_content
 		$_legacy_purge_pdf_content = apply_filters( 'searchwp_purge_pdf_content', false );
@@ -3373,9 +3905,12 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 	function import_settings( $settings_json ) {
 
 		// back up existing settings before import
-		$settings_backups = searchwp_get_option( 'settings_backup' );
-		$settings_backups[ current_time( 'timestamp' ) ] = $this->settings;
-		searchwp_update_option( 'settings_backup', $settings_backups );
+		$do_backup = apply_filters( 'searchwp_do_settings_backup', true );
+		if ( $do_backup ) {
+			$settings_backups = searchwp_get_option( 'settings_backup' );
+			$settings_backups[ current_time( 'timestamp' ) ] = $this->settings;
+			searchwp_update_option( 'settings_backup', $settings_backups );
+		}
 
 		// parse the import
 		$settings_to_import = json_decode( (string) $settings_json );
@@ -3834,7 +4369,15 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 			return;
 		}
 
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if (
+			defined( 'DOING_AJAX' )
+			&& DOING_AJAX
+			&& ! (
+				// Quick Edit.
+				isset( $_REQUEST['action'] )
+				&& 'inline-save' === $_REQUEST['action']
+			)
+		) {
 			return;
 		}
 
@@ -3844,6 +4387,32 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 
 		if ( wp_is_post_revision( $post_id ) ) {
 			return;
+		}
+
+		// Not all posts should be sent through the purge queue. To keep resource usage as low as possible
+		// we'll mimic what the indexer does to check for unindexed posts and find out whether
+		// we need to do anything here or can simply bug out early.
+		$this_post_type     = get_post_type( $post_id );
+		$indexed_post_types = $this->get_indexed_post_types();
+
+		$excluded_ids = apply_filters( 'searchwp_exclude', array(), '', array() );
+		$excluded_ids = array_map( 'absint', $excluded_ids );
+
+		if (
+			! in_array( $this_post_type, $indexed_post_types, true ) // Excluded post type
+			|| in_array( $post_id, $excluded_ids ) // Excluded from search results
+		) {
+			// There's a (slight) chance this post is in the index already even though it no longer should be.
+			// It may be because a hook was added along the line after content was already indexed, so we need
+			// to determine whether there is content in the index for this post type because if there is
+			// we should utilize the purge queue to get it out so as to reduce the overall index size.
+			if ( ! $this->is_post_present_in_index( $post_id ) ) {
+				do_action( 'searchwp_log', 'purge_post_via_edit() SKIPPING ' . $post_id );
+				return;
+			} else {
+				do_action( 'searchwp_log', 'purge_post_via_edit()' . $post_id . ' will not be indexed but needs to be purged' );
+				$this->purge_post( $post_id, true );
+			}
 		}
 
 		do_action( 'searchwp_log', 'purge_post_via_edit() ' . $post_id );
@@ -3865,6 +4434,41 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 		} else {
 			do_action( 'searchwp_log', 'Prevented duplicate purge purge_post_via_edit() ' . $post_id );
 		}
+	}
+
+	/**
+	 * Determines whether a given post ID is present in the index regardless of whether it's considered fully indexed.
+	 *
+	 * @param $post_id
+	 *
+	 * @return bool Whether the post is in the index.
+	 */
+	public function is_post_present_in_index( $post_id = 0 ) {
+		global $wpdb;
+
+		$post_id = intval( $post_id );
+
+		if ( $post_id < 1 ) {
+			return false;
+		}
+
+		$tables = array(
+			$wpdb->prefix . SEARCHWP_DBPREFIX . 'index',
+			$wpdb->prefix . SEARCHWP_DBPREFIX . 'tax',
+			$wpdb->prefix . SEARCHWP_DBPREFIX . 'cf',
+		);
+
+		$present = false;
+
+		foreach ( $tables as $table ) {
+			$present = $wpdb->get_row( $wpdb->prepare( "SELECT post_id FROM {$table} WHERE post_id = %d LIMIT 1", $post_id ) );
+
+			if ( $present ) {
+				break;
+			}
+		}
+
+		return $present;
 	}
 
 	/**
@@ -4370,6 +4974,8 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 			'application/vnd.apple.pages',
 		);
 
+		do_action( 'searchwp_document_content_before', $post );
+
 		if ( in_array( $post->post_mime_type, $supportedMimeTypes ) ) : ?>
 			<?php $file_content_limit = absint( apply_filters( 'searchwp_file_content_limit', 1000000 ) ); ?>
 			<?php if ( $file_content_limit > strlen( $existingContent ) ) : ?>
@@ -4416,6 +5022,8 @@ add_filter( 'searchwp_file_content_limit', 'my_searchwp_file_content_limit' );</
 		<?php else : ?>
 			<p><?php esc_html_e( 'Only plain text files, PDFs, and Office documents are supported at this time.', 'searchwp' ); ?></p>
 		<?php endif;
+
+		do_action( 'searchwp_document_content_after', $post );
 	}
 
 
@@ -4609,17 +5217,10 @@ add_filter( 'searchwp_file_content_limit', 'my_searchwp_file_content_limit' );</
 	function get_enabled_post_types_across_all_engines() {
 		$enabled_post_types = array();
 
-		// If searching in the Admin is enabled, we're going to force enable all post types
-		// otherwise searching a disabled post type will return nothing, so we have to deal
-		// with that overhead here to avoid that problem
-		$advanced_settings = searchwp_get_option( 'advanced' );
-		$admin_search_enabled = ! empty( $advanced_settings['admin_search'] );
-
 		foreach ( $this->settings['engines'] as $engine => $post_types ) {
 			foreach ( $post_types as $post_type => $post_type_settings ) {
 				if (
-					( $admin_search_enabled // Does not matter if it's enabled for the engine, index anyway
-					  || ( isset( $post_type_settings['enabled'] ) && ! empty( $post_type_settings['enabled'] ) )
+					( ( isset( $post_type_settings['enabled'] ) && ! empty( $post_type_settings['enabled'] ) )
 					) && post_type_exists( $post_type ) ) {
 					$enabled_post_types[] = $post_type;
 				}
@@ -4915,17 +5516,14 @@ add_filter( 'searchwp_file_content_limit', 'my_searchwp_file_content_limit' );</
 	 * @return bool
 	 */
 	function is_stemming_supported_in_locale() {
-		$locale = apply_filters( 'searchwp_locale_override', get_locale() );
+		$stemmer         = new SearchWPStemmer();
+		$locale          = apply_filters( 'searchwp_locale_override', get_locale() );
+		$language_code   = strtolower( substr( $locale, 0, 2 ) );
+		$supported_codes = $stemmer->get_supported_language_codes();
 
-		$supported_default_locales = array(
-			'en_US',
-			'en_AU',
-			'en_CA',
-			'en_ZA',
-			'en_GB',
-		);
+		$supported = ( in_array( $language_code, $supported_codes ) || apply_filters( 'searchwp_keyword_stem_locale', false, $locale ) );
 
-		return ( in_array( $locale, $supported_default_locales ) || apply_filters( 'searchwp_keyword_stem_locale', false, $locale ) );
+		return $supported;
 	}
 
 	/**
@@ -5070,13 +5668,13 @@ add_filter( 'searchwp_file_content_limit', 'my_searchwp_file_content_limit' );</
 		$config = array(
 			'enabled' => false,
 			'weights' => array(
-				'cf' => new stdClass(),
+				'cf'  => new stdClass(),
 				'tax' => array(),
 			),
 			'options' => array(
-				'exclude' => '',
+				'exclude'      => '',
 				'attribute_to' => '',
-				'parent' => '',
+				'parent'       => false,
 			),
 		);
 
@@ -5086,22 +5684,22 @@ add_filter( 'searchwp_file_content_limit', 'my_searchwp_file_content_limit' );</
 		foreach ( $supports as $supported => $label ) {
 			switch ( $supported ) {
 				case 'title':
-					$weight = absint( $max_weight * 0.8 );
+					$weight = absint( $max_weight ) * 0.8;
 					break;
 				case 'content':
-					$weight = absint( $max_weight * 0.05 );
+					$weight = absint( $max_weight ) * 0.05;
 					break;
 				case 'slug':
-					$weight = absint( $max_weight * 0.6 );
+					$weight = absint( $max_weight ) * 0.6;
 					break;
 				case 'excerpt':
-					$weight = absint( $max_weight * 0.4 );
+					$weight = absint( $max_weight ) * 0.4;
 					break;
 				case 'comments':
-					$weight = absint( $max_weight * 0.01 );
+					$weight = absint( $max_weight ) * 0.01;
 					break;
 				default:
-					$weight = absint( $max_weight * 0.01 );
+					$weight = absint( $max_weight ) * 0.01;
 			}
 			$config['weights'][ $supported ] = $weight;
 		}

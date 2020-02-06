@@ -90,6 +90,7 @@ final class FLBuilderServiceSendy extends FLBuilderService {
 					'list_id'  => $fields['list_id'],
 				);
 			} else {
+				/* translators: %s: error */
 				$response['error'] = sprintf( __( 'Error: Could not connect to Sendy. %s', 'fl-builder' ), $get_api_response['message'] );
 			}
 		}
@@ -192,11 +193,13 @@ final class FLBuilderServiceSendy extends FLBuilderService {
 
 			// Send request for list ID validation
 			$get_api_response = $api->subscribe( array(
-				'name'  => $name,
-				'email' => $email,
+				'name'    => $name,
+				'email'   => $email,
+				'api_key' => $account_data['api_key'],
 			) );
 
 			if ( false === $get_api_response['status'] ) {
+				/* translators: %s: error */
 				$response['error'] = sprintf( __( 'There was an error subscribing to Sendy. %s', 'fl-builder' ), $get_api_response['message'] );
 			}
 		}

@@ -1,8 +1,8 @@
 <template>
     <div class="searchwp-settings">
         <div class="searchwp-engines-index-stats metabox-holder">
-            <searchwp-engines/>
-            <searchwp-index-stats/>
+            <searchwp-engines></searchwp-engines>
+            <searchwp-index-stats></searchwp-index-stats>
         </div>
     </div>
 </template>

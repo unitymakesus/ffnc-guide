@@ -32,7 +32,7 @@ class UABBAdvancedTestimonialsModule extends FLBuilderModule {
 		);
 
 		$this->add_css( 'jquery-bxslider' );
-		$this->add_css( 'font-awesome' );
+		$this->add_css( 'font-awesome-5' );
 		$this->add_js( 'jquery-bxslider' );
 	}
 	/**
@@ -45,9 +45,9 @@ class UABBAdvancedTestimonialsModule extends FLBuilderModule {
 	 */
 	public function filter_settings( $settings, $helper ) {
 
-		$version_bb_check        = UABB_Compatibility::check_bb_version();
-		$page_migrated           = UABB_Compatibility::check_old_page_migration();
-		$stable_version_new_page = UABB_Compatibility::check_stable_version_new_page();
+		$version_bb_check        = UABB_Compatibility::$version_bb_check;
+		$page_migrated           = UABB_Compatibility::$uabb_migration;
+		$stable_version_new_page = UABB_Compatibility::$stable_version_new_page;
 
 		if ( $version_bb_check && ( 'yes' == $page_migrated || 'yes' == $stable_version_new_page ) ) {
 
@@ -560,7 +560,7 @@ class UABBAdvancedTestimonialsModule extends FLBuilderModule {
 	 */
 	public function render_ratings( $rating ) {
 
-		$rating_icon = apply_filters( 'uabb_testimonial_rating_icon', 'fa-star-o' );
+		$rating_icon = apply_filters( 'uabb_testimonial_rating_icon', 'fa-star' );
 
 		if ( 'none' != $rating ) {
 			$output  = '<div class="uabb-rating">
@@ -568,23 +568,23 @@ class UABBAdvancedTestimonialsModule extends FLBuilderModule {
                               <input class="uabb-rating__input';
 			$output .= ( 5 == $rating ) ? ' uabb-checked ' : '';
 			$output .= '" type="radio" value="5">
-                  <label class="uabb-rating__ico fa fa-lg ' . $rating_icon . '" title="5 out of 5 stars"></label>
+                  <label class="uabb-rating__ico far ' . $rating_icon . '" title="5 out of 5 stars"></label>
                   <input class="uabb-rating__input';
 			$output .= ( 4 == $rating ) ? ' uabb-checked ' : '';
 			$output .= '" type="radio" value="4">
-                  <label class="uabb-rating__ico fa fa-lg ' . $rating_icon . '" title="4 out of 5 stars"></label>
+                  <label class="uabb-rating__ico far ' . $rating_icon . '" title="4 out of 5 stars"></label>
                   <input class="uabb-rating__input';
 			$output .= ( 3 == $rating ) ? ' uabb-checked ' : '';
 			$output .= '" type="radio" value="3">
-                  <label class="uabb-rating__ico fa fa-lg ' . $rating_icon . '" title="3 out of 5 stars"></label>
+                  <label class="uabb-rating__ico far ' . $rating_icon . '" title="3 out of 5 stars"></label>
                   <input class="uabb-rating__input';
 			$output .= ( 2 == $rating ) ? ' uabb-checked ' : '';
 			$output .= '" type="radio" value="2">
-                  <label class="uabb-rating__ico fa fa-lg ' . $rating_icon . '" title="2 out of 5 stars"></label>
+                  <label class="uabb-rating__ico far ' . $rating_icon . '" title="2 out of 5 stars"></label>
                   <input class="uabb-rating__input';
 			$output .= ( 1 == $rating ) ? ' uabb-checked ' : '';
 			$output .= '" type="radio" value="1">
-                  <label class="uabb-rating__ico fa fa-lg ' . $rating_icon . '" title="1 out of 5 stars"></label>
+                  <label class="uabb-rating__ico far ' . $rating_icon . '" title="1 out of 5 stars"></label>
                 </div>
               </div>';
 
@@ -599,7 +599,7 @@ class UABBAdvancedTestimonialsModule extends FLBuilderModule {
  *
  */
 
-if ( UABB_Compatibility::check_bb_version() ) {
+if ( UABB_Compatibility::$version_bb_check ) {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/adv-testimonials/adv-testimonials-bb-2-2-compatibility.php';
 } else {
 	require_once BB_ULTIMATE_ADDON_DIR . 'modules/adv-testimonials/adv-testimonials-bb-less-than-2-2-compatibility.php';

@@ -24,6 +24,13 @@ if ( $enable_row_separator ) {
 
 		$id  = $row_object->node;
 		$row = $row_object->settings;
+		if ( ( 'none' !== $row->separator_shape || 'none' !== $row->bot_separator_shape ) ) {
+			?>
+			.fl-node-<?php echo $id; ?> .fl-row-content {
+				position: inherit;
+			}
+		<?php
+		}
 		if ( isset( $row->separator_shape_height_responsive ) && '' != $row->separator_shape_height_responsive ) {
 			$row->separator_shape_height_small = $row->separator_shape_height_responsive;
 		}
@@ -49,7 +56,8 @@ if ( $enable_row_separator ) {
 
 		$row->bot_separator_color = UABB_Helper::uabb_colorpicker( $row, 'bot_separator_color', true );
 
-		if ( 'round_split' == $row->separator_shape ) { ?>
+		if ( 'round_split' == $row->separator_shape ) {
+		?>
 			.fl-node-<?php echo $id; ?> .uabb-top-row-separator.uabb-round-split:before {
 				background-color: <?php echo $row->uabb_row_separator_color; ?>;
 				height: <?php echo $row->separator_shape_height; ?>px;

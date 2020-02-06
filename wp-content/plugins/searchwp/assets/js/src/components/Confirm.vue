@@ -1,10 +1,10 @@
 <template>
-	<v-popover offset="6" :placement="placement">
-		<searchwp-button :icon="icon" :label="buttonLabel" />
+	<v-popover offset="6" :placement="placement" ref="confirmPopover">
+		<searchwp-button :icon="icon" :label="buttonLabel"></searchwp-button>
 		<template slot="popover">
 			<div class="searchwp-confirmation">
 				<p v-if="question.length">{{ question }}</p>
-				<button @click="confirmed" v-close-popover>{{ confirm }}</button>
+				<button @click="confirmed">{{ confirm }}</button>
 			</div>
 		</template>
 	</v-popover>
@@ -46,6 +46,10 @@ export default {
 	},
 	methods: {
 		confirmed() {
+			if ( this.$refs.confirmPopover) {
+				this.$refs.confirmPopover.hide();
+			}
+
 			this.$emit('confirmed');
 		}
 	},

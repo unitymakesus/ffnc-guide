@@ -37,18 +37,18 @@
 				</portal>
 			</li>
 			<li>
-				<v-popover offset="6" placement="top">
-					<searchwp-button :icon="'dashicons-admin-tools'" :label="'Actions'" />
+				<v-popover offset="6" placement="top" ref="actionsPopover">
+					<searchwp-button :icon="'dashicons-admin-tools'" :label="'Actions'"></searchwp-button>
 					<template slot="popover">
 						<ul class="searchwp-popover-actions">
 							<li>
-								<button v-close-popover @click="sort">{{ i18n.sortAlphabetically }}</button>
+								<button @click="sort">{{ i18n.sortAlphabetically }}</button>
 							</li>
 							<li>
-								<button v-close-popover @click="removeAll">{{ i18n.removeAll }}</button>
+								<button @click="removeAll">{{ i18n.removeAll }}</button>
 							</li>
 							<li>
-								<button v-close-popover @click="restoreDefaults">{{ i18n.restoreDefaults }}</button>
+								<button @click="restoreDefaults">{{ i18n.restoreDefaults }}</button>
 							</li>
 						</ul>
 					</template>
@@ -68,7 +68,7 @@
 				:line-bg-color="'#ffb900'"
 				:line-fg-color="'#fff8e7'"
 				:text-fg-color="'#444444'"
-				:message="i18n.saving" />
+				:message="i18n.saving"></spinner>
 			<span v-else>{{ i18n.stopwordsSaved }}</span>
 		</searchwp-notice>
 	</div>
@@ -132,12 +132,24 @@ export default {
 			}
 		},
 		removeAll() {
+			if (this.$refs.actionsPopover) {
+				this.$refs.actionsPopover.hide();
+			}
+
 			this.stopwords = [];
 		},
 		restoreDefaults() {
+			if (this.$refs.actionsPopover) {
+				this.$refs.actionsPopover.hide();
+			}
+
 			this.stopwords = this.stopwordsDefault;
 		},
 		sort() {
+			if (this.$refs.actionsPopover) {
+				this.$refs.actionsPopover.hide();
+			}
+
 			let sorted = this.stopwords.sort(function(a, b) {
 				if (a.toLowerCase() > b.toLowerCase()) {
 					return 1;

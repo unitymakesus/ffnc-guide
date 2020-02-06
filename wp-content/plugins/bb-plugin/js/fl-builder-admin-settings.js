@@ -35,6 +35,7 @@
 			this._initUserAccessSelects();
 			this._initUserAccessNetworkOverrides();
 			this._templatesOverrideChange();
+			this._iconPro();
 		},
 
 		/**
@@ -56,6 +57,51 @@
 			$('.fl-delete-icon-set').on('click', FLBuilderAdminSettings._deleteCustomIconSet);
 			$('#uninstall-form').on('submit', FLBuilderAdminSettings._uninstallFormSubmit);
 			$( '.fl-settings-form .dashicons-editor-help' ).tipTip();
+			$( '.subscription-form .subscribe-button' ).on( 'click', FLBuilderAdminSettings._welcomeSubscribe);
+		},
+
+		_welcomeSubscribe: function()
+		{
+			form  = $('.subscription-form')
+			var error = form.find('.error')
+			var spinner = form.find('.dashicons')
+
+			if( error.css('display') != 'none' ) {
+				error.hide()
+			}
+
+			name   = form.find( '.input-group-field.name').val()
+			email  = form.find( '.input-group-field.email').val()
+			nonce  = form.find( '#_wpnonce' ).val()
+
+			if ( ! email || ! name ) {
+				error.html('Please enter required fields').fadeIn()
+				return false;
+			}
+			spinner.css('color', '#fff')
+			spinner.addClass('spin')
+
+			data = {
+				'action'  : 'fl_welcome_submit',
+				'name'    : name,
+				'email'   : email,
+				'_wpnonce': nonce
+			}
+
+			console.log(data)
+
+			$.post(ajaxurl, data, function(response) {
+				spinner.css( 'color', '#0a3c4b' );
+				spinner.removeClass( 'spin' );
+				if( response.success ) {
+					$('.subscribe-button').hide()
+					$('.input-group').remove()
+					spinner.remove()
+					$( error ).html( '<h2>' + response.data.message + '</h2>' ).fadeIn()
+				} else {
+					$( error ).html(response.data.message).fadeIn()
+				}
+			});
 		},
 
 		/**
@@ -436,7 +482,23 @@
 			}
 
 			return false;
+		},
+		_iconPro: function() {
+			form = $('#icons-form')
+			checkbox = form.find('input[name=fl-enable-fa-pro]').attr('checked')
+			light = form.find('input[value=font-awesome-5-light]').parent()
+			duo   = form.find('input[value=font-awesome-5-duotone]').parent()
+
+
+			if ( 'checked' === checkbox ) {
+				light.css('font-weight', '800')
+			//	light.css('color', '#0E5A71')
+				duo.css('font-weight', '800')
+			//	duo.css('color', '#0E5A71')
+			}
+
 		}
+
 	};
 
 	/* Initializes the builder's admin settings. */

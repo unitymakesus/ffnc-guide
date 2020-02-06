@@ -86,11 +86,29 @@ class Advanced_Excerpt {
 		 * and instead use the_content(). As such, we also need to hook into the_content().
 		 * To ensure we're not changing the content of single posts / pages we automatically exclude 'singular' page types.
 		 */
+
+        add_filter( 'wppsac_excerpt', array( $this, 'filter_content' ) );
+
 		$page_types = $this->get_current_page_types();
 		$skip_page_types = array_unique( array_merge( array( 'singular' ), $this->options['exclude_pages'] ) );
 		$skip_page_types = apply_filters( 'advanced_excerpt_skip_page_types', $skip_page_types ); 
 		$page_type_matches = array_intersect( $page_types, $skip_page_types );
 		if ( !empty( $page_types ) && !empty( $page_type_matches ) ) return;
+
+		// skip woocommerce products
+		if ( in_array( 'woocommerce', $skip_page_types ) && get_post_type( get_the_ID() ) == 'product' ) {
+			return;
+		}
+
+        // conflict with WPTouch
+        if ( function_exists( 'wptouch_is_mobile_theme_showing' ) && wptouch_is_mobile_theme_showing() ) {
+            return;
+        }
+
+        // skip bbpress
+        if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
+            return;
+        }
 
 		if ( 1 == $this->options['the_excerpt'] ) {
 			remove_all_filters( 'get_the_excerpt' );
@@ -219,11 +237,16 @@ class Advanced_Excerpt {
 	}
 
 	function filter( $content ) {
+
 		extract( wp_parse_args( $this->options, $this->default_options ), EXTR_SKIP );
 
 		if ( true === apply_filters( 'advanced_excerpt_skip_excerpt_filtering', false ) ) {
 			return $content;
-		}
+        }
+        
+        if ( is_post_type_archive( 'tribe_events' ) ) {
+            return $content;
+        }
 
 		global $post;
 		if ( $the_content_no_break && false !== strpos( $post->post_content, '<!--more-->' ) && 'content' == $this->filter_type ) {
@@ -253,7 +276,7 @@ class Advanced_Excerpt {
 
 		// add our filter back in
 		if ( $content_has_filter ) { 
-			add_filter( 'the_content', array( $this, 'filter_content' ) );
+            add_filter( 'the_content', array( $this, 'filter_content' ) );
 		}
 
 		// From the default wp_trim_excerpt():
@@ -297,6 +320,7 @@ class Advanced_Excerpt {
 		}
 
 		return apply_filters( 'advanced_excerpt_content', $text );
+
 	}
 
 	function text_excerpt( $text, $length, $length_type, $finish ) {
@@ -310,9 +334,9 @@ class Advanced_Excerpt {
 		foreach ( $tokens[0] as $t ) { // Parse each token
 			if ( $w >= $length && 'sentence' != $finish ) { // Limit reached
 				break;
-			}
+            }
 			if ( $t[0] != '<' ) { // Token is not a tag
-				if ( $w >= $length && 'sentence' == $finish && preg_match( '/[\?\.\!]\s*$/uS', $t ) == 1 ) { // Limit reached, continue until ? . or ! occur at the end
+				if ( $w >= $length && 'sentence' == $finish && preg_match( '/[\?\.\!].*$/uS', $t ) == 1 ) { // Limit reached, continue until ? . or ! occur at the end
 					$out .= trim( $t );
 					break;
 				}
@@ -355,6 +379,9 @@ class Advanced_Excerpt {
 			}
 			
 			$read_more = str_replace( '{title}', get_the_title(), $read_more );
+			$read_more = do_shortcode( $read_more );
+			$read_more = apply_filters( 'advanced_excerpt_read_more_text', $read_more );
+
 			$ellipsis .= sprintf( $link_template, get_permalink(), $read_more, $screen_reader_html );
 
 		}
@@ -369,7 +396,7 @@ class Advanced_Excerpt {
 			 * There was previously a problem where our 'read-more' links were being appending incorrectly into unsuitable HTML tags.
 			 * As such we're now maintaining a whitelist of HTML tags that are suitable for being appended into.
 			 */
-			$allow_tags_to_append_into = apply_filters( 'advanced_excerpt_allow_tags_to_append_into', array( 'p', 'div', 'article', 'section' ) );
+			$allow_tags_to_append_into = apply_filters( 'advanced_excerpt_allow_tags_to_append_into', array( 'p', 'article', 'section' ) );
 
 			if( !in_array( $last_tag, $allow_tags_to_append_into ) ) {
 				// After the content
@@ -428,6 +455,7 @@ class Advanced_Excerpt {
 			'author'		=> __( 'Author Archive', 'advanced-excerpt' ),
 			'category'		=> __( 'Category Archive', 'advanced-excerpt' ),
 			'tag'			=> __( 'Tag Archive', 'advanced-excerpt' ),
+			'woocommerce'   => __( 'WooCommerce Products', 'advanced-excerpt' ),
 		);
 		$exclude_pages_list = apply_filters( 'advanced_excerpt_exclude_pages_list', $exclude_pages_list );
 

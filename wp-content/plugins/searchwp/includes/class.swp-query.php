@@ -191,6 +191,8 @@ class SWP_Query {
 	 */
 	public $request;
 
+	public $suggested_search;
+
 	/**
 	 * The order clause
 	 *
@@ -259,6 +261,9 @@ class SWP_Query {
 			$args['paged'] = intval( $args['page'] );
 		}
 
+		// Initial processing of search query.
+		$args['s'] = searchwp_get_search_query( $args['s'], true );
+
 		// set up properties based on arguments
 		$args = apply_filters( 'searchwp_swp_query_args', $args );
 		if ( is_array( $args ) ) {
@@ -290,8 +295,6 @@ class SWP_Query {
 	 * @return array
 	 */
 	function get_posts() {
-		$this->get_search_results();
-
 		return $this->posts;
 	}
 
@@ -898,6 +901,14 @@ class SWP_Query {
 		return intval( $this->posts_per_page );
 	}
 
+	function get_search_suggestion( $search_query ) {
+		if ( empty( $search_query ) ) {
+			$search_query = $this->s;
+		}
+
+		return SWP()->get_search_suggestion( $search_query, $this->engine );
+	}
+
 	/**
 	 * Retrieve search results from SearchWP
 	 *
@@ -915,7 +926,7 @@ class SWP_Query {
 
 		$this->posts = $swp_query->search( $this->engine, $this->s, $this->paged );
 
-		// store the SQL used to get this results set
+		// Store the SQL used to get this results set.
 		$this->request = $swp_query->get_last_search_sql();
 
 		$this->found_posts      = intval( $swp_query->foundPosts );
@@ -923,7 +934,7 @@ class SWP_Query {
 		$this->max_num_pages    = intval( $swp_query->maxNumPages );
 		$this->posts_weights    = $swp_query->results_weights;
 
-		if ( empty( $this->posts ) || 0 === count( $this->posts ) ) {
+		if ( empty( $this->posts ) ) {
 			$this->found_posts      = 0;
 			$this->post_count       = 0;
 			$this->max_num_pages    = 0;

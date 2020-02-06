@@ -223,7 +223,7 @@ final class FLBuilderCSS {
 		if ( isset( $setting['style'] ) && ! empty( $setting['style'] ) ) {
 			$props['border-style']    = $setting['style'];
 			$props['border-width']    = '0'; // Default to zero.
-			$props['background-clip'] = 'padding-box';
+			$props['background-clip'] = 'border-box';
 		}
 		if ( isset( $setting['color'] ) && ! empty( $setting['color'] ) ) {
 			$props['border-color'] = $setting['color'];
@@ -243,16 +243,16 @@ final class FLBuilderCSS {
 			}
 		}
 		if ( isset( $setting['radius'] ) && is_array( $setting['radius'] ) ) {
-			if ( '' !== $setting['radius']['top_left'] ) {
+			if ( isset( $setting['radius']['top_left'] ) && '' !== $setting['radius']['top_left'] ) {
 				$props['border-top-left-radius'] = $setting['radius']['top_left'] . 'px';
 			}
 			if ( '' !== $setting['radius']['top_right'] ) {
 				$props['border-top-right-radius'] = $setting['radius']['top_right'] . 'px';
 			}
-			if ( '' !== $setting['radius']['bottom_left'] ) {
+			if ( isset( $setting['radius']['bottom_left'] ) && '' !== $setting['radius']['bottom_left'] ) {
 				$props['border-bottom-left-radius'] = $setting['radius']['bottom_left'] . 'px';
 			}
-			if ( '' !== $setting['radius']['bottom_right'] ) {
+			if ( isset( $setting['radius']['bottom_right'] ) && '' !== $setting['radius']['bottom_right'] ) {
 				$props['border-bottom-right-radius'] = $setting['radius']['bottom_right'] . 'px';
 			}
 		}
@@ -285,10 +285,13 @@ final class FLBuilderCSS {
 	static public function typography_field_props( $setting = array() ) {
 		$props    = array();
 		$settings = FLBuilderModel::get_global_settings();
-
+		$pattern  = '%s, %s';
 		if ( isset( $setting['font_family'] ) && 'Default' !== $setting['font_family'] ) {
-			$fallback             = FLBuilderFonts::get_font_fallback( $setting['font_family'] );
-			$props['font-family'] = sprintf( '%s, %s', $setting['font_family'], $fallback );
+			$fallback = FLBuilderFonts::get_font_fallback( $setting['font_family'] );
+			if ( preg_match( '#[0-9\s]#', $setting['font_family'] ) ) {
+				$pattern = '"%s", %s';
+			}
+			$props['font-family'] = sprintf( $pattern, $setting['font_family'], $fallback );
 		}
 		if ( isset( $setting['font_weight'] ) && 'i' == substr( $setting['font_weight'], -1 ) ) {
 			$props['font-weight'] = substr( $setting['font_weight'], 0, -1 );
@@ -340,10 +343,23 @@ final class FLBuilderCSS {
 	 * @return void
 	 */
 	static public function render() {
-		$rendered = array();
-		$css      = '';
+		$rendered    = array();
+		$breakpoints = array( 'default', 'medium', 'responsive' );
+		$css         = '';
 
-		foreach ( self::$rules as $args ) {
+		// Setup system breakpoints here to ensure proper order.
+		foreach ( $breakpoints as $breakpoint ) {
+			$media              = self::media_value( $breakpoint );
+			$rendered[ $media ] = array();
+		}
+
+		/**
+		 * Filter all responsive css rules before css is rendered
+		 * @see fl_builder_pre_render_css_rules
+		 */
+		$rules = apply_filters( 'fl_builder_pre_render_css_rules', self::$rules );
+
+		foreach ( $rules as $args ) {
 			$defaults = array(
 				'media'    => '',
 				'selector' => '',

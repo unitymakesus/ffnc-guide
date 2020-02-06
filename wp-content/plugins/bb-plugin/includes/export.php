@@ -28,7 +28,7 @@ function fl_export_wp( $post_ids = array() ) {
 	if ( ! empty( $sitename ) ) {
 		$sitename .= '.';
 	}
-	$date        = date( 'Y-m-d' );
+	$date        = gmdate( 'Y-m-d' );
 	$wp_filename = $sitename . 'WordPress.' . $date . '.xml';
 	/**
 	 * Filter the export filename.
@@ -297,7 +297,7 @@ function fl_export_wp( $post_ids = array() ) {
 	<title><?php bloginfo_rss( 'name' ); ?></title>
 	<link><?php bloginfo_rss( 'url' ); ?></link>
 	<description><?php bloginfo_rss( 'description' ); ?></description>
-	<pubDate><?php echo date( 'D, d M Y H:i:s +0000' ); ?></pubDate>
+	<pubDate><?php echo gmdate( 'D, d M Y H:i:s +0000' ); ?></pubDate>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
 	<wp:wxr_version><?php echo WXR_VERSION; ?></wp:wxr_version>
 	<wp:base_site_url><?php echo wxr_site_url(); ?></wp:base_site_url>
@@ -324,11 +324,11 @@ function fl_export_wp( $post_ids = array() ) {
 		$wp_query->in_the_loop = true;
 
 		// Fetch 20 posts at a time rather than loading the entire table into memory.
+		// @codingStandardsIgnoreStart
 		while ( $next_posts = array_splice( $post_ids, 0, 20 ) ) {
 			$where = 'WHERE ID IN (' . join( ',', $next_posts ) . ')';
-		// @codingStandardsIgnoreStart
-		$posts = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} $where" );
-		// @codingStandardsIgnoreEnd
+			$posts = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} $where" );
+			// @codingStandardsIgnoreEnd
 
 			// Begin Loop.
 			foreach ( $posts as $post ) {

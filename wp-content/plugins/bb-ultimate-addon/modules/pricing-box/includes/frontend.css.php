@@ -5,8 +5,8 @@
  *  @package UABB Pricing Table Module
  */
 
-$version_bb_check = UABB_Compatibility::check_bb_version();
-$converted        = UABB_Compatibility::check_old_page_migration();
+$version_bb_check = UABB_Compatibility::$version_bb_check;
+$converted        = UABB_Compatibility::$uabb_migration;
 
 $settings->foreground_outside = UABB_Helper::uabb_colorpicker( $settings, 'foreground_outside', true );
 
@@ -257,7 +257,7 @@ for ( $i = 0; $i < count( $settings->pricing_columns ); $i++ ) :
 							echo ( '' != $settings->pricing_columns[ $i ]->featured_typo->letter_spacing->length ) ? 'letter-spacing: ' . (string) $settings->pricing_columns[ $i ]->featured_typo->letter_spacing->length . 'px;' : '';
 							echo ( '' != $settings->pricing_columns[ $i ]->featured_typo->text_transform ) ? 'text-transform: ' . (string) $settings->pricing_columns[ $i ]->featured_typo->text_transform . ';' : '';
 }
-?>
+					?>
 					}
 			<?php } ?>
 			<?php
@@ -315,7 +315,7 @@ for ( $i = 0; $i < count( $settings->pricing_columns ); $i++ ) :
 								<?php
 }
 } elseif ( isset( $settings->pricing_columns[ $i ]->featured_font_size_unit_responsive ) && '' == $settings->pricing_columns[ $i ]->featured_font_size_unit_responsive && isset( $settings->pricing_columns[ $i ]->featured_font_size->small ) && '' != $settings->pricing_columns[ $i ]->featured_font_size->small ) {
-	?>
+							?>
 							font-size: <?php echo $settings->pricing_columns[ $i ]->featured_font_size->small; ?>px;
 							line-height: <?php echo $settings->pricing_columns[ $i ]->featured_font_size->small + 2; ?>px;
 						<?php } ?>
@@ -361,7 +361,7 @@ for ( $i = 0; $i < count( $settings->pricing_columns ); $i++ ) :
 			if ( 'yes' == $settings->show_spacing ) {
 				$border_size = ( '' != $settings->border_size ) ? $settings->border_size : 1;
 				if ( 'none' != $settings->border_style ) {
-					echo ( 'none' != $settings->border_style ) ? 'border: ' . $border_size . 'px ' . $settings->border_style . ' ' . $settings->border_color : '';
+					echo 'border: ' . $border_size . 'px ' . $settings->border_style . ' ' . $settings->border_color;
 				} else {
 					echo ( '' != $settings->border_radius ) ? 'border-radius: ' . $settings->border_radius . 'px;' : 'border-radius: 1px;';
 				}
@@ -377,7 +377,58 @@ for ( $i = 0; $i < count( $settings->pricing_columns ); $i++ ) :
 			}
 			?>
 		}
-
+		.fl-node-<?php echo $id; ?> .uabb-pricing-table .uabb-pricing-table-outter-<?php echo $i + 1; ?> .uabb-pricing-table-column-<?php echo $i + 1; ?> {
+			<?php
+			if ( isset( $settings->box_padding_top ) ) {
+				echo ( '' !== $settings->box_padding_top ) ? 'padding-top:' . $settings->box_padding_top . 'px;' : '';
+			}
+			if ( isset( $settings->box_padding_right ) ) {
+				echo ( '' !== $settings->box_padding_right ) ? 'padding-right:' . $settings->box_padding_right . 'px;' : '';
+			}
+			if ( isset( $settings->box_padding_bottom ) ) {
+				echo ( '' !== $settings->box_padding_bottom ) ? 'padding-bottom:' . $settings->box_padding_bottom . 'px;' : '';
+			}
+			if ( isset( $settings->box_padding_left ) ) {
+				echo ( '' !== $settings->box_padding_left ) ? 'padding-left:' . $settings->box_padding_left . 'px;' : '';
+			}
+			?>
+		}
+		@media ( max-width: <?php echo $global_settings->medium_breakpoint; ?>px ) {
+			.fl-node-<?php echo $id; ?> .uabb-pricing-table .uabb-pricing-table-outter-<?php echo $i + 1; ?>.uabb-pricing-table-column-<?php echo $i + 1; ?> {
+				<?php
+				if ( isset( $settings->box_padding_top_medium ) ) {
+					echo ( '' !== $settings->box_padding_top_medium ) ? 'padding-top:' . $settings->box_padding_top_medium . 'px;' : '';
+				}
+				if ( isset( $settings->box_padding_right_medium ) ) {
+					echo ( '' !== $settings->box_padding_right_medium ) ? 'padding-right:' . $settings->box_padding_right_medium . 'px;' : '';
+				}
+				if ( isset( $settings->box_padding_bottom_medium ) ) {
+					echo ( '' !== $settings->box_padding_bottom_medium ) ? 'padding-bottom:' . $settings->box_padding_bottom_medium . 'px;' : '';
+				}
+				if ( isset( $settings->box_padding_left_medium ) ) {
+					echo ( '' !== $settings->box_padding_left_medium ) ? 'padding-left:' . $settings->box_padding_left_medium . 'px;' : '';
+				}
+				?>
+			}
+		}
+		@media ( max-width: <?php echo $global_settings->responsive_breakpoint; ?>px ) {
+			.fl-node-<?php echo $id; ?> .uabb-pricing-table .uabb-pricing-table-outter-<?php echo $i + 1; ?> .uabb-pricing-table-column-<?php echo $i + 1; ?> {
+				<?php
+				if ( isset( $settings->box_padding_top_responsive ) ) {
+					echo ( '' !== $settings->box_padding_top_responsive ) ? 'padding-top:' . $settings->box_padding_top_responsive . 'px;' : '';
+				}
+				if ( isset( $settings->box_padding_right_responsive ) ) {
+					echo ( '' !== $settings->box_padding_right_responsive ) ? 'padding-right:' . $settings->box_padding_right_responsive . 'px;' : '';
+				}
+				if ( isset( $settings->box_padding_bottom_responsive ) ) {
+					echo ( '' !== $settings->box_padding_bottom_responsive ) ? 'padding-bottom:' . $settings->box_padding_bottom_responsive . 'px;' : '';
+				}
+				if ( isset( $settings->box_padding_left_responsive ) ) {
+					echo ( '' !== $settings->box_padding_left_responsive ) ? 'padding-left:' . $settings->box_padding_left_responsive . 'px;' : '';
+				}
+				?>
+			}
+		}
 		<?php
 		if ( 'yes' == $settings->responsive_size ) {
 			$size = ( '' != $settings->resp_size ) ? $settings->resp_size : '768';
@@ -545,6 +596,13 @@ for ( $i = 0; $i < count( $settings->pricing_columns ); $i++ ) :
 				'line_height_unit_responsive' => $settings->pricing_columns[ $i ]->button_typography_line_height_unit_responsive,
 				'transform'                   => $settings->pricing_columns[ $i ]->button_transform,
 				'letter_spacing'              => $settings->pricing_columns[ $i ]->button_letter_spacing,
+				'button_padding_dimension'    => ( isset( $settings->pricing_columns[ $i ]->button_padding_dimension ) ) ? $settings->pricing_columns[ $i ]->button_padding_dimension : '',
+				'button_border_style'         => ( isset( $settings->pricing_columns[ $i ]->button_border_style ) ) ? $settings->pricing_columns[ $i ]->button_border_style : '',
+				'button_border_width'         => ( isset( $settings->pricing_columns[ $i ]->button_border_width ) ) ? $settings->pricing_columns[ $i ]->button_border_width : '',
+				'button_border_radius'        => ( isset( $settings->pricing_columns[ $i ]->button_border_radius ) ) ? $settings->pricing_columns[ $i ]->button_border_radius : '',
+				'button_border_color'         => ( isset( $settings->pricing_columns[ $i ]->button_border_color ) ) ? $settings->pricing_columns[ $i ]->button_border_color : '',
+				'border_hover_color'          => ( isset( $settings->pricing_columns[ $i ]->border_hover_color ) ) ? $settings->pricing_columns[ $i ]->border_hover_color : '',
+
 			);
 		} else {
 			$button = array(
@@ -577,6 +635,9 @@ for ( $i = 0; $i < count( $settings->pricing_columns ); $i++ ) :
 				'button_typo_medium'         => ( isset( $settings->pricing_columns[ $i ]->button_typo_medium ) ) ? $settings->pricing_columns[ $i ]->button_typo_medium : '',
 
 				'button_typo_responsive'     => ( isset( $settings->pricing_columns[ $i ]->button_typo_responsive ) ) ? $settings->pricing_columns[ $i ]->button_typo_responsive : '',
+				'button_padding_dimension'   => ( isset( $settings->pricing_columns[ $i ]->button_padding_dimension ) ) ? $settings->pricing_columns[ $i ]->button_padding_dimension : '',
+				'button_border'              => ( isset( $settings->pricing_columns[ $i ]->button_border ) ) ? $settings->pricing_columns[ $i ]->button_border : '',
+				'border_hover_color'         => ( isset( $settings->pricing_columns[ $i ]->border_hover_color ) ) ? $settings->pricing_columns[ $i ]->border_hover_color : '',
 			);
 		}
 		FLBuilder::render_module_css( 'uabb-button', $btn_id, $button );
@@ -823,16 +884,16 @@ if ( 'yes' == $settings->add_legend ) {
 		<?php
 } else {
 	if ( class_exists( 'FLBuilderCSS' ) ) {
-		FLBuilderCSS::typography_field_rule(
-			array(
-				'settings'     => $settings->legend_column,
-				'setting_name' => 'legend_typo',
-				'selector'     => ".fl-node-$id .uabb-pricing-table .uabb-pricing-table-column-0 .uabb-pricing-table-features li,.fl-node-$id .uabb-pricing-table .uabb-pricing-table-column .uabb-pricing-table-features .uabb-pricing-ledgend",
-			)
-		);
+			FLBuilderCSS::typography_field_rule(
+				array(
+					'settings'     => $settings->legend_column,
+					'setting_name' => 'legend_typo',
+					'selector'     => ".fl-node-$id .uabb-pricing-table .uabb-pricing-table-column-0 .uabb-pricing-table-features li,.fl-node-$id .uabb-pricing-table .uabb-pricing-table-column .uabb-pricing-table-features .uabb-pricing-ledgend",
+				)
+			);
 	}
 }
-?>
+	?>
 
 	.fl-node-<?php echo $id; ?> .uabb-pricing-table .uabb-pricing-table-column-0 .uabb-pricing-table-features li {
 		text-align: <?php echo $settings->legend_column->legend_align; ?>;

@@ -2,7 +2,7 @@
 
     <div :class="[waiting ? 'searchwp-is-waiting' : '', 'searchwp-engines']">
 
-        <searchwp-environment-check/>
+        <searchwp-environment-check></searchwp-environment-check>
 
         <searchwp-message
             v-if="!initialSettingsSaved"
@@ -21,7 +21,8 @@
         <searchwp-engine v-for="(engine, engineName) in engines"
             :key="engineName"
             :name="engineName"
-            :settings="engine"/>
+            :settings="engine"
+            :isAdminEngine="adminSearchEnabled && adminSearchEngine == engineName"></searchwp-engine>
 
         <searchwp-message
             v-if="dirtyIndex"
@@ -64,6 +65,8 @@ export default {
     },
     data: function(){
         return {
+            adminSearchEnabled: _SEARCHWP_VARS.data.misc.admin_search,
+            adminSearchEngine: _SEARCHWP_VARS.data.misc.admin_engine,
             waiting: false,
             engines: _SEARCHWP_VARS.data.engines,
             initialFingerprint: '',

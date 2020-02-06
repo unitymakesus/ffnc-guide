@@ -7,7 +7,7 @@
                 <searchwp-button
                     :icon="'dashicons-admin-generic'"
                     :label="i18n.ignored"
-                    v-on:buttonClick="showingIgnoredSearches = true" />
+                    v-on:buttonClick="showingIgnoredSearches = true"></searchwp-button>
             </li>
             <li>
                 <confirm
@@ -15,7 +15,7 @@
                     :buttonLabel="i18n.resetStats"
                     :question="i18n.areYouSure"
                     :confirm="i18n.yesResetStats"
-                    v-on:confirmed="resetStats"/>
+                    v-on:confirmed="resetStats"></confirm>
             </li>
         </ul>
         <vue-modaltor
@@ -237,7 +237,7 @@ export default {
             loading: true,
             loaderPositionTop: 0,
             loaderPositionLeft: 0,
-            searchesOverTime: null,
+            searchesOverTime: {},
             searchesOverTimeOptions: {
                 maintainAspectRatio: false,
                 legend: {

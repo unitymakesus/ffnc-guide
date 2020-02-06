@@ -26,6 +26,8 @@ class SearchWP_i18n {
 			'add_post_type' => __( 'Add Post Type', 'searchwp' ),
 			'add_stopword' => __( 'Add Stopword', 'searchwp' ),
 			'add_to_stopwords' => __( 'Add to Stopwords', 'searchwp' ),
+			'admin_engine' => __( 'Admin engine', 'searchwp' ),
+			'admin_engine_note' => __( 'This engine is used for Admin/Dashboard searches. It cannot be renamed or removed.', 'searchwp' ),
 			'admin_search_enabled' => __( 'All post types will be indexed to facilitate searching in Admin/Dashboard', 'searchwp' ),
 			'any_custom_field' => __( 'Any Custom Field', 'searchwp' ),
 			'are_you_sure' => __( 'Are you sure?', 'searchwp' ),
@@ -33,6 +35,7 @@ class SearchWP_i18n {
 			'attribute' => __( 'Attribute', 'searchwp' ),
 			'attribution' => __( 'Attribution', 'searchwp' ),
 			'attribute_results_to' => __( 'Attribute search results to:', 'searchwp' ),
+			'auto_did_you_mean' => __( 'Automatic "Did you mean?" corrections', 'searchwp' ),
 			'auto_scale' => __( 'Currently scaled back to reduce server load. This is monitored automatically.', 'searchwp' ),
 			'average' => __( 'Average', 'searchwp' ),
 			'basic_auth_heading' => __( 'HTTP Basic Authentication', 'searchwp' ),
@@ -54,6 +57,22 @@ class SearchWP_i18n {
 			'default_engine_note' => __( 'Native WordPress searches will return these post types', 'searchwp' ),
 			'delete_engine' => __( 'Delete Engine', 'searchwp' ),
 			'dismiss' => __( 'Dismiss', 'searchwp' ),
+			'do_suggestions_note' => wp_kses(
+				sprintf(
+					// Translators: first placeholder opens the link to the docs, the second placeholder closes it
+					__( '<strong>Note:</strong> Searches with no results will automatically output results for closest index match <em>and</em> a note will be added above The Loop. %1$sRead more &raquo;%2$s', 'searchwp' ),
+					'<a href="https://searchwp.com/?p=190545" target="_blank">',
+					'</a>'
+				),
+				array(
+					'strong' => array(),
+					'em' => array(),
+					'a'  => array(
+						'href'   => array(),
+						'target' => array(),
+					),
+				)
+			),
 			'document_content' => __( 'Document Content', 'searchwp' ),
 			'document_properties' => __( 'Document Properties', 'searchwp' ),
 			'done' => __( 'Done', 'searchwp' ),
@@ -113,9 +132,23 @@ class SearchWP_i18n {
 			'notices_reset' => __( 'Notices have been reset', 'searchwp' ),
 			'no_engines_in_export' => __( 'No engines have been included in the export', 'searchwp' ),
 			'not_available_no_index' => __( 'is not available to PHP. As a result, Office document content will not be indexed.', 'searchwp' ),
+			'min_word_length_note' => wp_kses(
+				sprintf(
+					// Translators: placeholder is the number of characters.
+					__( 'In order to utilize Search Terms that are fewer than %s characters, you must remove the minimum character length.', 'searchwp' ),
+					'{{ minWordLength }}'
+				),
+				array(
+					'a' => array(
+						'href'   => array(),
+						'target' => array(),
+					),
+				)
+			),
 			'month' => __( 'Month', 'searchwp' ),
 			'more_info' => __( 'More Info', 'searchwp' ),
 			'options' => __( 'Options', 'searchwp' ),
+			'orignal_search_term' => __( 'Original search term', 'searchwp' ),
 			'parse_shortcodes' => __( 'Parse Shortcodes when indexing', 'searchwp' ),
 			'partial_matches' => __( 'Partial matches (fuzzy when necessary)', 'searchwp' ),
 			'partial_matches_note' => wp_kses(
@@ -142,6 +175,7 @@ class SearchWP_i18n {
 			'remove_all_data' => __( 'Remove all data on uninstall', 'searchwp' ),
 			'remove_min_word_length' => __( 'Remove minimum word length', 'searchwp' ),
 			'replace' => __( 'Replace', 'searchwp' ),
+			'replace_note' => __( 'When enabled, original Search Term will be removed', 'searchwp' ),
 			'reset_index' => __( 'Reset Index', 'searchwp' ),
 			'reset_stats' => __( 'Reset Stats', 'searchwp' ),
 			'restore_defaults' => __( 'Restore Defaults', 'searchwp' ),
@@ -160,6 +194,9 @@ class SearchWP_i18n {
 			'search' => __( 'Search', 'searchwp' ),
 			'search_term' => __( 'Search Term', 'searchwp' ),
 			'search_term_handling' => __( 'Search Term Handling', 'searchwp' ),
+			'search_term_note' => __( 'The original search term', 'searchwp' ),
+			'search_terms' => __( 'Search for terms', 'searchwp' ),
+			'search_to_choose_terms' => __( 'Search to choose terms', 'searchwp' ),
 			'searches' => __( 'Searches', 'searchwp' ),
 			'sort_alphabetically' => __( 'Sort Alphabetically', 'searchwp' ),
 			'statistics' => __( 'Search Statistics', 'searchwp' ),
@@ -183,9 +220,27 @@ class SearchWP_i18n {
 			'suggested_stopwords' => __( 'Suggested Stopwords', 'searchwp' ),
 			'suggested_stopwords_note' => __( 'The following terms are quite common to your site and may be cluttering your index and reducing relevency of results:', 'searchwp' ),
 			'suggestions' => __( 'Suggestions', 'searchwp' ),
+			'support_quoted_searches' => __( 'Support "quoted/phrase searches"', 'searchwp' ),
+			'support_quoted_searches_note' => wp_kses(
+				sprintf(
+					// Translators: first placeholder opens the link to the docs, the second placeholder closes it
+					__( '<strong>Note:</strong> There are some limitations that must be considered when enabling quoted search support. %1$sRead more &raquo;%2$s', 'searchwp' ),
+					'<a href="https://searchwp.com/?p=190759" target="_blank">',
+					'</a>'
+				),
+				array(
+					'strong' => array(),
+					'em' => array(),
+					'a'  => array(
+						'href'   => array(),
+						'target' => array(),
+					),
+				)
+			),
 			'synonyms' => __( 'Synonyms', 'searchwp' ),
 			'synonyms_maybe_plural' => __( 'Synonym(s)', 'searchwp' ),
 			'synonyms_none' => __( 'There are currently no synonyms', 'searchwp' ),
+			'synonyms_note_tooltip' => __( 'Term(s) that are synonymous with the Search Term', 'searchwp' ),
 			'synonyms_note' => wp_kses(
 				sprintf(
 					// Translators: first placeholder opens the link to the synonyms docs, the second placeholder closes it

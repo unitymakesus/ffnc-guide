@@ -7,8 +7,7 @@
 		:line-bg-color="'#1e8cbe'"
 		:line-fg-color="'#ffffff'"
 		:text-fg-color="'#444444'"
-		:message="label"
-		/>
+		:message="label"></spinner>
 	<searchwp-input-checkbox
 		v-else
 		:label="label"
@@ -16,7 +15,7 @@
 		:tooltip="tooltip"
 		:disabled="disabled"
 		v-model="state"
-		v-on:change="changed"/>
+		v-on:change="changed"></searchwp-input-checkbox>
 </template>
 
 <script>

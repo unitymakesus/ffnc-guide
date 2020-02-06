@@ -178,9 +178,9 @@ class UABBCountdownModule extends FLBuilderModule {
 	 */
 	public function filter_settings( $settings, $helper ) {
 
-		$version_bb_check        = UABB_Compatibility::check_bb_version();
-		$page_migrated           = UABB_Compatibility::check_old_page_migration();
-		$stable_version_new_page = UABB_Compatibility::check_stable_version_new_page();
+		$version_bb_check        = UABB_Compatibility::$version_bb_check;
+		$page_migrated           = UABB_Compatibility::$uabb_migration;
+		$stable_version_new_page = UABB_Compatibility::$stable_version_new_page;
 
 		if ( $version_bb_check && ( 'yes' == $page_migrated || 'yes' == $stable_version_new_page ) ) {
 
@@ -540,25 +540,29 @@ class UABBCountdownModule extends FLBuilderModule {
 				);
 			}
 			if ( isset( $settings->digit_line_height['desktop'] ) && isset( $settings->digit_font_size['desktop'] ) && 0 != $settings->digit_font_size['desktop'] && ! isset( $settings->digit_typo['line_height'] ) ) {
-
-				$settings->digit_typo['line_height'] = array(
-					'length' => round( $settings->digit_line_height['desktop'] / $settings->digit_font_size['desktop'], 2 ),
-					'unit'   => 'em',
-				);
+				if ( is_numeric( $settings->digit_line_height['desktop'] ) && is_numeric( $settings->digit_font_size['desktop'] ) ) {
+					$settings->digit_typo['line_height'] = array(
+						'length' => round( $settings->digit_line_height['desktop'] / $settings->digit_font_size['desktop'], 2 ),
+						'unit'   => 'em',
+					);
+				}
 			}
 			if ( isset( $settings->digit_line_height['medium'] ) && isset( $settings->digit_font_size['medium'] ) && 0 != $settings->digit_font_size['medium'] && ! isset( $settings->digit_typo_medium['line_height'] ) ) {
-
-				$settings->digit_typo_medium['line_height'] = array(
-					'length' => round( $settings->digit_line_height['medium'] / $settings->digit_font_size['medium'], 2 ),
-					'unit'   => 'em',
-				);
+				if ( is_numeric( $settings->digit_line_height['medium'] ) && is_numeric( $settings->digit_font_size['medium'] ) ) {
+					$settings->digit_typo_medium['line_height'] = array(
+						'length' => round( $settings->digit_line_height['medium'] / $settings->digit_font_size['medium'], 2 ),
+						'unit'   => 'em',
+					);
+				}
 			}
 			if ( isset( $settings->digit_line_height['small'] ) && isset( $settings->digit_font_size['small'] ) && 0 != $settings->digit_font_size['small'] && ! isset( $settings->digit_typo_responsive['line_height'] ) ) {
+				if ( is_numeric( $settings->digit_line_height['small'] ) && is_numeric( $settings->digit_font_size['small'] ) ) {
 
-				$settings->digit_typo_responsive['line_height'] = array(
-					'length' => round( $settings->digit_line_height['small'] / $settings->digit_font_size['small'], 2 ),
-					'unit'   => 'em',
-				);
+					$settings->digit_typo_responsive['line_height'] = array(
+						'length' => round( $settings->digit_line_height['small'] / $settings->digit_font_size['small'], 2 ),
+						'unit'   => 'em',
+					);
+				}
 			}
 
 			// For unit settings.
@@ -698,7 +702,7 @@ class UABBCountdownModule extends FLBuilderModule {
  * And accordingly render the required form settings file.
  */
 
-if ( UABB_Compatibility::check_bb_version() ) {
+if ( UABB_Compatibility::$version_bb_check ) {
 		require_once BB_ULTIMATE_ADDON_DIR . 'modules/uabb-countdown/uabb-countdown-bb-2-2-compatibility.php';
 } else {
 		require_once BB_ULTIMATE_ADDON_DIR . 'modules/uabb-countdown/uabb-countdown-bb-less-than-2-2-compatibility.php';

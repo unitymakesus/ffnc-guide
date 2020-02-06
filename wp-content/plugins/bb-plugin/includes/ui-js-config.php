@@ -4,7 +4,7 @@
  * Filter main UI JS config.
  * @see fl_builder_ui_js_config
  */
-echo 'FLBuilderConfig              = ' . json_encode( apply_filters('fl_builder_ui_js_config', array(
+echo 'FLBuilderConfig              = ' . FLBuilderUtils::json_encode( apply_filters('fl_builder_ui_js_config', array(
 	'adminUrl'                   => admin_url(),
 	'ajaxNonce'                  => wp_create_nonce( 'fl_ajax_update' ),
 	'builderEnabled'             => get_post_meta( $post_id, '_fl_builder_enabled', true ) ? true : false,
@@ -20,10 +20,12 @@ echo 'FLBuilderConfig              = ' . json_encode( apply_filters('fl_builder_
 	'isUserTemplate'             => false,
 	'lite'                       => true === FL_BUILDER_LITE,
 	'modSecFix'                  => ( defined( 'FL_BUILDER_MODSEC_FIX' ) && FL_BUILDER_MODSEC_FIX ),
+	'MaxInputVars'               => FL_Debug::safe_ini_get( 'max_input_vars' ),
 	'moduleGroups'               => FLBuilderModel::get_module_groups(),
 	'nestedColumns'              => ( ! defined( 'FL_BUILDER_NESTED_COLUMNS' ) || FL_BUILDER_NESTED_COLUMNS ),
 	'newUser'                    => FLBuilderModel::is_new_user(),
 	'pluginUrl'                  => FL_BUILDER_URL,
+	'relativePluginUrl'          => str_ireplace( home_url(), '', FL_BUILDER_URL ),
 	'postId'                     => $post_id,
 	'postStatus'                 => get_post_status(),
 	'postType'                   => get_post_type(),
@@ -62,19 +64,25 @@ echo 'FLBuilderConfig              = ' . json_encode( apply_filters('fl_builder_
 	'presets'                    => FLBuilderSettingsPresets::get_presets(),
 	'FontWeights'                => FLBuilderFonts::get_font_weight_strings(),
 	'statsEnabled'               => get_site_option( 'fl_builder_usage_enabled', false ),
+	'rememberTab'                => apply_filters( 'fl_remember_settings_tabs_enabled', true ),
+	'select2Enabled'             => apply_filters( 'fl_select2_enabled', true ),
 ) ) ) . ';';
 
 /**
  * Filter UI JS Strings.
  * @see fl_builder_ui_js_strings
  */
-echo 'FLBuilderStrings             = ' . json_encode( apply_filters('fl_builder_ui_js_strings', array(
+echo 'FLBuilderStrings             = ' . FLBuilderUtils::json_encode( apply_filters('fl_builder_ui_js_strings', array(
 	'actionsLightboxTitle'           => esc_attr__( 'What would you like to do?', 'fl-builder' ),
+	/* translators: %s: field name */
 	'addField'                       => esc_attr_x( 'Add %s', 'Field name to add.', 'fl-builder' ),
+	/* translators: %s: preset color code */
 	'alreadySaved'                   => esc_attr_x( '%s is already a saved preset.', '%s is the preset hex color code.', 'fl-builder' ),
 	'audioSelected'                  => esc_attr__( 'Audio File Selected', 'fl-builder' ),
+	/* translators: %d: number of files selected */
 	'audioSelectedNum'               => esc_attr__( '%d Audio File Selected', 'fl-builder' ),
 	'audiosSelected'                 => esc_attr__( 'Audio Files Selected', 'fl-builder' ),
+	/* translators: %d: number of files selected (plural) */
 	'audiosSelectedNum'              => esc_attr__( '%d Audio Files Selected', 'fl-builder' ),
 	'blank'                          => esc_attr__( 'Blank', 'fl-builder' ),
 	'cancel'                         => esc_attr__( 'Cancel', 'fl-builder' ),
@@ -87,6 +95,7 @@ echo 'FLBuilderStrings             = ' . json_encode( apply_filters('fl_builder_
 	'codeErrorIgnore'                => esc_attr__( 'Save With Errors', 'fl-builder' ),
 	'column'                         => esc_attr__( 'Column', 'fl-builder' ),
 	'contentSliderSelectLayout'      => esc_attr__( 'Please select either a background layout or content layout before submitting.', 'fl-builder' ),
+	'contentSliderTransitionWarn'    => esc_attr__( 'Transition value should be lower than Delay value.', 'fl-builder' ),
 	'countdownDateisInThePast'       => esc_attr__( 'Error! Please enter a date that is in the future.', 'fl-builder' ),
 	'deleteAccount'                  => esc_attr__( 'Remove Account', 'fl-builder' ),
 	'deleteAccountWarning'           => esc_attr__( 'Are you sure you want to remove this account? Other modules that are connected to it will be affected.', 'fl-builder' ),
@@ -102,6 +111,7 @@ echo 'FLBuilderStrings             = ' . json_encode( apply_filters('fl_builder_
 	'draft'                          => esc_attr__( 'Save Changes and Exit', 'fl-builder' ),
 	'duplicate'                      => esc_attr__( 'Duplicate', 'fl-builder' ),
 	'duplicateLayout'                => esc_attr_x( 'Duplicate Layout', 'Duplicate page/post action label.', 'fl-builder' ),
+	/* translators: %s: form field label */
 	'editFormField'                  => esc_attr_x( 'Edit %s', '%s stands for form field label.', 'fl-builder' ),
 	'editGlobalSettings'             => esc_attr__( 'Global Settings', 'fl-builder' ),
 	'editLayoutSettings'             => esc_attr__( 'Layout CSS / Javascript', 'fl-builder' ),
@@ -132,16 +142,22 @@ echo 'FLBuilderStrings             = ' . json_encode( apply_filters('fl_builder_
 	'ok'                             => esc_attr__( 'OK', 'fl-builder' ),
 	'photoPage'                      => esc_attr__( 'Photo Page', 'fl-builder' ),
 	'photoSelected'                  => esc_attr__( 'Photo Selected', 'fl-builder' ),
+	/* translators: %d: number of selected */
 	'photoSelectedNum'               => esc_attr__( '%d Photo Selected', 'fl-builder' ),
 	'photosSelected'                 => esc_attr__( 'Photos Selected', 'fl-builder' ),
+	/* translators: %d: number of selected (plural) */
 	'photosSelectedNum'              => esc_attr__( '%d Photos Selected', 'fl-builder' ),
 	'placeholder'                    => esc_attr__( 'Paste color here...', 'fl-builder' ),
+	'placeholderSelect2'             => esc_attr__( 'Pick a font...', 'fl-builder' ),
 	'pleaseWait'                     => esc_attr__( 'Please Wait...', 'fl-builder' ),
+	/* translators: %s: preset color code */
 	'presetAdded'                    => esc_attr_x( '%s added to presets!', '%s is the preset hex color code.', 'fl-builder' ),
 	'publish'                        => esc_attr__( 'Publish Changes', 'fl-builder' ),
 	'remove'                         => esc_attr__( 'Remove', 'fl-builder' ),
 	'removePresetConfirm'            => esc_attr__( 'Are you sure?', 'fl-builder' ),
+	/* translators: %s: time diff - 1 day/2 weeks */
 	'revisionDate'                   => esc_attr_x( '%s ago', '%s is a time diff such as 1 day or 2 weeks.', 'fl-builder' ),
+	/* translators: %s: author name */
 	'revisionAuthor'                 => esc_attr_x( 'By %s', '%s is the author name.', 'fl-builder' ),
 	'row'                            => esc_attr__( 'Row', 'fl-builder' ),
 	'rowSettings'                    => esc_attr__( 'Row Settings', 'fl-builder' ),
@@ -196,6 +212,8 @@ echo 'FLBuilderStrings             = ' . json_encode( apply_filters('fl_builder_
 	'visitForums'                    => esc_attr__( 'Contact Support', 'fl-builder' ),
 	'watchHelpVideo'                 => esc_attr__( 'Watch the Video', 'fl-builder' ),
 	'welcomeMessage'                 => esc_attr__( 'Welcome! It looks like this might be your first time using the builder. Would you like to take a tour?', 'fl-builder' ),
+	'widget'                         => esc_attr__( 'Widget', 'fl-builder' ),
+	'widgetsCategoryTitle'           => esc_attr__( 'WordPress Widgets', 'fl-builder' ),
 	'uncategorized'                  => esc_attr__( 'Uncategorized', 'fl-builder' ),
 	'yesPlease'                      => esc_attr__( 'Yes Please!', 'fl-builder' ),
 	'savedStatus'                    => array(
@@ -214,7 +232,6 @@ echo 'FLBuilderStrings             = ' . json_encode( apply_filters('fl_builder_
 		'hasAlreadySaved'      => esc_attr__( 'Your changes are saved', 'fl-builder' ),
 
 	),
-	'widgetsCategoryTitle'           => esc_attr__( 'WordPress Widgets', 'fl-builder' ),
 	'typeLabels'                     => array(
 		'template' => esc_attr__( 'Template', 'fl-builder' ),
 		'module'   => esc_attr__( 'Module', 'fl-builder' ),
@@ -234,6 +251,11 @@ echo 'FLBuilderStrings             = ' . json_encode( apply_filters('fl_builder_
 		'title'   => esc_attr__( 'Notifications', 'fl-builder' ),
 		'loading' => esc_attr__( 'Loading...', 'fl-builder' ),
 		'none'    => esc_attr__( 'No Notifications.', 'fl-builder' ),
+	),
+	'module_import'                  => array(
+		'copied' => esc_attr__( 'Copied!', 'fl-builder' ),
+		'error'  => esc_attr__( 'Import Error!', 'fl-builder' ),
+		'type'   => esc_attr__( 'Missing header or wrong module type!', 'fl-builder' ),
 	),
 ) ) ) . ';';
 

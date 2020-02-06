@@ -41,6 +41,7 @@ final class FLBuilderWPBlocks {
 	 * @return void
 	 */
 	static public function enqueue_block_editor_assets() {
+		global $wp_version;
 		global $post;
 
 		if ( ! is_object( $post ) ) {
@@ -74,23 +75,32 @@ final class FLBuilderWPBlocks {
 				'enabled'      => FLBuilderModel::is_builder_enabled( $post->ID ),
 				'nonce'        => wp_create_nonce( 'fl_ajax_update' ),
 				'unrestricted' => FLBuilderUserAccess::current_user_can( 'unrestricted_editing' ),
+				'showui'       => apply_filters( 'fl_builder_render_admin_edit_ui', true ),
 			),
 			'post'    => array(
 				'id' => $post->ID,
 			),
 			'strings' => array(
+				/* translators: 1: branded builder name: 2: post type name */
 				'active'      => sprintf( _x( '%1$s is currently active for this %2$s.', '%1$s branded builder name. %2$s post type name.', 'fl-builder' ), $branding, strtolower( $post_type_name ) ),
+				/* translators: %s: post type name */
 				'convert'     => sprintf( _x( 'Convert to %s', '%s branded builder name.', 'fl-builder' ), $branding ),
+				/* translators: %s: branded builder name */
 				'description' => sprintf( _x( '%s lets you drag and drop your layout on the frontend.', '%s branded builder name.', 'fl-builder' ), $branding ),
 				'editor'      => __( 'Use Standard Editor', 'fl-builder' ),
+				/* translators: %s: branded builder name */
 				'launch'      => sprintf( _x( 'Launch %s', '%s branded builder name.', 'fl-builder' ), $branding ),
 				'title'       => $branding,
+				/* translators: %s: post type name */
 				'view'        => sprintf( _x( 'View %s', '%s post type name.', 'fl-builder' ), $post_type_name ),
 				'warning'     => __( 'Switching to the native WordPress editor will disable your Beaver Builder layout until it is enabled again. Any edits made in the WordPress editor will not be converted to your Page Builded layout. Do you want to continue?', 'fl-builder' ),
 			),
 			'urls'    => array(
 				'edit' => FLBuilderModel::get_edit_url( $post->ID ),
 				'view' => get_permalink( $post->ID ),
+			),
+			'wp'      => array(
+				'version' => $wp_version,
 			),
 		) );
 	}

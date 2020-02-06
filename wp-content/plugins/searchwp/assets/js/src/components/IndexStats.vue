@@ -10,7 +10,7 @@
 
             <searchwp-progress-bar
                 :progress="progress"
-                :disabled="!initialSettingsSaved || emptyEngines"/>
+                :disabled="!initialSettingsSaved || emptyEngines"></searchwp-progress-bar>
 
         </div>
 
@@ -48,18 +48,13 @@
 
         <p class="description">{{ i18n.indexNote }}</p>
 
-        <searchwp-message
-            v-if="adminEnabled">
-            <p>{{ i18n.adminSearchEnabled }}</p>
-        </searchwp-message>
-
         <ul v-if="false" class="searchwp-index-actions">
             <li>
                 <confirm
                     :buttonLabel="'Reset Index'"
                     :question="'Are you sure?'"
                     :confirm="'Yes, reset index'"
-                    v-on:confirmed="resetIndex"/>
+                    v-on:confirmed="resetIndex"></confirm>
             </li>
         </ul>
 
@@ -165,7 +160,6 @@ export default {
     data: function(){
         return {
             i18n: {
-                adminSearchEnabled:  _SEARCHWP_VARS.i18n.admin_search_enabled,
                 autoScale:  _SEARCHWP_VARS.i18n.auto_scale,
                 indexProgress: _SEARCHWP_VARS.i18n.index_progress,
                 lastActivity: _SEARCHWP_VARS.i18n.last_activity,
@@ -187,7 +181,6 @@ export default {
             mainRowCount: _SEARCHWP_VARS.data.index_stats.main_row_count,
             waiting: _SEARCHWP_VARS.data.index_stats.waiting,
             dirtyIndex: false,
-            adminEnabled: _SEARCHWP_VARS.data.misc.admin_search,
             emptyEngines: _SEARCHWP_VARS.data.misc.empty_engines,
             initialSettingsSaved: _SEARCHWP_VARS.data.misc.initial_settings_saved,
             indexIsReset: false,

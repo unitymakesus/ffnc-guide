@@ -8,6 +8,8 @@
  * @link      http://stehle-internet.de
  * @copyright 2014 Martin Stehle
  */
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
  class Quick_Featured_Images_Admin {
 
@@ -19,7 +21,7 @@
 	 *
 	 * @var     string
 	 */
-	protected $plugin_version = '13.3.3';
+	protected $plugin_version = '13.3.6';
 
 	/**
 	 * Instance of this class.

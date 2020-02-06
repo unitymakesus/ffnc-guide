@@ -1,3 +1,104 @@
+### 3.1.10
+- **[Fix]** Issue with supported post type attributes not appearing in all cases
+- **[Change]** Template conflict detection is now opt-in
+- **[Update]** Updated dependencies
+
+### 3.1.9
+- **[Fix]** Logic issue with one of the query limiters in some cases
+
+### 3.1.8
+- **[New]** `searchwp_query_strict_limiters` filter allowing you to opt out of some search query limiters
+- **[Change]** Some `private` properties/methods have been made `public`
+
+### 3.1.7
+- **[Fix]** Issue with finding partial matches in some cases
+- **[Improvement]** PHP 7.4 compatibility
+- **[Update]** Adds class reference to some hooks
+- **[Update]** Dependencies
+
+### 3.1.6
+- **[Change]** Default partial match minimum length updated to 3
+- **[Improvement]** Handling of quoted searches when highlighting
+- **[Improvement]** Integration with WordPress 5.3
+- **[Improvement]** Exact matches given more weight when finding partial matches
+- **[Fix]** `SWP_Query` quoted search handling in some cases
+
+### 3.1.5
+- **[Improvement]** Performance when considering document processing
+- **[Fix]** Partial matches resource usage
+
+### 3.1.4
+- **[Fix]** Regression introduced when debugging is enabled and `FS_METHOD = ftpext` is imposed
+- **[Fix]** Custom built admin searches not working as expected in some cases
+- **[Improvement]** Search query performance
+- **[Improvement]** Handling of `AND` logic when considering partial matches and synonyms
+- **[Improvement]** Improve performance of partial match handling
+- **[Improvement]** Prevention of redundant queries in some cases
+- **[New]** New filter `searchwp_th_excerpt_consider_comments` to consider Comments when generating global excerpts if no highlight is found
+
+### 3.1.3
+- **[Fix]** Issue with tokenizing during searches in some cases
+- **[Fix]** Fixes a regression in synonym processing introduced in 3.1
+- **[Fix]** `AND` logic being too restrictive in some cases
+- **[Improvement]** Performance improvement when performing searches
+
+### 3.1.2
+- **[Fix]** Indexer performance regression introduced in 3.1
+- **[Fix]** Inaccurate notice displayed when searching in the admin in some cases
+
+### 3.1.1
+- **[Fix]** JavaScript error when adding Custom Fields to engines
+
+### 3.1
+- **[Change]** Partial term matching now requires PHP 5.4+
+- **[Change]** Synonym handling has been improved, for full explanation see https://searchwp.com/?p=193232
+- **[New]** Support (with caveats) for quoted/phrase/sentence searches, for more information see https://searchwp.com/?p=190759
+- **[New]** Automatic "Did you mean" handling for misspelled searches, for more information see https://searchwp.com/?p=190545
+- **[New]** Adds core support for keyword stemming for these language codes: EN, DA, NL, FR, DE, IT, NB, NN, PT, RO, RU, ES, SV (if you are using an Extension you can remove it)
+- **[New]** New filter `searchwp_query_collate_override` to override table `COLLATE`
+- **[New]** New filter `searchwp_th_minimum_word_length` to control highlighter minimum word length
+- **[New]** New filter `searchwp_persist_extra_metadata` to control whether Extra Metadata is persisted (e.g. to support quoted searches for that data)
+- **[New]** Detection for background indexer communication failure in some cases
+- **[Improvement]** Global excerpts now implement WordPress' `excerpt_more` output where applicable
+- **[Improvement]** Partial match highlighting is more accurate
+- **[Improvement]** JavaScript bundlers have been reconfigured and optimized
+- **[Fix]** Account for `AND` logic refinement being too aggressive in some cases
+- **[Fix]** Trigger index when scheduled posts are published
+- **[Fix]** Delta updates when editing via Quick Edit
+- **[Fix]** Better checks against index when evaluating partial matches
+- **[Fix]** `SWP_Query` results are no longer incorrectly overridden with subsequent calls to `SWP_Query->get_posts()`
+- **[Fix]** Highlighter partial match setting now defaults to core partial match setting
+- **[Fix]** Warning when processing purge queue in some cases
+- **[Fix]** Parent weight transfer for Media is no longer enabled by default
+- **[Fix]** Global highlight functions are now initialized in a more accessible way
+- **[Fix]** `z-index` problem when adding a Post Type to an engine
+- **[Fix]** More consistent handling of internal metadata types
+- **[Fix]** Prevent inapplicable post types from being considered for search when in the WordPress Dashboard
+- **[Fix]** Take exclusive regex matches into consideration when tokenizing
+- **[Update]** Translation source
+
+### 3.0.7
+- **[Improvement]** Handling of highlighter logic
+- **[Improvement]** Highlighter excerpt generation
+- **[Improvement]** Debug environment checks/messaging
+- **[Improvement]** Provide feedback when synonyms are influenced by other tokenizer rules
+- **[Improvement]** Index statistics calculation
+- **[Fix]** Issue with multiple-word source terms for synonyms not being processed correctly in all cases
+- **[New]** New filter `searchwp_weight_mods_wrap_core_weights` to support additional weight customizations
+- **[Update]** Translation source
+- **[Update]** Updated updater
+
+### 3.0.6
+- **[New]** When enabling Admin search hijacking you must now choose an engine to use for Admin searches
+- **[Change]** Regex pattern matches are processed by min word length and stopword removal rules
+- **[New]** New filter `searchwp_apply_rules_to_whitelisted_terms` controls whether rules (min word length, stopword removal) applies to whitelisted terms
+- **[Fix]** Issue with partial matching when multiple searches are run for a single request
+- **[Fix]** Prevent parent attribution when searching in the Admin (would result in false negatives)
+- **[Improvement]** Partial match processing
+- **[Improvement]** Handling of delta updates to reduce resource usage
+- **[Improvement]** System Information is now more comprehensive
+- **[Update]** Translation source
+
 ### 3.0.5
 - **[New]** Pasting of comma separated Stopwords will create individual Stopwords from the list
 - **[Fix]** Conditional disabling of partial matches per engine by using provided filter
@@ -9,7 +110,7 @@
 - **[Update]** Translation source
 - **[Update]** PHP version compatibility
 - **[Update]** Dependency update which brings additional PHP compatibility
-- **[Update]** TCPDF security update (which as evaluated could NOT have been exploited)
+- **[Security]** TCPDF security update (which as evaluated could NOT have been exploited)
 
 ### 3.0.4
 - **[Improvement]** Handling of multiple word highlighting

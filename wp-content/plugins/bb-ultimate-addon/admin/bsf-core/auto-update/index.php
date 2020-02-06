@@ -46,14 +46,6 @@ if ( $updgrate_action === 'upgrade' ) {
 	}
 }
 
-if ( isset( $_POST['bsf-developer-access'] ) ) {
-	// echo $_POST['bsf-developer-access-action'];
-	if ( isset( $_POST['bsf-developer-access-action'] ) || $_POST['bsf-developer-access-action'] !== '' ) {
-		$dev_action = $_POST['bsf-developer-access-action'];
-		bsf_grant_developer_access( $dev_action );
-	}
-}
-
 $author = ( isset( $_GET['author'] ) ) ? true : false;
 if ( $author ) {
 	$tab = 'author';
@@ -629,7 +621,7 @@ $is_product_theme = false;
 							<h2>Developer Access</h2>
 							<span class="bsf-span"><?php echo __( 'Enable Developer access', 'bsf' ); ?>
 								,<br/><?php echo __( 'Read more about developer access ', 'bsf' ); ?><a
-									href="<?php echo get_api_site() . 'license-registration-faqs/#developer-access'; ?>"
+									href="<?php echo bsf_get_api_site() . 'license-registration-faqs/#developer-access'; ?>"
 									target="_blank"><?php echo __( 'here', 'bsf' ); ?></a></span>
 
 							<form action="" class="bsf-cp-dev-access" method="post">
@@ -653,10 +645,6 @@ $is_product_theme = false;
 									$action      = 'grant';
 								}
 								?>
-								<input type="hidden" name="bsf-developer-access-action" value="<?php echo $action; ?>"/>
-								<input type="submit" class="button-primary bsf-access-<?php echo $action; ?>-button"
-									   name="bsf-developer-access" value="<?php echo $button_text; ?>"
-									   title="<?php echo $title; ?>" <?php echo $disabled; ?>/>
 							</form>
 						</div>
 					</div>
@@ -676,7 +664,7 @@ $is_product_theme = false;
 						<div class="bsf-column-inner">
 							<h2>Request Support</h2>
 							<?php
-							$request_support = apply_filters( 'agency_updater_request_support', get_api_site() . 'request-support/' );
+							$request_support = apply_filters( 'agency_updater_request_support', bsf_get_api_site() . 'request-support/' );
 							?>
 							<span
 								class="bsf-span"><?php echo __( 'Having any trouble using our products? Head to our support center to get your issues resolved.', 'bsf' ); ?></span>

@@ -16,8 +16,9 @@
 		<p class="uabb-cf7-form-desc"><?php echo $settings->form_desc; ?></p>
 		<?php
 }
-?>
+	?>
 	<?php
+
 	if ( $settings->form_id ) {
 		echo do_shortcode( '[contact-form-7 id=' . absint( $settings->form_id ) . ']' );
 	}

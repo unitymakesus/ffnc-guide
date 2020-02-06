@@ -8,7 +8,7 @@ if ( ! function_exists( 'bsf_generate_rand_token' ) ) {
 		$length          = 32;
 		for ( $n = 1; $n < $length; $n++ ) {
 			$whichCharacter = rand( 0, strlen( $validCharacters ) - 1 );
-			$myKeeper      .= $validCharacters{$whichCharacter};
+			$myKeeper      .= $validCharacters[$whichCharacter];
 		}
 		return $myKeeper;
 	}
@@ -64,7 +64,7 @@ if ( ! function_exists( 'bsf_register_product_callback' ) ) {
 
 		update_option( 'brainstrom_products', $brainstrom_products );
 
-		$path = get_api_url() . '?referer=register-product-' . $id;
+		$path = bsf_get_api_url() . '?referer=register-product-' . $id;
 
 		$data = array(
 			'action'        => 'bsf_product_registration',
@@ -84,17 +84,17 @@ if ( ! function_exists( 'bsf_register_product_callback' ) ) {
 		$request = wp_remote_post(
 			$path, array(
 				'body'    => $data,
-				'timeout' => '30',
+				'timeout' => '10',
 			)
 		);
 
 		// Request http URL if the https version fails.
 		if ( is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) !== 200 ) {
-			$path    = get_api_url( true ) . '?referer=register-product-' . $id;
+			$path    = bsf_get_api_url( true ) . '?referer=register-product-' . $id;
 			$request = wp_remote_post(
 				$path, array(
 					'body'    => $data,
-					'timeout' => '30',
+					'timeout' => '8',
 				)
 			);
 		}
@@ -201,7 +201,7 @@ if ( ! function_exists( 'bsf_deregister_product_callback' ) ) {
 
 		update_option( 'brainstrom_products', $brainstrom_products );
 
-		$path = get_api_url() . '?referer=deregister-product-' . $id;
+		$path = bsf_get_api_url() . '?referer=deregister-product-' . $id;
 
 		$data = array(
 			'action'        => 'bsf_product_deregistration',
@@ -220,17 +220,17 @@ if ( ! function_exists( 'bsf_deregister_product_callback' ) ) {
 		$request = wp_remote_post(
 			$path, array(
 				'body'    => $data,
-				'timeout' => '30',
+				'timeout' => '10',
 			)
 		);
 
 		// Request http URL if the https version fails.
 		if ( is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) !== 200 ) {
-			$path    = get_api_url( true ) . '?referer=deregister-product-' . $id;
+			$path    = bsf_get_api_url( true ) . '?referer=deregister-product-' . $id;
 			$request = wp_remote_post(
 				$path, array(
 					'body'    => $data,
-					'timeout' => '30',
+					'timeout' => '8',
 				)
 			);
 		}
@@ -294,7 +294,7 @@ if ( ! function_exists( 'bsf_register_user_callback' ) ) {
 			}
 		}
 
-		$path = get_api_url() . '&referrer=user_registration';
+		$path = bsf_get_api_url() . '&referrer=user_registration';
 
 		$data = array(
 			'action'                => 'bsf_user_registration',
@@ -309,16 +309,16 @@ if ( ! function_exists( 'bsf_register_user_callback' ) ) {
 		$request = wp_remote_post(
 			$path, array(
 				'body'    => $data,
-				'timeout' => '60',
+				'timeout' => '10',
 			)
 		);
 
 		if ( is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) !== 200 ) {
-			$path    = get_api_url( true ) . '&referrer=user_registration';
+			$path    = bsf_get_api_url( true ) . '&referrer=user_registration';
 			$request = wp_remote_post(
 				$path, array(
 					'body'    => $data,
-					'timeout' => '60',
+					'timeout' => '8',
 				)
 			);
 		}
@@ -634,109 +634,6 @@ if ( ! function_exists( 'bsf_notices' ) ) {
 	}
 }
 
-if ( ! function_exists( 'bsf_grant_developer_access' ) ) {
-	function bsf_grant_developer_access( $action ) {
-		$brainstrom_users = ( get_option( 'brainstrom_users' ) ) ? get_option( 'brainstrom_users' ) : array();
-
-		if ( empty( $brainstrom_users ) ) {
-			return false;
-		}
-
-		global $current_user;
-		$user  = $current_user->user_login;
-		$email = $current_user->user_email;
-
-		// $token = bin2hex(openssl_random_pseudo_bytes(32));
-		$token = bsf_generate_rand_token();
-		$url   = wp_nonce_url( get_site_url() . '/wp-login.php?developer_access=true&access_id=' . $user . '&access_token=' . $token );
-
-		$subject = $message = $vc_version = '';
-
-		$username = ( isset( $brainstrom_users[0]['name'] ) ) ? $brainstrom_users[0]['name'] : $user;
-
-		$response = bsf_allow_developer_access( $username, $url, $action );
-		if ( $response ) {
-			if ( $action === 'grant' ) {
-				update_option( 'developer_access', true );
-				$interval = time() + ( 15 * 24 * 60 * 60 );
-				update_option( 'access_time', $interval );
-				update_option( 'access_token', $token );
-				// echo '<div class="updated"><p>'.$response.'</p></div>';
-			} else {
-				$interval = time() - ( 10000 );
-				update_option( 'access_time', $interval );
-				if ( update_option( 'developer_access', false ) ) {
-					// echo __("Access Revoked!",'bsf');
-				} else {
-					?>
-					<div class="error"><p><?php echo __( 'Something went wrong. Please try again!', 'bsf' ); ?></p></div>
-					<?php
-				}
-			}
-		} else {
-			echo '<div class="error"><p>Something went wrong. Please try again.</p></div>';
-			update_option( 'developer_access', false );
-			$interval = time();
-			update_option( 'access_time', $interval );
-		}
-	}
-}
-if ( ! function_exists( 'bsf_allow_developer_access' ) ) {
-	function bsf_allow_developer_access( $username, $url, $process ) {
-
-		$path    = get_api_url() . '?referer=allow-developer-access';
-		$new_url = $url;
-		$user    = $username;
-		$request = wp_remote_post(
-			$path, array(
-				'body'    => array(
-					'action'    => 'give_developer_access',
-					'userid'    => $user,
-					'login_url' => $new_url,
-					'site_url'  => get_site_url(),
-					'process'   => $process,
-				),
-				'timeout' => '30',
-			)
-		);
-		if ( ! is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
-			return ( $request['body'] );
-		}
-	}
-}
-if ( ! function_exists( 'bsf_process_developer_login' ) ) {
-	function bsf_process_developer_login() {
-		$basename = basename( $_SERVER['SCRIPT_NAME'] );
-		if ( $basename == 'wp-login.php' ) {
-			$interval = get_option( 'access_time' );
-			$now      = time();
-			if ( $interval <= $now ) {
-				update_option( 'developer_access', false );
-			}
-			require_once ABSPATH . 'wp-includes/pluggable.php';
-
-			if ( isset( $_GET['access_token'] ) ) {
-				$access       = get_option( 'developer_access' );
-				$access_token = get_option( 'access_token' );
-				$verify_token = $_GET['access_token'];
-				$verified     = ( $access_token === $verify_token ) ? true : false;
-				if ( isset( $_GET['developer_access'] ) && $access && $verified ) {
-					$user_login = $_GET['access_id'];
-					$user       = get_user_by( 'login', $user_login );
-					$user_id    = $user->ID;
-					wp_set_current_user( $user_id, $user_login );
-					wp_set_auth_cookie( $user_id );
-					$redirect_to = user_admin_url();
-					setcookie( 'DeveloperAccess', 'active', time() + 86400 );
-					wp_safe_redirect( $redirect_to );
-					exit();
-				}
-			}
-		}
-	}
-}
-bsf_process_developer_login();
-
 if ( ! function_exists( 'bsf_get_free_products' ) ) {
 	function bsf_get_free_products() {
 		$plugins = get_plugins();
@@ -787,46 +684,7 @@ if ( ! function_exists( 'bsf_get_free_products' ) ) {
 		return $bsf_free_products;
 	}
 }
-// function to toggle licence from server
-add_action( 'wp_ajax_bsf_update_client_license', 'bsf_server_update_client_license' );
-add_action( 'wp_ajax_nopriv_bsf_update_client_license', 'bsf_server_update_client_license' );
-if ( ! function_exists( 'bsf_server_update_client_license' ) ) {
-	function bsf_server_update_client_license() {
-		if ( isset( $_SERVER['HTTP_ORIGIN'] ) ) {
-			header( 'Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'] );
-			header( 'Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS' );
-			header( 'Access-Control-Max-Age: 1000' );
-			header( 'Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With' );
-		}
 
-		$product_id    = ( isset( $_POST['product_id'] ) ) ? $_POST['product_id'] : '';
-		$product_type  = ( isset( $_POST['product_type'] ) ) ? $_POST['product_type'] : '';
-		$purchase_code = ( isset( $_POST['purchase_code'] ) ) ? $_POST['purchase_code'] : '';
-		$useremail     = ( isset( $_POST['user_email'] ) ) ? $_POST['user_email'] : '';
-		$userid        = $useremail;
-		$process       = ( isset( $_POST['process'] ) ) ? $_POST['process'] : '';
-		$site_url      = ( isset( $_POST['site_url'] ) ) ? $_POST['site_url'] : '';
-		$status        = ( isset( $_POST['status'] ) ) ? $_POST['status'] : '';
-
-		$brainstrom_products = ( get_option( 'brainstrom_products' ) ) ? get_option( 'brainstrom_products' ) : array();
-
-		if ( ! empty( $brainstrom_products ) ) {
-			if ( ( isset( $brainstrom_products[ $product_type . 's' ] ) ) && ( ! empty( $brainstrom_products[ $product_type . 's' ] ) ) ) {
-				if ( isset( $brainstrom_products[ $product_type . 's' ][ $product_id ] ) ) {
-					$brainstrom_products[ $product_type . 's' ][ $product_id ]['status'] = $status;
-					if ( empty( $brainstrom_products[ $product_type . 's' ][ $product_id ]['purchase_key'] ) ) {
-						$brainstrom_products[ $product_type . 's' ][ $product_id ]['purchase_key'] = $purchase_code;
-					}
-					update_option( 'brainstrom_products', $brainstrom_products );
-					echo true;
-					die();
-				}
-			}
-		}
-		echo false;
-		die();
-	}
-}
 // delete bundled products after switch theme
 if ( ! function_exists( 'bsf_theme_deactivation' ) ) {
 

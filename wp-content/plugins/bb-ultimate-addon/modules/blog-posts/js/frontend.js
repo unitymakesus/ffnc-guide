@@ -29,6 +29,7 @@ var UABBBlogPosts;
         this.slidesToScroll         = settings.slidesToScroll;
         this.autoplay         = settings.autoplay;
         this.autoplaySpeed         = settings.autoplaySpeed;
+        this.dots = settings.dots;
         this.small_breakpoint         = settings.small_breakpoint;
         this.medium_breakpoint         = settings.medium_breakpoint;
         this.equal_height_box         = settings.equal_height_box;
@@ -121,15 +122,15 @@ var UABBBlogPosts;
             var grid = jQuery( this.nodeClass ).find( '.uabb-blog-posts-carousel' );
 
             jQuery( this.nodeClass ).find( '.uabb-blog-posts-carousel' ).uabbslick({
-                dots: false,
+                dots: this.dots,
                 infinite: this.infinite,
                 arrows: this.arrows,
                 lazyLoad: 'ondemand',
                 slidesToShow: this.desktop,
                 slidesToScroll: this.slidesToScroll,
                 autoplay: this.autoplay,
-                prevArrow: '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button"><i class="fa '+ this.prevArrow +' "></i></button>',
-                nextArrow: '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button"><i class="fa '+ this.nextArrow +' "></i></button>',
+                prevArrow: '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button"><i class=" '+ this.prevArrow +' "></i></button>',
+                nextArrow: '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button"><i class="'+ this.nextArrow +' "></i></button>',
                 autoplaySpeed: this.autoplaySpeed,
                 adaptiveHeight: false,
                 responsive: [

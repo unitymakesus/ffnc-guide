@@ -36,6 +36,13 @@ SWP()->ajax->enqueue_script(
 	)
 );
 
+wp_enqueue_style(
+	'searchwp-statistics',
+	trailingslashit( SWP()->url ) . 'assets/js/dist/statistics.min.css',
+	array(),
+	SEARCHWP_VERSION
+);
+
 ?>
 <div class="wrap">
 	<h2><?php esc_html_e( 'Search Statistics', 'searchwp' ); ?></h2>

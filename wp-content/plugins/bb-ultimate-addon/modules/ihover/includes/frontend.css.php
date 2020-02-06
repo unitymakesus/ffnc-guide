@@ -5,8 +5,8 @@
  *  @package UABB iHover Module
  */
 
-$version_bb_check = UABB_Compatibility::check_bb_version();
-$converted        = UABB_Compatibility::check_old_page_migration();
+$version_bb_check = UABB_Compatibility::$version_bb_check;
+$converted        = UABB_Compatibility::$uabb_migration;
 
 $settings->title_margin_top        = '' != trim( $settings->title_margin_top ) ? $settings->title_margin_top : '5';
 $settings->title_margin_bottom     = '' != trim( $settings->title_margin_bottom ) ? $settings->title_margin_bottom : '5';
@@ -113,7 +113,9 @@ if ( count( $settings->ihover_item ) > 0 ) {
 ?>
 
 .fl-node-<?php echo $id; ?> .uabb-ih-container ul.uabb-ih-list li.uabb-ih-list-item {
-	margin: <?php echo ( $settings->spacing / 2 ); ?>px;
+	<?php if ( is_numeric( $settings->spacing ) ) { ?>
+		margin: <?php echo ( $settings->spacing / 2 ); ?>px;
+	<?php } ?>
 }
 <?php if ( ! $version_bb_check ) { ?>
 	.fl-node-<?php echo $id; ?> .uabb-align-<?php echo $settings->align; ?> {

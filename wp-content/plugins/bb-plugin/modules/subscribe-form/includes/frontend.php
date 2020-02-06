@@ -2,13 +2,13 @@
 
 	<?php if ( 'show' == $settings->show_name ) : ?>
 	<div class="fl-form-field">
-		<input type="text" name="fl-subscribe-form-name" placeholder="<?php _ex( 'Name', 'First and last name.', 'fl-builder' ); ?>" aria-label="name" />
+		<input type="text" name="fl-subscribe-form-name" placeholder="<?php echo esc_attr( $settings->name_field_text ); ?>" aria-label="name" />
 		<div class="fl-form-error-message"><?php _e( 'Please enter your name.', 'fl-builder' ); ?></div>
 	</div>
 	<?php endif; ?>
 
 	<div class="fl-form-field">
-		<input type="email" name="fl-subscribe-form-email" placeholder="<?php _e( 'Email Address', 'fl-builder' ); ?>" aria-label="email address" />
+		<input type="email" name="fl-subscribe-form-email" placeholder="<?php echo esc_attr( $settings->email_field_text ); ?>" aria-label="email address" />
 		<div class="fl-form-error-message"><?php _e( 'Please enter a valid email address.', 'fl-builder' ); ?></div>
 	</div>
 
@@ -29,7 +29,7 @@
 		<?php if ( 'show' == $settings->show_recaptcha && ( isset( $settings->recaptcha_site_key ) && ! empty( $settings->recaptcha_site_key ) ) ) : ?>
 		<div class="fl-form-field fl-form-recaptcha">
 			<div class="fl-form-error-message"><?php _e( 'Please check the captcha to verify you are not a robot.', 'fl-builder' ); ?></div>
-			<div id="<?php echo $id; ?>-fl-grecaptcha" class="fl-grecaptcha" data-sitekey="<?php echo $settings->recaptcha_site_key; ?>"<?php if ( isset( $settings->recaptcha_validate_type ) ) { echo ' data-validate="' . $settings->recaptcha_validate_type . '"';} ?><?php if ( isset( $settings->recaptcha_theme ) ) { echo ' data-theme="' . $settings->recaptcha_theme . '"';} ?>></div><?php // @codingStandardsIgnoreLine ?>
+			<div id="<?php echo $id; ?>-fl-grecaptcha" class="fl-grecaptcha"<?php $module->recaptcha_data_attributes(); ?>></div>
 		</div>
 		<?php endif; ?>
 	<?php endif; ?>
@@ -55,10 +55,12 @@
 		<?php if ( 'show' == $settings->show_recaptcha && ( isset( $settings->recaptcha_site_key ) && ! empty( $settings->recaptcha_site_key ) ) ) : ?>
 		<div class="fl-form-field fl-form-recaptcha">
 			<div class="fl-form-error-message"><?php _e( 'Please check the captcha to verify you are not a robot.', 'fl-builder' ); ?></div>
-			<div id="<?php echo $id; ?>-fl-grecaptcha" class="fl-grecaptcha" data-sitekey="<?php echo $settings->recaptcha_site_key; ?>"<?php if ( isset( $settings->recaptcha_validate_type ) ) { echo ' data-validate="' . $settings->recaptcha_validate_type . '"';} ?><?php if ( isset( $settings->recaptcha_theme ) ) { echo ' data-theme="' . $settings->recaptcha_theme . '"';} ?>></div><?php // @codingStandardsIgnoreLine ?>
+			<div id="<?php echo $id; ?>-fl-grecaptcha" class="fl-grecaptcha"<?php $module->recaptcha_data_attributes(); ?>></div>
 		</div>
 		<?php endif; ?>
 	<?php endif; ?>
+
+	<div class="fl-form-success-message"><?php echo $settings->success_message; ?></div>
 
 	<div class="fl-form-error-message"><?php _e( 'Something went wrong. Please check your entries and try again.', 'fl-builder' ); ?></div>
 

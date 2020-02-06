@@ -5,14 +5,16 @@ final class FL_Debug {
 	static private $tests = array();
 
 	public static function init() {
-		if ( isset( $_GET['fldebug'] ) && get_option( 'fl_debug_mode', false ) === $_GET['fldebug'] ) {
+		if ( isset( $_GET['fldebug'] ) && get_transient( 'fl_debug_mode', false ) === $_GET['fldebug'] ) {
 			add_action( 'init', array( 'FL_Debug', 'display_tests' ) );
 		}
 
-		if ( get_option( 'fl_debug_mode', false ) ) {
+		if ( get_transient( 'fl_debug_mode' ) ) {
 			self::enable_logging();
+			add_filter( 'fl_is_debug', '__return_true' );
 		}
 	}
+
 
 	public static function enable_logging() {
 		@ini_set( 'display_errors', 1 ); // @codingStandardsIgnoreLine
@@ -79,7 +81,7 @@ final class FL_Debug {
 		return $plugins;
 	}
 
-	private static function safe_ini_get( $ini ) {
+	public static function safe_ini_get( $ini ) {
 		return @ini_get( $ini ); // @codingStandardsIgnoreLine
 	}
 
@@ -159,6 +161,31 @@ final class FL_Debug {
 		self::register( 'wp_max_mem', $args );
 
 		$args = array(
+			'name' => 'Post Counts',
+			'data' => self::divider(),
+		);
+		self::register( 'post_counts', $args );
+
+		$templates = wp_count_posts( 'fl-builder-template' );
+
+		$post_types = get_post_types( null, 'object' );
+
+		foreach ( $post_types as $type => $type_object ) {
+
+			if ( in_array( $type, array( 'wp_block', 'user_request', 'oembed_cache', 'customize_changeset', 'custom_css', 'nav_menu_item' ) ) ) {
+				continue;
+			}
+
+			$count = wp_count_posts( $type );
+
+			$args = array(
+				'name' => ( 'fl-builder-template' == $type ) ? 'Builder Templates' : 'WordPress ' . $type_object->label,
+				'data' => ( $count->inherit > 0 ) ? $count->inherit : $count->publish,
+			);
+			self::register( 'wp_type_count_' . $type, $args );
+		}
+
+		$args = array(
 			'name' => 'Themes',
 			'data' => self::divider(),
 		);
@@ -173,6 +200,27 @@ final class FL_Debug {
 			),
 		);
 		self::register( 'active_theme', $args );
+
+		if ( 'bb-theme' === $theme->get( 'Template' ) ) {
+			if ( is_dir( trailingslashit( get_stylesheet_directory() ) . 'includes' ) ) {
+				$args = array(
+					'name' => 'Child Theme includes folder detected.',
+					'data' => trailingslashit( get_stylesheet_directory() ) . 'includes/',
+				);
+				self::register( 'child_includes', $args );
+			}
+
+			if ( is_dir( trailingslashit( get_stylesheet_directory() ) . 'fl-builder/modules' ) ) {
+				$modules = glob( trailingslashit( get_stylesheet_directory() ) . 'fl-builder/modules/*' );
+				if ( ! empty( $modules ) ) {
+					$args = array(
+						'name' => 'Child Theme builder modules folder detected.',
+						'data' => implode( '<br>', $modules ),
+					);
+					self::register( 'child_bb_modules', $args );
+				}
+			}
+		}
 
 		$args = array(
 			'name' => 'Plugins',
@@ -283,6 +331,26 @@ final class FL_Debug {
 		);
 		self::register( 'recursion', $args );
 
+		$zlib = self::safe_ini_get( 'zlib.output_compression' );
+
+		if ( $zlib ) {
+			$args = array(
+				'name' => 'ZLIB Output Compression',
+				'data' => $zlib,
+			);
+			self::register( 'zlib', $args );
+		}
+
+		$zlib_handler = self::safe_ini_get( 'zlib.output_handler' );
+
+		if ( $zlib_handler ) {
+			$args = array(
+				'name' => 'ZLIB Handler',
+				'data' => $zlib,
+			);
+			self::register( 'zlib_handler', $zlib_handler );
+		}
+
 		$args = array(
 			'name' => 'BB Products',
 			'data' => self::divider(),
@@ -385,6 +453,13 @@ final class FL_Debug {
 				);
 				self::register( 'bb_sub_domain', $args );
 			}
+			if ( isset( $subscription->downloads ) && is_array( $subscription->downloads ) && ! empty( $subscription->downloads ) ) {
+				$args = array(
+					'name' => 'Available Downloads',
+					'data' => implode( "\n", $subscription->downloads ),
+				);
+				self::register( 'av_downloads', $args );
+			}
 		}
 
 		$args = array(
@@ -398,6 +473,33 @@ final class FL_Debug {
 			'data' => ( ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : 'Unknown' ),
 		);
 		self::register( 'mysql_version', $args );
+
+		$results = (array) $wpdb->get_results( 'SHOW VARIABLES' );
+
+		foreach ( $results as $k => $result ) {
+			if ( 'max_allowed_packet' === $result->Variable_name ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$args = array(
+					'name' => 'MySQL Max Allowed Packet',
+					'data' => number_format( $result->Value / 1048576 ) . 'MB', // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				);
+				self::register( 'mysql_packet', $args );
+			}
+		}
+
+		$db_bytes = $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT SUM(data_length + index_length) FROM information_schema.TABLES where table_schema = %s GROUP BY table_schema;',
+				DB_NAME
+			)
+		);
+
+		if ( is_numeric( $db_bytes ) ) {
+			$args = array(
+				'name' => 'MySQL Database Size',
+				'data' => number_format( $db_bytes / 1048576 ) . 'MB',
+			);
+			self::register( 'mysql_size', $args );
+		}
 
 		$args = array(
 			'name' => 'Server Info',

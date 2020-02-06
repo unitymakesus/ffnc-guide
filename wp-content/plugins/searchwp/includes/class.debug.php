@@ -28,7 +28,19 @@ class SearchWPDebug {
 
 		if ( ! file_exists( $this->logfile ) ) {
 			WP_Filesystem();
-			if ( method_exists( $wp_filesystem, 'put_contents' ) ) {
+
+			/**
+			 * 3.1.3 hotfix: We have to check for wp_generate_password() because it is a pluggable
+			 * function defined only after plugins_loaded. This comes into play when using the FTP
+			 * implementation of WP_Filesystem() and because SearchWP 3.1 initializes debugging
+			 * earlier (so as to provide better internal logging) put_contents() eventually fires
+			 * wp_generate_password() which when using FTP doesn't exist until plugins_loaded.
+			 * Debugging will eventually kick in using the <3.x implementation as a fallback.
+			 */
+			if (
+				method_exists( $wp_filesystem, 'put_contents' )
+				&& function_exists( 'wp_generate_password' )
+			) {
 				if ( ! $wp_filesystem->put_contents( $this->logfile, '' ) ) {
 					$this->active = false;
 				}

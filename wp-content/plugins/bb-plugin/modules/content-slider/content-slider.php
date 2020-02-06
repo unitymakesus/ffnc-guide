@@ -80,7 +80,7 @@ class FLContentSliderModule extends FLBuilderModule {
 
 		// Background link
 		if ( ! empty( $slide->link ) && ( 'photo' == $slide->bg_layout || 'color' == $slide->bg_layout ) ) {
-			echo '<a class="fl-slide-bg-link" href="' . $slide->link . '" target="' . $slide->link_target . '"></a>';
+			echo '<a class="fl-slide-bg-link" href="' . esc_attr( $slide->link ) . '" target="' . $slide->link_target . '" aria-label="' . esc_attr( $slide->title ) . '"></a>';
 		}
 	}
 
@@ -299,6 +299,15 @@ FLBuilder::register_module('FLContentSliderModule', array(
 							'1' => array(
 								'fields' => array( 'play_pause' ),
 							),
+						),
+					),
+					'shuffle'    => array(
+						'type'    => 'select',
+						'label'   => __( 'Shuffle', 'fl-builder' ),
+						'default' => '0',
+						'options' => array(
+							'0' => __( 'No', 'fl-builder' ),
+							'1' => __( 'Yes', 'fl-builder' ),
 						),
 					),
 					'auto_hover' => array(
@@ -752,6 +761,32 @@ FLBuilder::register_settings_form('content_slider_slide', array(
 							'show_remove' => true,
 							'show'        => array(
 								'fields' => array( 'btn_icon_position', 'btn_icon_animation' ),
+							),
+						),
+						'btn_duo_color1'     => array(
+							'label'      => __( 'DuoTone Primary Color', 'fl-builder' ),
+							'type'       => 'color',
+							'default'    => '',
+							'show_reset' => true,
+							'show_alpha' => true,
+							'preview'    => array(
+								'type'      => 'css',
+								'selector'  => 'i.fl-button-icon.fad:before',
+								'property'  => 'color',
+								'important' => true,
+							),
+						),
+						'btn_duo_color2'     => array(
+							'label'      => __( 'DuoTone Secondary Color', 'fl-builder' ),
+							'type'       => 'color',
+							'default'    => '',
+							'show_reset' => true,
+							'show_alpha' => true,
+							'preview'    => array(
+								'type'      => 'css',
+								'selector'  => 'i.fl-button-icon.fad:after',
+								'property'  => 'color',
+								'important' => true,
 							),
 						),
 						'btn_icon_position'  => array(

@@ -8,7 +8,7 @@
 					<searchwp-input-checkbox
 						:label="engine.label"
 						:checked="engine.export"
-						v-on:change="toggleEngineExport(engineIndex)"/>
+						v-on:change="toggleEngineExport(engineIndex)"></searchwp-input-checkbox>
 				</li>
 			</ul>
 		</div>

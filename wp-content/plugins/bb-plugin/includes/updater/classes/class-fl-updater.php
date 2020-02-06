@@ -14,7 +14,7 @@ final class FLUpdater {
 	 * @access private
 	 * @var string $_updates_api_url
 	 */
-	static private $_updates_api_url = 'http://updates.wpbeaverbuilder.com/';
+	static private $_updates_api_url = 'https://updates.wpbeaverbuilder.com/';
 
 	/**
 	 * An internal array of data for each product.
@@ -79,7 +79,7 @@ final class FLUpdater {
 		FLUpdater::$_responses[ $slug ] = FLUpdater::api_request( FLUpdater::$_updates_api_url, array(
 			'fl-api-method' => 'update_info',
 			'license'       => FLUpdater::get_subscription_license(),
-			'domain'        => network_home_url(),
+			'domain'        => FLUpdater::validate_domain( network_home_url() ),
 			'product'       => $this->settings['name'],
 			'slug'          => $this->settings['slug'],
 			'version'       => $this->settings['version'],
@@ -328,12 +328,13 @@ final class FLUpdater {
 		$response = FLUpdater::api_request(self::$_updates_api_url, array(
 			'fl-api-method' => 'activate_domain',
 			'license'       => $license,
-			'domain'        => network_home_url(),
+			'domain'        => FLUpdater::validate_domain( network_home_url() ),
 			'products'      => json_encode( self::$_products ),
 		));
 		update_site_option( 'fl_themes_subscription_email', $license );
 		return $response;
 	}
+
 
 	/**
 	 * Static method for retrieving the subscription info.
@@ -344,7 +345,7 @@ final class FLUpdater {
 	static public function get_subscription_info() {
 		return self::api_request(self::$_updates_api_url, array(
 			'fl-api-method' => 'subscription_info',
-			'domain'        => network_home_url(),
+			'domain'        => FLUpdater::validate_domain( network_home_url() ),
 			'license'       => FLUpdater::get_subscription_license(),
 		));
 	}
@@ -376,9 +377,24 @@ final class FLUpdater {
 
 			if ( ! $license ) {
 				$link = sprintf( '<a href="%s" target="_blank" style="color: #fff; text-decoration: underline;">%s &raquo;</a>', admin_url( '/options-general.php?page=fl-builder-settings#license' ), __( 'Enter License Key', 'fl-builder' ) );
+				/* translators: %s: link to license tab */
 				$text = sprintf( __( 'Please enter a valid license key to enable automatic updates. %s', 'fl-builder' ), $link );
 			} else {
-				$link = sprintf( '<a href="%s" target="_blank" style="color: #fff; text-decoration: underline;">%s &raquo;</a>', $plugin_data['PluginURI'], __( 'Subscribe Now', 'fl-builder' ) );
+				if ( 'bb-theme-builder/bb-theme-builder.php' === $plugin_data['plugin'] ) {
+					$subscribe_link = FLBuilderModel::get_store_url( 'beaver-themer', array(
+						'utm_medium'   => 'bb-theme-builder',
+						'utm_source'   => 'plugins-admin-page',
+						'utm_campaign' => 'subscribe',
+					) );
+				} else {
+					$subscribe_link = FLBuilderModel::get_store_url( '', array(
+						'utm_medium'   => 'bb',
+						'utm_source'   => 'plugins-admin-page',
+						'utm_campaign' => 'subscribe',
+					) );
+				}
+				$link = sprintf( '<a href="%s" target="_blank" style="color: #fff; text-decoration: underline;">%s &raquo;</a>', $subscribe_link, __( 'Subscribe Now', 'fl-builder' ) );
+				/* translators: %s: subscribe link */
 				$text = sprintf( __( 'Please subscribe to enable automatic updates for this plugin. %s', 'fl-builder' ), $link );
 			}
 
@@ -468,5 +484,15 @@ final class FLUpdater {
 		}
 
 		return $body_decoded;
+	}
+
+	/**
+	 * Validate domain and strip any query params
+	 * @since 2.3
+	 */
+	private static function validate_domain( $url ) {
+		$pos = strpos( $url, '?' );
+		$url = ( $pos ) ? untrailingslashit( substr( $url, 0, $pos ) ) : $url;
+		return $url;
 	}
 }

@@ -12,7 +12,7 @@ Vue.component("multiselect", Multiselect);
 new Vue({
   el: "#searchwp-settings",
   data: _SEARCHWP_VARS.data ? _SEARCHWP_VARS.data : {},
-  template: "<searchwp-settings/>",
+  template: "<searchwp-settings></searchwp-settings>",
   components: {
     "searchwp-settings": SearchwpSettings
   }

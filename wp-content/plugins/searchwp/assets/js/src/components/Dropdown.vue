@@ -1,41 +1,36 @@
 <template>
     <div class="searchwp-dropdown">
 
-        <v-popover offset="6" v-if="!showing">
-            <searchwp-button :label="buttonText" />
+        <v-popover offset="6" v-if="!showing" ref="dropdownPopover">
+            <searchwp-button :label="buttonText"></searchwp-button>
             <template slot="popover">
                 <ul v-if="type=='postTypes'">
                     <li v-for="unusedPostType in getUnusedPostTypes()"
                         :key="unusedPostType.name"
-                        v-close-popover
-                        @click="addPostType(unusedPostType.name)">{{ unusedPostType.label }}</li>
-                    <li v-for="excludedPostType in excludedPostTypes" class="searchwp-excluded-types-note">
+                        @click="addPostType(unusedPostType.name)"
+                        >{{ unusedPostType.label }}</li>
+                    <li
+                        v-for="excludedPostType in excludedPostTypes" class="searchwp-excluded-types-note"
+                        :key="'excluded-' + excludedPostType.name">
                         {{ i18n.excluded }}: {{ excludedPostType.label }}
                     </li>
                 </ul>
                 <ul v-else-if="type=='contentTypes'">
                     <li v-if="getUnusedNativeAttributes().length"
-                        v-close-popover
                         @click="showDetails('native')">{{ i18n.nativeAttribute }}</li>
                     <li v-if="getUnusedTaxonomies().length"
-                        v-close-popover
                         @click="showDetails('taxonomy')">{{ i18n.taxonomy }}</li>
                     <li v-if="'attachment' == postType && isWithoutCustomField('searchwp_content')"
-                        v-close-popover
                         @click="addMetakeyRecord('searchwp_content', true)">{{ i18n.documentContent }}</li>
                     <li v-if="'attachment' == postType && isWithoutCustomField('searchwp_pdf_metadata')"
-                        v-close-popover
                         @click="addMetakeyRecord('searchwp_pdf_metadata', true)">{{ i18n.pdfMetadata }}</li>
                     <li v-if="getUnusedMetakeys().length"
-                        v-close-popover
                         @click="showDetails('meta')">{{ i18n.customField }}</li>
                 </ul>
                 <ul v-else-if="type=='rules'">
                     <li v-if="getUnusedRuleTaxonomies('exclude').length"
-                        v-close-popover
                         @click="showDetails('excludeTaxonomy')">{{ i18n.excludeByTaxonomy }}</li>
                     <li v-if="getUnusedRuleTaxonomies('limit_to').length"
-                        v-close-popover
                         @click="showDetails('limitToTaxonomy')">{{ i18n.limitByTaxonomy }}</li>
                 </ul>
             </template>
@@ -98,7 +93,7 @@
 
             <searchwp-button
                 @click.native.prevent="showing=''"
-                :label="i18n.done"/>
+                :label="i18n.done"></searchwp-button>
 
         </div>
 
@@ -110,6 +105,7 @@ import Vue from 'vue';
 import md5 from 'md5';
 import { EventBus } from './../EventBus.js';
 import SearchwpButton from './Button.vue';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
     name: 'SearchwpDropdown',
@@ -157,7 +153,7 @@ export default {
 
             // A native attribute is unused if it has a weight of zero
             return attributes.filter(function (attribute) {
-                return attributeWeights[ attribute.name ] == 0;
+                return ! attributeWeights[ attribute.name ] || attributeWeights[ attribute.name ] === 0;
             });
         },
         getUnusedTaxonomies() {
@@ -266,6 +262,10 @@ export default {
             return grouped;
         },
         showDetails( details ) {
+            if (this.$refs.dropdownPopover) {
+                this.$refs.dropdownPopover.hide();
+            }
+
             // Show the multiselect
             this.showing = details;
         },
@@ -277,6 +277,9 @@ export default {
             if (this.getUnusedNativeAttributes().length == 0) {
                 this.showing = '';
             }
+
+            // This is ugly, but the code isn't reactive for this change.
+            this.$parent.$forceUpdate();
         },
         addTaxonomy( taxonomy ) {
             this.visible = !this.visible;
@@ -325,9 +328,17 @@ export default {
             }
         },
         addPostType( postType ) {
+            if (this.$refs.dropdownPopover) {
+                this.$refs.dropdownPopover.hide();
+            }
+
             Vue.set(this.$parent.model.objects[ postType ], 'enabled', true);
         },
         addMetakeyRecord( metakey, passive ) {
+            if (this.$refs.dropdownPopover) {
+                this.$refs.dropdownPopover.hide();
+            }
+
             let modelKeyHash = 'swppv' + md5( this.postType + metakey);
 
             if (!this.$parent.model.objects[ this.postType ].weights.cf) {
@@ -437,7 +448,6 @@ export default {
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss">
     .searchwp-dropdown {
         border-top: 1px solid #ddd;
@@ -539,110 +549,115 @@ export default {
     }
 
     // Multiselect component overrides
-    .multiselect {
-        color: #444;
+    #wpbody {
 
+        .multiselect {
+            color: #444;
+
+            .multiselect__placeholder {
+                line-height: 1;
+                padding-top: 5px;
+                padding-left: 1px;
+                margin-bottom: 0;
+            }
+
+            .multiselect__input {
+                margin-bottom: 4px;
+                border: 0;
+                box-shadow: none;
+            }
+        }
+
+        .multiselect,
+        .multiselect__tags {
+            min-height: 35px;
+        }
+
+        .multiselect__tags {
+            padding: 4px 40px 0 8px;
+            border-radius: 3px;
+        }
+
+        .multiselect__select {
+            height: 35px;
+            width: 30px;
+        }
+
+        .searchwp-engine .multiselect__content {
+            z-index: 9999 !important;
+        }
+
+        .multiselect__input,
         .multiselect__single {
-            margin-bottom: 5px;
+            line-height: 22px;
+            width: auto;
+            background-color: transparent;
+            font-size: 1em;
+            padding: 0;
         }
 
-        .multiselect__input {
-            margin-bottom: 4px;
-            border: 0;
-            box-shadow: none;
+        .multiselect__option {
+            padding: 8px;
+            line-height: 1.4;
+            min-height: 30px;
+            font-size: 13px;
         }
-    }
 
-    .multiselect,
-    .multiselect__tags {
-        min-height: 30px;
-    }
-
-    .multiselect__tags {
-        padding: 4px 40px 0 2px;
-        border-radius: 3px;
-    }
-
-    .multiselect__select {
-        height: 32px;
-        width: 30px;
-        padding: 4px;
-    }
-
-    .searchwp-engine .multiselect__content {
-        z-index: 9999 !important;
-    }
-
-    .multiselect__input,
-    .multiselect__single {
-        line-height: 22px;
-        width: auto;
-        background-color: transparent;
-        font-size: 1em;
-    }
-
-    .multiselect__element {
-        margin: 0;
-    }
-
-    .multiselect__option {
-        padding: 8px;
-        line-height: 1.4;
-        min-height: 30px;
-        font-size: 13px;
-    }
-
-    .multiselect__option--selected:after,
-    .multiselect__option--highlight:after {
-        display: none;
-    }
-
-    .multiselect__option--selected {
-        background: #fff;
-        font-weight: normal;
-        color: #444;
-    }
-
-    .multiselect__option--highlight,
-    .multiselect__option--highlight.multiselect__option--selected {
-        background: #159FD2;
-    }
-
-    .multiselect__spinner {
-        height: 28px;
-
-        &:before,
-        &:after {
-            border-color: #159FD2 transparent transparent;
+        .multiselect__option--selected:after,
+        .multiselect__option--highlight:after {
+            display: none;
         }
-    }
 
-    .multiselect__tag {
-        background: #159FD2;
-        font-size: 13px;
-        padding: 4px 26px 4px 7px;
-        border-radius: 3px;
-        margin-top: 2px;
-        margin-right: 5px;
-        margin-bottom: 2px;
-    }
-
-    .multiselect__tag-icon {
-        line-height: 19px;
-        border-radius: 3px;
-
-        &:after {
-            color: darken( #159FD2, 20% );
-            font-size: 15px;
+        .multiselect__option--selected {
+            background: #fff;
+            font-weight: normal;
+            color: #444;
         }
-    }
 
-    .multiselect__tag-icon:focus,
-    .multiselect__tag-icon:hover {
-        background: #159FD2;
-    }
+        .multiselect__option--highlight,
+        .multiselect__option--highlight.multiselect__option--selected {
+            background: #159FD2;
+        }
 
-    .multiselect__content-wrapper {
-        box-shadow: 0 2px 3px 0 rgba(44,44,44,0.2);
+        .multiselect__spinner {
+            height: 30px;
+            width: 34px;
+            background: #fff;
+
+            &:before,
+            &:after {
+                border-color: #159FD2 transparent transparent;
+            }
+        }
+
+        .multiselect__tag {
+            background: #159FD2;
+            font-size: 13px;
+            padding: 4px 26px 4px 7px;
+            border-radius: 3px;
+            margin-top: 2px;
+            margin-right: 5px;
+            margin-bottom: 2px;
+        }
+
+        .multiselect__tag-icon {
+            line-height: 19px;
+            border-radius: 3px;
+
+            &:after {
+                color: darken( #159FD2, 20% );
+                font-size: 15px;
+            }
+        }
+
+        .multiselect__tag-icon:focus,
+        .multiselect__tag-icon:hover {
+            background: #159FD2;
+        }
+
+        // NOTE: The shadow looks out of place...
+        // .multiselect__content-wrapper {
+        //     box-shadow: 0 2px 3px 0 rgba(44,44,44,0.2);
+        // }
     }
 </style>

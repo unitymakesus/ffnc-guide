@@ -55,7 +55,8 @@ if ( ! class_exists( 'UABB_Cloud_Templates' ) ) {
 		function __construct() {
 
 			self::$cloud_url = apply_filters(
-				'uabb_template_cloud_api', array(
+				'uabb_template_cloud_api',
+				array(
 					'page-templates' => 'http://templates.ultimatebeaver.com/wp-json/uabb/v1/template/layouts/',
 					'sections'       => 'http://templates.ultimatebeaver.com/wp-json/uabb/v1/template/sections/',
 					'presets'        => 'http://templates.ultimatebeaver.com/wp-json/uabb/v1/template/presets/',
@@ -148,7 +149,8 @@ if ( ! class_exists( 'UABB_Cloud_Templates' ) ) {
 				}
 
 				$response = wp_remote_get(
-					$https_url, array(
+					$https_url,
+					array(
 						'timeout' => 30,
 					)
 				);
@@ -156,7 +158,8 @@ if ( ! class_exists( 'UABB_Cloud_Templates' ) ) {
 				if ( $ssl && is_wp_error( $response ) ) {
 
 					$response = wp_remote_get(
-						$url, array(
+						$url,
+						array(
 							'timeout' => 30,
 						)
 					);
@@ -247,7 +250,7 @@ if ( ! class_exists( 'UABB_Cloud_Templates' ) ) {
 					 *
 					 *  Then, keep downloaded.
 					 */
-				} elseif ( 0 == $type_templates && count( $downloaded_templates[ $type ] ) > 0 ) {
+				} elseif ( 0 == $type_templates && count( ( is_array( $downloaded_templates[ $type ] ) || is_object( $downloaded_templates[ $type ] ) ) ? $downloaded_templates[ $type ] : array() ) > 0 ) {
 
 					$cloud_templates[ $type ] = $downloaded_templates[ $type ];
 				}
@@ -457,7 +460,7 @@ if ( ! class_exists( 'UABB_Cloud_Templates' ) ) {
 		function download_cloud_templates() {
 
 			// Check folder exist or not?
-			$dir_info = self::create_local_dir();
+			$dir_info = $this->create_local_dir();
 
 			// Get template details.
 			$dat_file_url                = $dir_info['url'] . basename( $_POST['dat_file'] );
@@ -743,7 +746,7 @@ if ( ! class_exists( 'UABB_Cloud_Templates' ) ) {
 		 * @since 1.2.0.2
 		 * @param string $dir_name verifies the dir name with bb-ultimate-addon.
 		 */
-		static public function create_local_dir( $dir_name = 'bb-ultimate-addon' ) {
+		function create_local_dir( $dir_name = 'bb-ultimate-addon' ) {
 
 			$wp_info = wp_upload_dir();
 
@@ -761,13 +764,13 @@ if ( ! class_exists( 'UABB_Cloud_Templates' ) ) {
 			);
 
 			// Create the upload dir if it doesn't exist.
-			if ( ! file_exists( $dir_info['path'] ) ) {
+			if ( ! fl_builder_filesystem()->file_exists( $dir_info['path'] ) ) {
 
 				// Create the directory.
-				mkdir( $dir_info['path'] );
+				fl_builder_filesystem()->mkdir( $dir_info['path'] );
 
 				// Add an index file for security.
-				file_put_contents( $dir_info['path'] . 'index.html', '' );
+				fl_builder_filesystem()->file_put_contents( $dir_info['path'] . 'index.html', '' );
 			}
 
 			return $dir_info;
