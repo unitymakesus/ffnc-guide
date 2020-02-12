@@ -1,5 +1,5 @@
 ---
 deployment:
  tasks:
-  - export DEPLOYPATH=/home/familyforwardnc/public_html/guide/
+  - export DEPLOYPATH=/home/ffunity/public_html/
   - /bin/cp -R * $DEPLOYPATH
