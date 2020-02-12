@@ -6,7 +6,7 @@
 // Import child theme overrides into this file
 @import "common/a11y";
 @import "common/typography";
-// @import "components/footnotes";
+@import "components/dropdowns";
 @import "components/forms";
 @import "components/nav";
 @import "components/pagination";
@@ -15,4 +15,5 @@
 @import "layouts/footer";
 @import "layouts/header";
 @import "layouts/posts";
+@import "layouts/archive";
 @import "layouts/events";
