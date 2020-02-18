@@ -1,0 +1,31 @@
+.blog .content {
+  width: 90% !important;
+}
+
+.archive-filters {
+  margin-bottom: 2rem;
+
+  &__type {
+    margin-bottom: 1rem;
+
+    a {
+      color: $color-ff-green;
+      padding: 0.5rem;
+      margin: 0 0.25rem;
+      text-decoration: none;
+
+      &.active {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media #{$medium-and-up} {
+    display: flex;
+    justify-content: space-between;
+
+    &__type {
+      margin-bottom: 0;
+    }
+  }
+}
