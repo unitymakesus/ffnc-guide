@@ -1,3 +1,12 @@
 .footnotes {
   @extend .container;
+
+  &::before {
+    border-top-color: $color-ff-gray-med;
+  }
+
+  a.footnotetoggle {
+    color: $color-ff-gray-dark;
+    font-weight: normal;
+  }
 }

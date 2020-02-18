@@ -1,12 +1,20 @@
 .page-footer {
   background-color: $color-ff-gray-dark !important;
 
+  .footer-copyright {
+    font-size: 0.8rem;
+
+    .row {
+      margin-bottom: 0;
+    }
+  }
+
   .menu li {
     padding: 5px 0;
+  }
 
-    a {
-      font-weight: normal;
-    }
+  a {
+    font-weight: normal;
   }
 }
 

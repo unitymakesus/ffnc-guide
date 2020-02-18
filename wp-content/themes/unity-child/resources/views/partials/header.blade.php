@@ -57,7 +57,7 @@
             <input type="checkbox" name="menu-trigger" id="menu-trigger" value="true" />
             <label for="menu-trigger"><i class="material-icons" aria-label="Show navigation menu">menu</i></label>
           </div>
-          {!! wp_nav_menu(['theme_location' => 'primary_navigation', 'container_class' => 'navbar-menu', 'menu_class' => 'flex flex-center space-around']) !!}
+          {!! wp_nav_menu(['theme_location' => 'primary_navigation', 'container_class' => 'navbar-menu', 'menu_class' => 'flex']) !!}
           {!! get_search_form(false) !!}
         @endif
       </div>

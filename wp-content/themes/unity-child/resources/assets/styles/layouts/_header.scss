@@ -13,8 +13,17 @@
   .fl-builder-edit & {
     z-index: auto;
   }
+
+  .logo {
+    padding: 10px 25px;
+  }
 }
 
 .navbar-menu {
   flex-grow: 1;
+  padding: 0;
+
+  ul a {
+    font-size: 0.9rem;
+  }
 }

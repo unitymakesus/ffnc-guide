@@ -6,7 +6,7 @@
     ]
   },
   "publicPath": "/wp-content/themes/unity-child",
-  "devUrl": "http://family-forward-guide.test",
+  "devUrl": "http://familyforwardnc.test",
   "proxyUrl": "http://localhost:3000",
   "cacheBusting": "[name]_[hash:8]",
   "watch": [

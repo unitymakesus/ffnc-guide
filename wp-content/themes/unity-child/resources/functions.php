@@ -199,7 +199,7 @@ function add_post_type() {
 				'parent_item_colon' => ''
    ),
    'public' => true,
-   'exclude_from_search' => true,
+   'exclude_from_search' => false,
    'publicly_queryable' => true,
    'show_ui' => true,
    'show_in_nav_menus' => false,
@@ -274,7 +274,7 @@ add_filter( 'get_search_form', function( $form ) {
     $form = '<form role="search" method="get" class="search-form" action="' . home_url( '/' ) . '" >
 			<label>
 				<span class="screen-reader-text">Search Site:</span>
-				<input type="search" class="search-field" placeholder="Keyword …" value="" name="s">
+				<input type="search" class="search-field" placeholder="Search …" value="" name="s">
 			</label>
 			<input type="submit" class="search-submit disabled" value="Search">
 		</form>';
