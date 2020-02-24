@@ -1,5 +1,5 @@
 ---
 deployment:
  tasks:
-  - export DEPLOYPATH=/home/ffunity/public_html/
+  - export DEPLOYPATH=/home/ffbeta/public_html/
   - /bin/cp -R * $DEPLOYPATH
