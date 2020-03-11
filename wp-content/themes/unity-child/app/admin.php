@@ -27,4 +27,10 @@ if ( function_exists('acf_add_options_page') ) {
     'menu_title'	=> __('Settings', 'sage'),
     'parent_slug'	=> 'edit.php',
   ]);
+
+  acf_add_options_sub_page([
+    'page_title' 	=> __('Directory Settings', 'sage'),
+    'menu_title'	=> __('Directory Settings', 'sage'),
+    'parent_slug'	=> 'edit.php?post_type=ff-company',
+  ]);
 }

@@ -1,7 +1,7 @@
 @extends('layouts.directory')
 
 @php
-  $upload_dir = wp_upload_dir();
+  $background_img = get_field('directory_hero_image', 'options');
   $field_region = get_field_object('field_5c75cc91664bd');
   $regions = $field_region['choices'];
   $field_industry = get_field_object('field_5c75ccac664bf');
@@ -11,7 +11,7 @@
 @endphp
 
 @section('content')
-  <header class="page-header" style="background-image:url({{ $upload_dir['baseurl'] }}/2019/02/iStock-803284710-1.jpg);">
+  <header class="page-header" style="background-image:url({{ $background_img['sizes']['large'] }});">
     <div class="header-row">
       <div class="header-card">
         <div>Directory</div>
