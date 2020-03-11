@@ -78,7 +78,7 @@
                 <strong>Number of Employees:</strong> <em class="employees"> {{ the_field('number_of_employees') }}</em>
               </div>
               <div class="row">
-                <div class="col xl7ß s12">
+                <div class="col xl7 s12">
                   <div class="policies entry-content">
                     <h3 class="h4">Policies</h3>
                     {!! the_field('policies') !!}
