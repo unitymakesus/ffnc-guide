@@ -92,7 +92,7 @@
                         <a href="{{ get_the_permalink($case_study) }}">
                           @if (has_post_thumbnail($case_study))
                             <div class="related-case-study__image">
-                              {!! get_the_post_thumbnail($case_study, 'medium') !!}
+                              {!! get_the_post_thumbnail($case_study, 'card') !!}
                             </div>
                           @endif
                           {!! sprintf('View <span class="screen-reader-text">%s</span> case study', $case_study->post_title) !!}
