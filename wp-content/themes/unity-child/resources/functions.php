@@ -182,6 +182,9 @@ function add_post_type() {
    'menu_icon' => 'dashicons-megaphone',
    'capability_type' => 'page',
    'hierarchical' => false,
+   'taxonomies' => array(
+     'category',
+   ),
    'supports' => array(
      'title',
      'editor',
