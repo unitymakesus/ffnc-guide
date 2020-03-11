@@ -115,7 +115,7 @@ update_option( 'medium_size_h', 600 );
 add_image_size('tiny-thumbnail', 80, 80, true);
 add_image_size('small-thumbnail', 150, 150, true);
 add_image_size('medium-square-thumbnail', 400, 400, true);
-
+add_image_size('card', 800, 600, ['center', 'center']);
 
 add_filter( 'image_size_names_choose', function( $sizes ) {
   return array_merge( $sizes, array(
@@ -335,4 +335,4 @@ array_map(function ($file) use ($sage_error) {
   if (!locate_template($file, true, true)) {
     $sage_error(sprintf(__('Error locating <code>%s</code> for inclusion.', 'sage'), $file), 'File not found');
   }
-}, ['archive']);
+}, ['admin', 'archive']);

@@ -1,0 +1,46 @@
+{
+    "key": "group_5e67bb6ababbd",
+    "title": "Blog Settings",
+    "fields": [
+        {
+            "key": "field_5e67bb7ae3067",
+            "label": "Included Categories",
+            "name": "blog_include_categories",
+            "type": "taxonomy",
+            "instructions": "Select which categories to display in the Categories list.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "category",
+            "field_type": "multi_select",
+            "allow_null": 0,
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "multiple": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-settings"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": 1,
+    "description": "",
+    "modified": 1583856687
+}

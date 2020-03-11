@@ -14,12 +14,16 @@
       <div class="archive-filters__cat">
         @include('partials.category-dropdown', [
           'categories' => get_categories([
-            // 'exclude'    => 1,
-            // 'hide_empty' => true,
+            'include'    => get_field('blog_include_categories', 'options'),
+            'hide_empty' => true,
           ]),
           'label' => 'Filter by category:'
         ])
       </div>
+    </div>
+  @elseif (is_category())
+    <div class="archive-filters">
+      <a href="{{ get_the_permalink(get_option('page_for_posts')) }}"><span aria-hidden="true"><<</span> Back To {{ get_the_title(get_option('page_for_posts', true)) }}</a>
     </div>
   @endif
 

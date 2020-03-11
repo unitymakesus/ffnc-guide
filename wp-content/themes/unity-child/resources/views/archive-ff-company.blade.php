@@ -77,9 +77,30 @@
                 <span class="spacer">&bull;</span>
                 <strong>Number of Employees:</strong> <em class="employees"> {{ the_field('number_of_employees') }}</em>
               </div>
-              <div class="policies entry-content">
-                <h3 class="h4">Policies</h3>
-                {!! the_field('policies') !!}
+              <div class="row">
+                <div class="col xl6 s12">
+                  <div class="policies entry-content">
+                    <h3 class="h4">Policies</h3>
+                    {!! the_field('policies') !!}
+                  </div>
+                </div>
+                @if ($case_studies = get_field('related_case_study'))
+                  <div class="col xl6 s12">
+                    <div class="related-case-study">
+                      <h3 class="h4 screen-reader-text">Case Study</h3>
+                      @foreach ($case_studies as $case_study)
+                        <a href="{{ get_the_permalink($case_study) }}">
+                          @if (has_post_thumbnail($case_study))
+                            <div class="related-case-study__image">
+                              {!! get_the_post_thumbnail($case_study, 'medium') !!}
+                            </div>
+                          @endif
+                          {!! sprintf('View <span class="screen-reader-text">%s</span> case study', $case_study->post_title) !!}
+                        </a>
+                      @endforeach
+                    </div>
+                  </div>
+                @endif
               </div>
             </div>
           </li>

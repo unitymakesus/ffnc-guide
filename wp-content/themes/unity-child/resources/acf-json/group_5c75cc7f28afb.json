@@ -1,0 +1,200 @@
+{
+    "key": "group_5c75cc7f28afb",
+    "title": "Company Info",
+    "fields": [
+        {
+            "key": "field_5c75cc84664bc",
+            "label": "City",
+            "name": "city",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_5c75cc91664bd",
+            "label": "Region",
+            "name": "region",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "North Central": "North Central",
+                "Northeast": "Northeast",
+                "Northwest": "Northwest",
+                "Piedmont-Triad": "Piedmont-Triad",
+                "South Central": "South Central",
+                "Southeast": "Southeast",
+                "Southwest": "Southwest",
+                "Western": "Western"
+            },
+            "default_value": [],
+            "allow_null": 1,
+            "multiple": 1,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_5c75cc9b664be",
+            "label": "Number of Employees",
+            "name": "number_of_employees",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1 to 99": "1 to 99",
+                "100 to 499": "100 to 499",
+                "500 to 999": "500 to 999",
+                "1,000 +": "1,000 +"
+            },
+            "default_value": [],
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_5c75ccac664bf",
+            "label": "Industry",
+            "name": "industry",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "Accommodation\/Food Services": "Accommodation\/Food Services",
+                "Administrative\/Support Services": "Administrative\/Support Services",
+                "Agriculture": "Agriculture",
+                "Arts\/Entertainment\/Recreation": "Arts\/Entertainment\/Recreation",
+                "Construction": "Construction",
+                "Finance\/Insurance": "Finance\/Insurance",
+                "Health Care\/Social Assistance": "Health Care\/Social Assistance",
+                "Manufacturing": "Manufacturing",
+                "Professional\/Scientific\/Technical": "Professional\/Scientific\/Technical",
+                "Services": "Services",
+                "Retail": "Retail",
+                "Transport\/Warehousing": "Transport\/Warehousing",
+                "Wholesale": "Wholesale",
+                "Other": "Other"
+            },
+            "default_value": [],
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_5c75ccb6664c0",
+            "label": "Link to Website",
+            "name": "link_to_website",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": ""
+        },
+        {
+            "key": "field_5c75ccc8664c1",
+            "label": "Policies",
+            "name": "policies",
+            "type": "wysiwyg",
+            "instructions": "Please list policies in a bulleted list.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_5c75cce7664c2",
+            "label": "Related Case Study",
+            "name": "related_case_study",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "ff-case-study"
+            ],
+            "taxonomy": "",
+            "filters": [
+                "search"
+            ],
+            "elements": [
+                "featured_image"
+            ],
+            "min": "",
+            "max": 1,
+            "return_format": "object"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "ff-company"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": 1,
+    "description": "",
+    "modified": 1583864742
+}
