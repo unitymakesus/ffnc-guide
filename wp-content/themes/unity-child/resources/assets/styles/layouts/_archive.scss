@@ -1,5 +1,10 @@
-.blog .content {
+.blog .content,
+.category .content {
   width: 90% !important;
+}
+
+.category .content {
+  @extend .container;
 }
 
 .archive-filters {
