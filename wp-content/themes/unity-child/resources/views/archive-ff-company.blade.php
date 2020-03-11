@@ -78,14 +78,14 @@
                 <strong>Number of Employees:</strong> <em class="employees"> {{ the_field('number_of_employees') }}</em>
               </div>
               <div class="row">
-                <div class="col xl6 s12">
+                <div class="col xl7ß s12">
                   <div class="policies entry-content">
                     <h3 class="h4">Policies</h3>
                     {!! the_field('policies') !!}
                   </div>
                 </div>
                 @if ($case_studies = get_field('related_case_study'))
-                  <div class="col xl6 s12">
+                  <div class="col xl5 s12">
                     <div class="related-case-study">
                       <h3 class="h4 screen-reader-text">Case Study</h3>
                       @foreach ($case_studies as $case_study)
