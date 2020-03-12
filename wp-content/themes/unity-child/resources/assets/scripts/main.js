@@ -1,5 +1,8 @@
 // Import parent JS
-import '../../../../unity-core/dist/scripts/main.js';
+// import '../../../../unity-core/dist/scripts/main.js';
+
+// Import everything from autoload
+import './autoload/*';
 
 /** Import local dependencies */
 import Router from './util/Router';

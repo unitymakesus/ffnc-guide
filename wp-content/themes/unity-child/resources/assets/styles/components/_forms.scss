@@ -11,3 +11,10 @@ fieldset {
     top: -4px;
   }
 }
+
+.search-form input.search-submit {
+  &:hover,
+  &:focus {
+    background-color: darken($color-ff-gray-dark, 10%);
+  }
+}

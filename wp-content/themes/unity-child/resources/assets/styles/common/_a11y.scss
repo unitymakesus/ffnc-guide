@@ -1,3 +1,8 @@
+:focus:not([tabindex="-1"]) {
+  box-shadow: 0 0 0 3px transparentize($color-ff-blue, 0.25);
+  outline: 0;
+}
+
 .sr-only,
 .screen-reader-only {
   position: absolute;

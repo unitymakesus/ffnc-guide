@@ -1,6 +1,10 @@
 .page-footer {
   background-color: $color-ff-gray-dark !important;
 
+  :focus:not([tabindex="-1"]) {
+    box-shadow: 0 0 0 3px transparentize($color-white, 0.25);
+  }
+
   .footer-copyright {
     font-size: 0.8rem;
 
