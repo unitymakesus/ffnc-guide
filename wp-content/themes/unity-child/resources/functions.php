@@ -292,7 +292,7 @@ add_filter( 'get_search_form', function( $form ) {
 				<span class="screen-reader-text">Search Site:</span>
 				<input type="search" class="search-field" placeholder="Search …" value="" name="s">
 			</label>
-			<input type="submit" class="search-submit disabled" value="Search">
+			<input type="submit" class="search-submit disabled" aria-label="Submit search" />
 		</form>';
     return $form;
 } );

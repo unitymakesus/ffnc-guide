@@ -10,3 +10,8 @@
   white-space: nowrap;
   border: 0;
 }
+
+// Skip to content link.
+body > a[href="#content"] {
+  @extend .btn;
+}

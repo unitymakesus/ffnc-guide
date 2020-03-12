@@ -31,33 +31,36 @@
         </div>
 
         <div class="row">
-          <span class="label">Filter by:</span>
-
-          <select class="filter browser-default" id="filter_region" data-filter="region">
-            <option value="" disabled selected>Region</option>
-            <option value="all">All Regions</option>
-            @foreach ($regions as $region)
-              <option value="{{ $region }}">{{ $region }}</option>
-            @endforeach
-          </select>
-
-          <select class="filter browser-default" id="filter_industry" data-filter="industry">
-            <option value="" disabled selected>Industry</option>
-            <option value="all">All Industries</option>
-            @foreach ($industries as $industry)
-              <option value="{{ $industry }}">{{ $industry }}</option>
-            @endforeach
-          </select>
-
-          <select class="filter browser-default" id="filter_employees" data-filter="employees">
-            <option value="" disabled selected>Number of Employees</option>
-            <option value="all">All Sizes</option>
-            @foreach ($employeess as $employees)
-              <option value="{{ $employees }}">{{ $employees }}</option>
-            @endforeach
-          </select>
-
-          <input id="reset_filter" type="button" class="btn-small" value="Reset" />
+          <fieldset>
+            <legend>
+              <span class="label">Filter by:</span>
+            </legend>
+            <label class="sr-only" for="filter_region">Region</label>
+            <select class="filter browser-default" id="filter_region" data-filter="region">
+              <option value="" disabled selected>Region</option>
+              <option value="all">All Regions</option>
+              @foreach ($regions as $region)
+                <option value="{{ $region }}">{{ $region }}</option>
+              @endforeach
+            </select>
+            <label class="sr-only" for="filter_industry">Industry</label>
+            <select class="filter browser-default" id="filter_industry" data-filter="industry">
+              <option value="" disabled selected>Industry</option>
+              <option value="all">All Industries</option>
+              @foreach ($industries as $industry)
+                <option value="{{ $industry }}">{{ $industry }}</option>
+              @endforeach
+            </select>
+            <label class="sr-only" for="filter_employees">Number of Employees</label>
+            <select class="filter browser-default" id="filter_employees" data-filter="employees">
+              <option value="" disabled selected>Number of Employees</option>
+              <option value="all">All Sizes</option>
+              @foreach ($employeess as $employees)
+                <option value="{{ $employees }}">{{ $employees }}</option>
+              @endforeach
+            </select>
+            <input id="reset_filter" type="button" class="btn-small" value="Reset" />
+          </fieldset>
         </div>
       </div>
     </div>
