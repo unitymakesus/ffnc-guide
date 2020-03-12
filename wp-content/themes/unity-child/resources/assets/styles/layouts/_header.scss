@@ -17,13 +17,12 @@
   .logo {
     padding: 10px 25px;
   }
-}
 
-.navbar-menu {
-  flex-grow: 1;
-  padding: 0;
+  .search-form {
+    margin: 1rem auto;
 
-  ul a {
-    font-size: 0.9rem;
+    @media #{$large-and-up} {
+      margin: 0 auto;
+    }
   }
 }
