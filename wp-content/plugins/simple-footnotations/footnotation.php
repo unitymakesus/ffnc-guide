@@ -176,7 +176,7 @@ options to take effect immediately.
 
                 } else {
 
-                    $content = str_replace( $marker, "<sup class='footnote'><a href='$singleurl#marker-$post_id-$n' id='markerref-$post_id-$n' onclick='return footnotation_show($post_id)'><span class='sr-only'>Footnote #</span> $n</a></sup>", $content );
+                    $content = str_replace( $marker, "<sup class='footnote'><a href='$singleurl#marker-$post_id-$n' id='markerref-$post_id-$n' onclick='return footnotation_show($post_id)'><span class='sr-only'>Footnote # </span>$n</a></sup>", $content );
                     $n ++;
                 }
             }

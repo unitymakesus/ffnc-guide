@@ -21,9 +21,9 @@ if ( ! class_exists( 'UABB_WPML_Translatable' ) ) {
 		 * @since 1.6.7
 		 * @return void
 		 */
-		static public function init() {
+		public static function init() {
 			add_filter( 'wpml_beaver_builder_modules_to_translate', __CLASS__ . '::wpml_uabb_modules_translate' );
-			UABB_WPML_Translatable::load_files();
+			self::load_files();
 		}
 
 		/**
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UABB_WPML_Translatable' ) ) {
 		 *
 		 * @since 1.6.7
 		 */
-		static public function load_files() {
+		public static function load_files() {
 
 			if ( class_exists( 'WPML_Page_Builders_Defined' ) ) {
 				require_once BB_ULTIMATE_ADDON_DIR . 'classes/wpml/class-wpml-uabb-progress-bar.php';
@@ -63,7 +63,7 @@ if ( ! class_exists( 'UABB_WPML_Translatable' ) ) {
 		 * @param array $form gets the forms array to be resolved.
 		 * @return array
 		 */
-		static public function wpml_uabb_modules_translate( $form ) {
+		public static function wpml_uabb_modules_translate( $form ) {
 
 			// Heading Module.
 			$form['uabb-heading'] = array(
@@ -329,6 +329,23 @@ if ( ! class_exists( 'UABB_WPML_Translatable' ) ) {
 					array(
 						'field'       => 'form_desc',
 						'type'        => __( 'Gravity Form Description', 'uabb' ),
+						'editor_type' => 'VISUAL',
+					),
+				),
+			);
+
+			// Caldera Form Styler.
+			$form['uabb-caldera-form-styler'] = array(
+				'conditions' => array( 'type' => 'uabb-caldera-form-styler' ),
+				'fields'     => array(
+					array(
+						'field'       => 'caf_form_title',
+						'type'        => __( 'Caldera Form Title', 'uabb' ),
+						'editor_type' => 'LINE',
+					),
+					array(
+						'field'       => 'caf_form_desc',
+						'type'        => __( 'Caldera Form Description', 'uabb' ),
 						'editor_type' => 'VISUAL',
 					),
 				),
