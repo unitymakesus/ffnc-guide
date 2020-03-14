@@ -21,8 +21,14 @@ $sage_error = function ($message, $subtitle = '', $title = '') {
 add_action('wp_enqueue_scripts', function () {
   // Enqueue files for child theme (which include the core assets as imports)
   wp_enqueue_style('sage/main.css', asset_path('styles/main.css'), false, null);
-  wp_enqueue_script('sage/main.js', asset_path('scripts/main.js'), ['jquery'], null, true);
-  wp_localize_script( 'sage/main.js', 'simple_options', array('fonts' => get_theme_mod('theme_fonts'), 'colors' => get_theme_mod('theme_color')) );
+
+  if (class_exists('FLBuilderModel') && (\FLBuilderModel::is_builder_active())) {
+    // Don't load theme js if Beaver Builder is active
+  } else {
+    wp_enqueue_script('sage/main.js', asset_path('scripts/main.js'), ['jquery'], null, true);
+    // Set array of theme customizations for JS
+    wp_localize_script( 'sage/main.js', 'simple_options', array('fonts' => get_theme_mod('theme_fonts'), 'colors' => get_theme_mod('theme_color')) );
+  }
 }, 100);
 
 /**
