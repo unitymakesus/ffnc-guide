@@ -1,5 +1,4 @@
-// Import parent JS
-// import '../../../../unity-core/dist/scripts/main.js';
+import 'custom-event-polyfill';
 
 // Import everything from autoload
 import './autoload/*';

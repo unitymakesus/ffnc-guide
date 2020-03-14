@@ -6,11 +6,6 @@ export default {
     // Initialize Materialize JS for forms
     Materialize.updateTextFields();
     $('select.filter').formSelect();
-
-    // Expandable sections
-    $('.expandable').on('click', '.closed', function() {
-      $(this).removeClass('closed');
-    });
   },
   finalize() {
     // Initialize List.JS
@@ -66,5 +61,23 @@ export default {
 
     $('select.filter').on('change', updateList);
     $('#reset_filter').on('click', resetList);
+
+
+    /**
+     * Collapse elements.
+     */
+    let collapseElems = document.querySelectorAll('.collapse');
+    if (collapseElems.length) {
+      collapseElems.forEach(collapse => {
+        let btn = collapse.querySelector('.collapse__toggle');
+        let target = collapse.querySelector('.collapse__panel');
+
+        btn.addEventListener('click', function() {
+          let expanded = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', !expanded);
+          target.hidden = expanded;
+        });
+      });
+    }
   },
 };

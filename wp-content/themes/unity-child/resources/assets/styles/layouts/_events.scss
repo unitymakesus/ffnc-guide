@@ -17,13 +17,13 @@
   }
 
   .tribe-common-anchor-alt {
-    color: $color-ff-blue;
+    color: $color-ff-blue-a11y;
     border-color: inherit;
 
     &:hover,
     &:focus,
     &:active {
-      color: $color-ff-blue;
+      color: $color-ff-blue-a11y;
       border-color: inherit;
     }
   }
@@ -143,21 +143,21 @@
 .tribe-events .datepicker .month.active.focused,
 .tribe-events .datepicker .year.active,
 .tribe-events .datepicker .year.active.focused {
-  background: $color-ff-blue;
+  background: $color-ff-blue-a11y;
 
   &:hover,
   &:focus {
-    background: $color-ff-blue;
+    background: $color-ff-blue-a11y;
   }
 }
 
 .tribe-events .tribe-events-calendar-month__day-cell--selected,
 .tribe-events .tribe-events-calendar-month__mobile-events-icon--event {
-  background-color: $color-ff-blue;
+  background-color: $color-ff-blue-a11y;
 
   &:hover,
   &:focus {
-    background: $color-ff-blue;
+    background: $color-ff-blue-a11y;
   }
 }
 
@@ -192,11 +192,11 @@
 
 #tribe-events .tribe-events-button,
 .tribe-events-button {
-  background-color: $color-ff-blue;
+  background-color: $color-ff-blue-a11y;
 
   &:hover,
   &:focus {
-    background-color: darken($color-ff-blue, 10%);
+    background-color: darken($color-ff-blue-a11y, 10%);
     color: $color-white;
   }
 }

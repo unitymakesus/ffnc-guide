@@ -18,6 +18,13 @@ function modify_blog_query($query) {
       $post_type = (isset($_GET['filter']) && post_type_exists($_GET['filter'])) ? ($_GET['filter']) : ['post', 'ff-case-study'];
       $query->set('post_type', $post_type);
     }
+
+    /**
+     * Category archives (+ case studies)
+     */
+    if ($query->is_category()) {
+      $query->set('post_type', ['post', 'ff-case-study']);
+    }
   }
   return $query;
 }

@@ -3,6 +3,11 @@ fieldset {
   border: 0;
 }
 
+label,
+.input-field > label {
+  color: inherit;
+}
+
 .input-field.col label {
   left: 1.25em;
   top: 4px;
@@ -17,4 +22,33 @@ fieldset {
   &:focus {
     background-color: darken($color-ff-gray-dark, 10%);
   }
+}
+
+.wpcf7-form abbr[title="Required"] {
+  color: $error-color;
+  text-decoration: none;
+}
+
+.wpcf7 {
+  div[role="alert"] {
+    padding: 1rem;
+    background-color: lighten($error-color, 60%);
+    color: $error-color;
+
+    a {
+      color: inherit;
+    }
+  }
+}
+
+.wpcf7-validation-errors {
+  display: none !important; // These are duplicated by the plugin for some reason...
+}
+
+.wpcf7-not-valid {
+  border-color: $error-color !important;
+}
+
+.wpcf7-not-valid-tip {
+  color: $error-color;
 }

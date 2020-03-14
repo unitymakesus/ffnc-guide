@@ -40,7 +40,7 @@
 }
 
 .filter-wrap {
-  background: $color-ff-gray-med;
+  background: $color-ff-gray-dark;
   padding: 1em;
 
   .input-field {
@@ -98,7 +98,7 @@
 
         &::after {
           bottom: 0;
-          color: $color-ff-blue;
+          color: $color-ff-blue-a11y;
           content: "Expand\A\25BE";
           cursor: pointer;
           font-size: 18px;
@@ -142,6 +142,7 @@
 
   .meta {
     font-size: 0.8em;
+    margin-bottom: 0;
   }
 
   .related-case-study {

@@ -153,6 +153,13 @@ html {
 
   a {
     color: $color-ff-blue;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      color: darken($color-ff-blue, 10%);
+      text-decoration: underline;
+    }
   }
 
   ul {
@@ -215,7 +222,11 @@ abbr[title] {
 sup.footnote {
   a {
     font-size: 0.7em !important;
-    color: $color-ff-blue;
+    color: $color-ff-blue !important;
+
+    .info-table-main-heading & {
+      color: inherit !important;
+    }
   }
 }
 
