@@ -1,6 +1,6 @@
 <article {!! post_class('excerpt') !!}>
   <header>
-    <h3 class="excerpt-title"><a href="{{ get_permalink() }}">{{ get_the_title() }}</a></h3>
+    <h3 class="excerpt-title"><a href="{{ get_permalink() }}">{!! get_the_title() !!}</a></h3>
     @if (get_post_type() === 'post')
       @include('partials/entry-meta')
     @endif
