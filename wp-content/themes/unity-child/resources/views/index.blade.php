@@ -8,7 +8,7 @@
         <span style="font-weight:bold;">View:</span>
         @php $active_filter = array_key_exists('filter', $_GET); @endphp
         <a href="{{ get_post_type_archive_link('post') }}" class="{{ $active_filter ? '' : 'active' }}">All</a>
-        <a href="{{ get_post_type_archive_link('post') . '?filter=post' }}"  class="{{ $active_filter && $_GET['filter'] === 'post' ? 'active' : '' }}">Posts</a>
+        <a href="{{ get_post_type_archive_link('post') . '?filter=post' }}"  class="{{ $active_filter && $_GET['filter'] === 'post' ? 'active' : '' }}">News</a>
         <a href="{{ get_post_type_archive_link('post') . '?filter=ff-case-study' }}" class="{{ $active_filter && $_GET['filter'] === 'ff-case-study' ? 'active' : '' }}">Case Studies</a>
       </div>
       <div class="archive-filters__cat">

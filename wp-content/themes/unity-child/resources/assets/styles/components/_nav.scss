@@ -35,7 +35,7 @@
 
       &:hover,
       &:focus {
-        background-color: darken($color-ff-gray-dark, 10%);
+        background-color: $color-ff-green;
         color: $color-white;
       }
     }
