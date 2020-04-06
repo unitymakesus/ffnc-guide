@@ -1,11 +1,7 @@
 import List from 'list.js';
-import Materialize from 'materialize-css';
 
 export default {
   init() {
-    // Initialize Materialize JS for forms
-    Materialize.updateTextFields();
-    $('select.filter').formSelect();
   },
   finalize() {
     // Initialize List.JS

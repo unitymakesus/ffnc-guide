@@ -24,9 +24,9 @@
     <div class="filter-wrap">
       <div class="container">
         <div class="row">
-          <div class="input-field">
-            <input id="search_keyword" type="text" class="search"  />
-            <label for="search_keyword">Search by Keyword</label>
+          <div class="input-search">
+            <label for="search_keyword">Search by Keyword:</label>
+            <input id="search_keyword" type="text" class="search" placeholder="Enter keyword" />
           </div>
         </div>
 

@@ -43,15 +43,16 @@
   background: $color-ff-gray-dark;
   padding: 1em;
 
-  .input-field {
+  .input-search {
     margin-bottom: 0;
 
-    & > label {
-      transform: translateY(1rem);
+    label {
+      font-size: 1rem;
+      color: $color-white;
+    }
 
-      &.active {
-        transform: translateY(-1rem) scale(0.8);
-      }
+    input::placeholder {
+      color: black;
     }
   }
 
