@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the Ultimate Addons for Beaver Builder package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Addons for Beaver Builder 1.26.3\n"
+"Project-Id-Version: Ultimate Addons for Beaver Builder 1.26.4\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/bb-ultimate-addon\n"
-"POT-Creation-Date: 2020-04-23 06:50:59+00:00\n"
+"POT-Creation-Date: 2020-05-05 05:47:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -236,7 +236,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: admin/bsf-core/class-bsf-update-manager.php:568
+#: admin/bsf-core/class-bsf-update-manager.php:566
 #. translators: %1$s: $parent_name %2%s: $registration_page
 msgid ""
 " <br>This plugin is came bundled with the <i>%1$s</i>. For receiving "
@@ -244,15 +244,15 @@ msgid ""
 "href=\"%3$s\">here</a>."
 msgstr ""
 
-#: admin/bsf-core/class-bsf-update-manager.php:571
+#: admin/bsf-core/class-bsf-update-manager.php:569
 #. translators: %1$s: $registration_page %2%s: search term
 msgid ""
 " <i>Please <a href=\"%1$s\">activate your license</a> to update the "
 "plugin.</i>"
 msgstr ""
 
-#: admin/bsf-core/class-bsf-update-manager.php:653
-#: admin/bsf-core/class-bsf-update-manager.php:683
+#: admin/bsf-core/class-bsf-update-manager.php:651
+#: admin/bsf-core/class-bsf-update-manager.php:681
 #. translators: %1$s: $registration_page_url %2%s: $plugin_name
 #. translators: %1$s: $registration_page_url %2%s: $theme_name
 msgid ""
@@ -260,12 +260,12 @@ msgid ""
 "<i>%2$2s</i> to receive automatic updates."
 msgstr ""
 
-#: admin/bsf-core/class-bsf-update-manager.php:660
+#: admin/bsf-core/class-bsf-update-manager.php:658
 #. translators: %1$s: $plugin_name %2%s: search term
 msgid "Activate license of <i>%2s</i> to receive automatic updates."
 msgstr ""
 
-#: admin/bsf-core/class-bsf-update-manager.php:667
+#: admin/bsf-core/class-bsf-update-manager.php:665
 #. translators: %1$s: $plugin_name %2%s: $plugin_name %3%s:
 #. $registration_page_url
 msgid ""
@@ -319,31 +319,31 @@ msgstr ""
 msgid "Installed Plugins"
 msgstr ""
 
-#: admin/bsf-core/index.php:114 admin/bsf-core/index.php:115
+#: admin/bsf-core/index.php:113 admin/bsf-core/index.php:114
 msgid "Extensions"
 msgstr ""
 
-#: admin/bsf-core/index.php:249
+#: admin/bsf-core/index.php:248
 msgid "iMedica Extensions"
 msgstr ""
 
-#: admin/bsf-core/plugin-installer/admin-functions.php:153
+#: admin/bsf-core/plugin-installer/admin-functions.php:147
 msgid "You do not have sufficient permissions to install plugins for this site."
 msgstr ""
 
-#: admin/bsf-core/plugin-installer/admin-functions.php:207
+#: admin/bsf-core/plugin-installer/admin-functions.php:201
 msgid "Error! Can't connect to filesystem"
 msgstr ""
 
-#: admin/bsf-core/plugin-installer/admin-functions.php:218
+#: admin/bsf-core/plugin-installer/admin-functions.php:212
 msgid "Downloading package from Server"
 msgstr ""
 
-#: admin/bsf-core/plugin-installer/admin-functions.php:219
+#: admin/bsf-core/plugin-installer/admin-functions.php:213
 msgid "Removing old plugin, if exists"
 msgstr ""
 
-#: admin/bsf-core/plugin-installer/admin-functions.php:279
+#: admin/bsf-core/plugin-installer/admin-functions.php:273
 msgid "Invalid request"
 msgstr ""
 
@@ -2546,7 +2546,7 @@ msgstr ""
 #: modules/uabb-off-canvas/uabb-off-canvas-bb-2-2-compatibility.php:574
 #: modules/uabb-off-canvas/uabb-off-canvas-bb-less-than-2-2-compatibility.php:454
 #: modules/uabb-registration-form/uabb-registration-form-bb-2-2-compatibility.php:778
-#: modules/uabb-registration-form/uabb-registration-form.php:527
+#: modules/uabb-registration-form/uabb-registration-form.php:528
 #: modules/uabb-social-share/uabb-social-share-bb-less-than-2-2-compatibility.php:80
 #: modules/uabb-table/uabb-table-bb-less-than-2-2-compatibility.php:699
 #: modules/uabb-table/uabb-table-bb-less-than-2-2-compatibility.php:781
@@ -28309,46 +28309,46 @@ msgstr ""
 msgid "User Registration Form."
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:181
+#: modules/uabb-registration-form/uabb-registration-form.php:182
 #. translators: %d admin link
 msgid "Can not connect to the reCAPTCHA server (%d)."
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:190
+#: modules/uabb-registration-form/uabb-registration-form.php:191
 msgid "Invalid Form - reCAPTCHA validation failed"
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:219
+#: modules/uabb-registration-form/uabb-registration-form.php:220
 msgid "Passwords may not contain the character \"\\\""
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:225
+#: modules/uabb-registration-form/uabb-registration-form.php:226
 msgid "The email address isn&#8217;t correct."
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:230
+#: modules/uabb-registration-form/uabb-registration-form.php:231
 msgid "This email is already registered, please choose another one."
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:239
+#: modules/uabb-registration-form/uabb-registration-form.php:240
 msgid ""
 "This username is invalid because it uses illegal characters. Please enter a "
 "valid username."
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:243
+#: modules/uabb-registration-form/uabb-registration-form.php:244
 msgid "This username is already registered. Please choose another one."
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:249
+#: modules/uabb-registration-form/uabb-registration-form.php:250
 msgid "Sorry, that username is not allowed."
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:289
+#: modules/uabb-registration-form/uabb-registration-form.php:290
 msgid "successfully registered"
 msgstr ""
 
-#: modules/uabb-registration-form/uabb-registration-form.php:550
+#: modules/uabb-registration-form/uabb-registration-form.php:551
 #. translators: %1$s: search term, translators: %2$s: search term
 msgid ""
 "Dear User,\r\n"

@@ -131,6 +131,7 @@ class UABBRegistrationFormModule extends FLBuilderModule {
 		$error              = array();
 		$error_flag         = '';
 		$password_generated = '';
+		$allow_register     = get_option( 'users_can_register' );
 
 			$node_id          = isset( $_POST['node_id'] ) ? sanitize_text_field( $_POST['node_id'] ) : false;
 			$template_id      = isset( $_POST['template_id'] ) ? sanitize_text_field( $_POST['template_id'] ) : false;
@@ -150,7 +151,7 @@ class UABBRegistrationFormModule extends FLBuilderModule {
 			}
 		}
 
-		if ( isset( $_POST['data'] ) ) {
+		if ( isset( $_POST['data'] ) && '1' === $allow_register ) {
 
 			$data = $_POST['data'];
 

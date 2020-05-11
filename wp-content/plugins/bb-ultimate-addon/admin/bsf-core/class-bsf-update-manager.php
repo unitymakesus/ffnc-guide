@@ -400,9 +400,7 @@ if ( ! class_exists( 'BSF_Update_Manager' ) ) {
 				$ultimate_referer = 'on-transient-delete-2-hours';
 				bsf_check_product_update();
 				update_option( 'bsf_local_transient', (string) current_time( 'timestamp' ) );
-				set_transient( 'bsf_check_product_updates', true, 2 * DAY_IN_SECONDS );
 			}
-
 		}
 
 		/**

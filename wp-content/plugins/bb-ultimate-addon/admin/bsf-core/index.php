@@ -56,7 +56,6 @@ require_once 'auto-update/updater.php';
 require_once 'class-bsf-update-manager.php';
 require_once 'class-bsf-license-manager.php';
 
-
 require_once 'classes/class-bsf-core-update.php';
 
 if ( defined( 'WP_CLI' ) ) {
@@ -287,9 +286,6 @@ if ( ! function_exists( 'bsf_extract_product_id' ) ) {
 	 * @param string $path Path.
 	 */
 	function bsf_extract_product_id( $path ) {
-
-		WP_Filesystem();
-
 		$id            = false;
 		$file          = rtrim( $path, '/' ) . '/admin/bsf.yml';
 		$file_fallback = rtrim( $path, '/' ) . '/bsf.yml';
@@ -302,10 +298,8 @@ if ( ! function_exists( 'bsf_extract_product_id' ) ) {
 			return apply_filters( 'bsf_extract_product_id', $id, $path );
 		}
 
-		$wp_filesystem_direct = new WP_Filesystem_Direct( $file );
-
-		$filelines = $wp_filesystem_direct->get_contents( $file );
-
+		// Use of file_get_contents() - https://github.com/WordPress/WordPress-Coding-Standards/pull/1374/files#diff-400e43bc09c24262b43f26fce487fdabR43-R52.
+		$filelines = file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if ( stripos( $filelines, 'ID:[' ) !== false ) {
 			preg_match_all( '/ID:\[(.*?)\]/', $filelines, $matches );
 			if ( isset( $matches[1] ) ) {
