@@ -41,9 +41,9 @@
 }
 
 /** Captions */
-.wp-caption {
-  width: 100% !important;
-  max-width: 992px;
+.wp-caption figcaption {
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
 .wp-caption img {
