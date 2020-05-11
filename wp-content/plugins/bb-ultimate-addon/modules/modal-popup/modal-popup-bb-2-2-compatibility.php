@@ -154,6 +154,10 @@ FLBuilder::register_module(
 								'selector' => '.uabb-modal-content-data',
 							),
 						),
+						'ct_raw'            => array(
+							'type'    => 'raw',
+							'content' => '<div class="uabb-module-raw" data-uabb-module-nonce=' . wp_create_nonce( 'uabb-module-nonce' ) . '></div>',
+						),
 						'ct_photo'          => array(
 							'type'        => 'photo',
 							'label'       => __( 'Select Photo', 'uabb' ),
@@ -349,6 +353,18 @@ FLBuilder::register_module(
 							'default'    => 'rgba(0,0,0,0.75)',
 							'show_reset' => true,
 							'show_alpha' => true,
+						),
+						'modal_border'            => array(
+							'type'    => 'border',
+							'label'   => __( 'Modal Popup Border', 'uabb' ),
+							'slider'  => true,
+							'units'   => array( 'px' ),
+							'preview' => array(
+								'type'     => 'css',
+								'selector' => '.uabb-content',
+								'property' => 'border',
+								'unit'     => 'px',
+							),
 						),
 					),
 				),

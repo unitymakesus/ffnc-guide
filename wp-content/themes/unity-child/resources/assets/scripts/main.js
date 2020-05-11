@@ -1,15 +1,18 @@
-// Import parent JS
-import '../../../../unity-core/dist/scripts/main.js';
+import 'custom-event-polyfill';
+// import 'materialize-css';
+
+// Import everything from autoload
+import './autoload/*';
 
 /** Import local dependencies */
 import Router from './util/Router';
 import common from './routes/common';
-import archiveFfCompanyData from './routes/directory';
+import postTypeArchiveFfCompany from './routes/postTypeArchiveFfCompany';
 
 /** Populate Router instance with DOM routes */
 const routes = new Router({
   common,
-  archiveFfCompanyData,
+  postTypeArchiveFfCompany,
 });
 
 /** Load Events */

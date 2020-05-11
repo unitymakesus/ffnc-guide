@@ -1,3 +1,13 @@
+.single-post {
+  header {
+    text-align: left;
+  }
+
+  .content header {
+    text-align: center;
+  }
+}
+
 .excerpt .overlay {
   background: $color-ff-orange;
 }

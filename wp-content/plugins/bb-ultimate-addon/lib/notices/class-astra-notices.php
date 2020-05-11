@@ -112,12 +112,17 @@ if ( ! class_exists( 'Astra_Notices' ) ) :
 		 * @return void
 		 */
 		public function dismiss_notice() {
+			// Check the user capability.
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
 			$notice_id           = ( isset( $_POST['notice_id'] ) ) ? sanitize_key( $_POST['notice_id'] ) : '';
 			$repeat_notice_after = ( isset( $_POST['repeat_notice_after'] ) ) ? absint( $_POST['repeat_notice_after'] ) : '';
 			$nonce               = ( isset( $_POST['nonce'] ) ) ? sanitize_key( $_POST['nonce'] ) : '';
 
 			if ( false === wp_verify_nonce( $nonce, 'astra-notices' ) ) {
-				wp_send_json_error( _e( 'WordPress Nonce not validated.', 'uabb' ) );
+				wp_send_json_error( esc_attr_e( 'WordPress Nonce not validated.', 'uabb' ) );
 			}
 
 			// Valid inputs?
@@ -334,7 +339,7 @@ if ( ! class_exists( 'Astra_Notices' ) ) :
 		 *
 		 * @return mixed URL.
 		 */
-		public static function _get_uri() {
+		public static function _get_uri() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
 			$path       = wp_normalize_path( dirname( __FILE__ ) );
 			$theme_dir  = wp_normalize_path( get_template_directory() );
 			$plugin_dir = wp_normalize_path( WP_PLUGIN_DIR );
@@ -347,7 +352,7 @@ if ( ! class_exists( 'Astra_Notices' ) ) :
 				return plugin_dir_url( __FILE__ );
 			}
 
-			return;
+			return; // phpcs:ignore Squiz.PHP.NonExecutableCode.ReturnNotRequired
 		}
 
 	}

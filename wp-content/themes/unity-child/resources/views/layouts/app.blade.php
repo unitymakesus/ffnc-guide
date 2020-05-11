@@ -1,7 +1,7 @@
 <!doctype html>
 @php
-  $text_size = $_COOKIE['data_text_size'];
-  $contrast = $_COOKIE['data_contrast'];
+  $text_size = $_COOKIE['data_text_size'] ?? '';
+  $contrast = $_COOKIE['data_contrast'] ?? '';
   $simple_fonts = get_theme_mod('theme_fonts');
   $simple_color = get_theme_mod('theme_color');
   $button_font = get_theme_mod('button_font');
@@ -9,12 +9,6 @@
 <html {!! language_attributes() !!} data-text-size="{{ $text_size }}" data-contrast="{{ $contrast }}">
   @include('partials.head')
   <body {!! body_class() !!} data-buttons="{{ $button_font }}">
-    @if (!is_user_logged_in())
-      <!-- Google Tag Manager (noscript) -->
-      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PZPJJVP"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-      <!-- End Google Tag Manager (noscript) -->
-    @endif
     <a href="#content" class="screen-reader-text">Skip to content</a>
     <!--[if IE]>
       <div class="alert alert-warning">

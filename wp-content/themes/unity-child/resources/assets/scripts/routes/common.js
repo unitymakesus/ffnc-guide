@@ -1,44 +1,76 @@
+import Macy from 'macy';
+import initMainMenu from '../util/initMainMenu';
+
 export default {
   init() {
-    // JavaScript to be fired on all pages
+    /**
+     * Initialize main menu behavior.
+     */
+    initMainMenu();
+
+    /**
+     * Initialize Macy layouts.
+     */
+    if (document.querySelector('.grid') !== null) {
+      let macyGrid = Macy({   // eslint-disable-line no-unused-vars
+        container: '.grid',
+        trueOrder: true,
+        columns: 3,
+        margin: {
+          x: 20,
+          y: 30,
+        },
+        breakAt: {
+          767: 1,
+        },
+      });
+    }
+
+    /**
+     * Initalize our custom dropdowns.
+     */
+    let dropdownToggles = document.querySelectorAll('.dropdown__toggle');
+    if (dropdownToggles.length) {
+      dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+          let expanded = this.getAttribute('aria-expanded');
+          this.setAttribute('aria-expanded', expanded === 'false' ? 'true' : 'false');
+
+          e.preventDefault();
+          return false;
+        });
+      });
+    }
   },
   finalize() {
-    // Activate search box
-    function activateSearch() {
-      $('.navbar .search-form').addClass('active');
-      $('.navbar .search-form .search-submit').removeClass('disabled');
-    }
+    /**
+     * Form label controls
+     */
+    $('.wpcf7-form-control-wrap').children('input[type="text"], input[type="email"], input[type="tel"], textarea').each(function() {
+      // Remove br
+      $(this).parent().prevAll('br').remove();
 
-    // Deactivate search box
-    function deactivateSearch() {
-      $('.navbar .search-form').removeClass('active');
-      $('.navbar .search-form .search-submit').addClass('disabled');
-    }
+      // Set field wrapper to active
+      $(this).on('focus', function() {
+        $(this).parent().prev('label').addClass('active');
+      });
 
-    // Only show search if element inside is receiving focus
-    $('.navbar .search-form').on('click', 'input', function(e) {
-      e.preventDefault();
+      // Remove field wrapper active state
+      $(this).on('blur', function() {
+        var val = $.trim($(this).val());
 
-      // Only allow default action (submit) if the search field has content
-      // If not, switch focus to search field instead
-      if ($(this).hasClass('search-submit')) {
-        if ($('.navbar .search-field').val().length > 0) {
-          $('.navbar .search-form').submit();
-        } else {
-          $('.navbar .search-form .search-field').focus();
+        if (!val) {
+          $(this).parent().prev('label').removeClass('active');
         }
-      }
-
-      return false;
-    }).on('focus', 'input', function() {
-      activateSearch();
-    }).on('focusout', function() {
-      setTimeout(function () {
-        if ($(':focus').closest('.navbar').length == 0) {
-          deactivateSearch();
-        }
-      }, 200);
+      });
     });
 
+    $('.wpcf7-form-control-wrap').find('.has-free-text').each(function() {
+      var $input = $(this).find('input[type="radio"], input[type="checkbox"]');
+
+      $input.on('focus', function() {
+        $input.parent().addClass('active');
+      });
+    });
   },
 };

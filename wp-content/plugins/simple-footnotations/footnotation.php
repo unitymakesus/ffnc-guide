@@ -3,7 +3,7 @@
      * Plugin Name: Simple Footnotes
      * Plugin URI: https://www.unitymakes.us/
      * Description: Just a simple little footnotes plugin
-     * Version: 1.0.0
+     * Version: 1.0.1
      * Author: Alisa Herr | Unity Digital Agency
      * Author URI: https://www.unitymakes.us/
      * Requires at least: 2.0.0
@@ -171,12 +171,12 @@ options to take effect immediately.
 
                 if ( $options['footnotation_colour'] ) {
 
-                    $content = str_replace( $marker, "<sup class='footnote footnoteblack'><a href='$singleurl#marker-$post_id-$n' id='markerref-$post_id-$n' onclick='return footnotation_show($post_id)'>$n</a></sup>", $content );
+                    $content = str_replace( $marker, "<sup class='footnote footnoteblack'><a href='$singleurl#marker-$post_id-$n' id='markerref-$post_id-$n' onclick='return footnotation_show($post_id)'>span class='sr-only'>Footnote</span> $n</a></sup>", $content );
                     $n ++;
 
                 } else {
 
-                    $content = str_replace( $marker, "<sup class='footnote'><a href='$singleurl#marker-$post_id-$n' id='markerref-$post_id-$n' onclick='return footnotation_show($post_id)'>$n</a></sup>", $content );
+                    $content = str_replace( $marker, "<sup class='footnote'><a href='$singleurl#marker-$post_id-$n' id='markerref-$post_id-$n' onclick='return footnotation_show($post_id)'><span class='sr-only'>Footnote # </span>$n</a></sup>", $content );
                     $n ++;
                 }
             }
@@ -201,7 +201,7 @@ options to take effect immediately.
                     $content .= "<ol>";
                 }
                 for ( $i = 1; $i < $n; $i ++ ) {
-                    $content .= "<li id='marker-$post_id-$i'>$notes[$i] <span class='returnkey'><a href='#markerref-$post_id-$i'>&#8629;</a></span></li>";
+                    $content .= "<li id='marker-$post_id-$i'>$notes[$i] <span class='returnkey'><a href='#markerref-$post_id-$i'><span aria-hidden='true'>&#8629;</span><span class='sr-only'>Return to footnote #{$i} referrer</span></a></span></li>";
                 }
                 $content .= "</ol>";
                 $content .= "</div>";

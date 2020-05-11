@@ -1,72 +1,57 @@
-header {
-  .search-form {
-    align-self: stretch;
-    height: auto;
-    width: 2.2em;
+.search-form {
+  height: auto;
+  background: $color-ff-gray-dark;
+  border: 2px solid $color-ff-gray-dark;
+  border-radius: 0;
+  clear: both;
+  line-height: 2.2rem;
+  position: relative;
 
-    label {
-      width: 0;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: calc(2.2rem - 12px);
+    height: calc(2.2rem - 12px);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-image: url('../images/icon-search-white.svg');
+    pointer-events: none;
+  }
+
+  label {
+    float: left;
+    width: calc(100% - 2.2rem);
+  }
+
+  input.search-field {
+    background: $color-white;
+    color: $color-ff-gray-dark;
+    height: 2.2rem;
+    margin: 0;
+    padding: 0 10px;
+    border: 0 !important;
+    border-radius: 0;
+    box-sizing: border-box;
+    width: 100%;
+
+    &::placeholder {
+      color: $color-ff-gray-dark;
     }
+  }
 
-    .search-field {
-      overflow: hidden;
-      transition: all 0.3s ease;
-      height: 0;
-      padding: 0;
-      border: none;
-      position: absolute;
-      top: calc(100% + 6px);
-      right: 0;
-    }
-
-    input.search-submit {
-      height: 100%;
-      background: none;
-
-      &:hover, &:focus, &:active {
-        background: rgba($color-white, 0.5);
-      }
-    }
-
-    &::after {
-      top: 50%;
-      left: 50%;
-      transform: translate3d(-50%, -50%, 0);
-    }
-
-    &.active {
-      .search-field {
-        width: 200px;
-        padding: 0 10px;
-        background: $color-white;
-        height: 2.2em;
-        border: 3px solid $color-ff-gray-dark !important;
-      }
-    }
-
-    @media #{$small-and-down} {
-      .search-field {
-        width: 250px;
-        padding: 0 10px;
-      }
-    }
-    @media #{$xsmall-and-down} {
-      margin-left: 0;
-
-      .label {
-        display: none;
-      }
-
-      .search-field {
-        width: 225px;
-      }
-    }
-
-    html[data-contrast="true"] & {
-      .label {
-        color: $color-white;
-      }
-    }
+  input.search-submit {
+    display: block;
+    height: 2.2rem;
+    width: 2.2rem;
+    color: $color-ff-gray-dark;
+    text-indent: -100em;
+    overflow: hidden;
+    border: none;
+    background: $color-ff-gray-dark;
+    cursor: pointer;
   }
 }
 

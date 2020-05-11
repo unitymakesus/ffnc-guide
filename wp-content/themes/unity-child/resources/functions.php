@@ -3,17 +3,29 @@
 namespace App;
 
 /**
+ * Helper function for prettying up errors
+ * @param string $message
+ * @param string $subtitle
+ * @param string $title
+ */
+$sage_error = function ($message, $subtitle = '', $title = '') {
+  $title = $title ?: __('Sage &rsaquo; Error', 'sage');
+  $footer = '<a href="https://roots.io/sage/docs/">roots.io/sage/docs/</a>';
+  $message = "<h1>{$title}<br><small>{$subtitle}</small></h1><p>{$message}</p><p>{$footer}</p>";
+  wp_die($message, $title);
+};
+
+/**
  * Theme assets
  */
 add_action('wp_enqueue_scripts', function () {
   // Enqueue files for child theme (which include the core assets as imports)
   wp_enqueue_style('sage/main.css', asset_path('styles/main.css'), false, null);
 
-  if(class_exists('FLBuilderModel') && (\FLBuilderModel::is_builder_active())) {
+  if (class_exists('FLBuilderModel') && (\FLBuilderModel::is_builder_active())) {
     // Don't load theme js if Beaver Builder is active
   } else {
     wp_enqueue_script('sage/main.js', asset_path('scripts/main.js'), ['jquery'], null, true);
-
     // Set array of theme customizations for JS
     wp_localize_script( 'sage/main.js', 'simple_options', array('fonts' => get_theme_mod('theme_fonts'), 'colors' => get_theme_mod('theme_color')) );
   }
@@ -102,7 +114,7 @@ update_option( 'medium_size_h', 600 );
 add_image_size('tiny-thumbnail', 80, 80, true);
 add_image_size('small-thumbnail', 150, 150, true);
 add_image_size('medium-square-thumbnail', 400, 400, true);
-
+add_image_size('card', 800, 600, ['center', 'center']);
 
 add_filter( 'image_size_names_choose', function( $sizes ) {
   return array_merge( $sizes, array(
@@ -169,6 +181,9 @@ function add_post_type() {
    'menu_icon' => 'dashicons-megaphone',
    'capability_type' => 'page',
    'hierarchical' => false,
+   'taxonomies' => array(
+     'category',
+   ),
    'supports' => array(
      'title',
      'editor',
@@ -199,7 +214,7 @@ function add_post_type() {
 				'parent_item_colon' => ''
    ),
    'public' => true,
-   'exclude_from_search' => true,
+   'exclude_from_search' => false,
    'publicly_queryable' => true,
    'show_ui' => true,
    'show_in_nav_menus' => false,
@@ -274,9 +289,9 @@ add_filter( 'get_search_form', function( $form ) {
     $form = '<form role="search" method="get" class="search-form" action="' . home_url( '/' ) . '" >
 			<label>
 				<span class="screen-reader-text">Search Site:</span>
-				<input type="search" class="search-field" placeholder="Keyword …" value="" name="s">
+				<input type="search" class="search-field" placeholder="Search …" value="" name="s">
 			</label>
-			<input type="submit" class="search-submit disabled" value="Search">
+			<input type="submit" class="search-submit disabled" aria-label="Submit search" />
 		</form>';
     return $form;
 } );
@@ -310,3 +325,16 @@ add_action( 'pre_get_posts', function($query){
       return;
   }
 } );
+
+/**
+ * Sage required files
+ *
+ * The mapped array determines the code library included in your theme.
+ * Add or remove files to the array as needed. Supports child theme overrides.
+ */
+array_map(function ($file) use ($sage_error) {
+  $file = "../app/{$file}.php";
+  if (!locate_template($file, true, true)) {
+    $sage_error(sprintf(__('Error locating <code>%s</code> for inclusion.', 'sage'), $file), 'File not found');
+  }
+}, ['admin', 'archive', 'nav']);

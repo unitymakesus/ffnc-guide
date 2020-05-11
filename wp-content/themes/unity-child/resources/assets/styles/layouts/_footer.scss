@@ -1,12 +1,25 @@
 .page-footer {
   background-color: $color-ff-gray-dark !important;
 
+  :focus:not([tabindex="-1"]) {
+    box-shadow: 0 0 0 3px transparentize($color-white, 0.25);
+  }
+
+  .footer-copyright {
+    height: auto;
+    font-size: 0.8rem;
+
+    .row {
+      margin-bottom: 0;
+    }
+  }
+
   .menu li {
     padding: 5px 0;
+  }
 
-    a {
-      font-weight: normal;
-    }
+  a {
+    font-weight: normal;
   }
 }
 
@@ -14,5 +27,11 @@
   .textwidget {
     text-align: left;
     font-size: 0.7em;
+  }
+
+  img:not(:first-of-type) {
+    margin-top: 1.5rem;
+    width: 100%;
+    max-width: 175px;
   }
 }

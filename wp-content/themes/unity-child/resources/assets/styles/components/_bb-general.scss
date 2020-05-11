@@ -1,0 +1,14 @@
+// Image Carousel
+.uabb-image-carousel .slick-list {
+  height: 100% !important;
+}
+
+.uabb-image-carousel .slick-track {
+  display: flex;
+  align-items: center;
+}
+
+.uabb-image-carousel img {
+  max-width: 175px;
+  margin: 0 auto;
+}

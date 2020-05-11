@@ -1,0 +1,45 @@
+.collapse {
+  margin-top: 2.5rem;
+
+  .name {
+    padding: 1rem;
+  }
+
+  &__panel {
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  &__toggle {
+    all: inherit;
+    border: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    color: $color-ff-green;
+    padding: 1rem 15px;
+    cursor: pointer;
+
+    &:focus {
+      box-shadow: none;
+      background-color: transparent;
+
+      svg {
+        box-shadow: 0 0 0 3px transparentize($color-ff-blue, 0.25);
+      }
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      margin-left: 0.5em;
+    }
+
+    &[aria-expanded="true"] .vert {
+      display: none;
+    }
+
+    &[aria-expanded] rect {
+      fill: black;
+    }
+  }
+}

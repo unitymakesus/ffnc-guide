@@ -73,6 +73,7 @@
 
 html {
   font-size: 18px;
+  color: black;
 
   &[data-text-size="medium"] {
     font-size: 20px;
@@ -152,6 +153,13 @@ html {
 
   a {
     color: $color-ff-blue;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      color: darken($color-ff-blue, 10%);
+      text-decoration: underline;
+    }
   }
 
   ul {
@@ -162,7 +170,7 @@ html {
     }
   }
 
-  &.content {
+  .uabb-infobox-content {
     p, li {
       color: black;
     }
@@ -214,10 +222,22 @@ abbr[title] {
 sup.footnote {
   a {
     font-size: 0.7em !important;
-    color: $color-ff-blue;
+    color: $color-ff-blue !important;
+
+    .info-table-main-heading & {
+      color: inherit !important;
+    }
   }
 }
 
 .uabb-infobox-title-prefix.uabb-infobox-title-prefix {
   color: $color-ff-green;
+}
+
+input {
+  font-family: 'Gotham', Helvetica, Arial, sans-serif;
+}
+
+figure {
+  margin: 0;
 }

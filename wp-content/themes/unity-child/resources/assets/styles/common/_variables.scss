@@ -1,5 +1,6 @@
 $color-ff-green: #81BC41;
 $color-ff-blue: #4597CB;
+$color-ff-blue-a11y: #007EB3;
 $color-ff-orange: #F89C24;
 $color-ff-orange-light: #FEF7EE;
 $color-ff-brown: #744F28;
@@ -13,7 +14,7 @@ $primary-color:               $color-ff-green;
 $secondary-color:             $color-ff-gray-dark;
 $success-color:               $color-ff-green;
 $error-color:                 #A3320B;
-$link-color:                  $color-ff-blue;
+$link-color:                  $color-ff-blue-a11y;
 
 @mixin filter-gradient($start-color, $end-color, $orientation: vertical) {
   $gradient-type: if($orientation == vertical, 0, 1);

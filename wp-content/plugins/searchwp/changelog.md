@@ -1,3 +1,6 @@
+### 3.1.11
+- **[Fix]** Issue with synonym partial matching not working as expected in some cases
+-
 ### 3.1.10
 - **[Fix]** Issue with supported post type attributes not appearing in all cases
 - **[Change]** Template conflict detection is now opt-in

@@ -13,8 +13,18 @@
   .fl-builder-edit & {
     z-index: auto;
   }
-}
 
-.navbar-menu {
-  flex-grow: 1;
+  .logo {
+    position: relative;
+    padding: 10px 25px;
+    margin: 0.125rem;
+  }
+
+  .search-form {
+    margin: 1rem auto;
+
+    @media #{$large-and-up} {
+      margin: 0 auto;
+    }
+  }
 }
