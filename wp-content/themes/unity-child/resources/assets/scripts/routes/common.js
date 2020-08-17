@@ -24,6 +24,11 @@ export default {
           767: 1,
         },
       });
+
+      // Recalc layout on lazyloaded images.
+      document.addEventListener('lazyloaded', () => {
+        macyGrid.recalculate(true);
+      });
     }
 
     /**
