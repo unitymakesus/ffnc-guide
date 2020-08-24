@@ -334,17 +334,6 @@ class autoptimizeMain
                 }
             }
 
-            // also honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
-            // see https://www.modpagespeed.com/doc/experiment#ModPagespeed for info on that.
-            if ( false === $ao_noptimize && array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
-                $ao_noptimize = true;
-            }
-
-            // and make sure Thrive editor doesn't get optimized HTML.
-            if ( false === $ao_noptimize && array_key_exists( 'tve', $_GET ) && 'true' === $_GET['tve'] ) {
-                $ao_noptimize = true;
-            }
-
             // If setting says not to optimize logged in user and user is logged in...
             if ( false === $ao_noptimize && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', 'on' ) && is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
                 $ao_noptimize = true;
@@ -361,7 +350,24 @@ class autoptimizeMain
                 }
             }
 
-            // Allows blocking of autoptimization on your own terms regardless of above decisions.
+            // And make sure pagebuilder previews don't get optimized HTML/ JS/ CSS/ ...
+            if ( false === $ao_noptimize ) {
+                $_qs_pagebuilders = array( 'tve', 'elementor-preview', 'fl_builder', 'vc_action', 'et_fb', 'bt-beaverbuildertheme', 'ct_builder', 'fb-edit', 'siteorigin_panels_live_editor' );
+                foreach ( $_qs_pagebuilders as $_pagebuilder ) {
+                    if ( array_key_exists( $_pagebuilder, $_GET ) ) {
+                        $ao_noptimize = true;
+                        break;
+                    }
+                }
+            }
+
+            // Also honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
+            // see https://www.modpagespeed.com/doc/experiment#ModPagespeed for info on that.
+            if ( false === $ao_noptimize && array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
+                $ao_noptimize = true;
+            }
+
+            // And finally allows blocking of autoptimization on your own terms regardless of above decisions.
             $ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
 
             // Check for site being previewed in the Customizer (available since WP 4.0).
@@ -579,6 +585,7 @@ class autoptimizeMain
             'autoptimize_ccss_forcepath',
             'autoptimize_ccss_deferjquery',
             'autoptimize_ccss_domain',
+            'autoptimize_ccss_unloadccss',
         );
 
         if ( ! is_multisite() ) {
@@ -604,8 +611,8 @@ class autoptimizeMain
         $ao_ccss_dir = WP_CONTENT_DIR . '/uploads/ao_ccss/';
         if ( file_exists( $ao_ccss_dir ) && is_dir( $ao_ccss_dir ) ) {
             // fixme: should check for subdirs when in multisite and remove contents of those as well.
-            array_map( 'unlink', glob( AO_CCSS_DIR . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
-            rmdir( AO_CCSS_DIR );
+            array_map( 'unlink', glob( $ao_ccss_dir . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
+            rmdir( $ao_ccss_dir );
         }
     }
 

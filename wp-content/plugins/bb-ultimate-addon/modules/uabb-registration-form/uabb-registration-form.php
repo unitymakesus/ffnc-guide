@@ -234,7 +234,7 @@ class UABBRegistrationFormModule extends FLBuilderModule {
 
 			if ( empty( $data['user_login'] ) ) {
 
-				$data['user_login'] = $this->uabb_create_username( $data['user_email'], '' ); // phpcs:ignore PHPCompatibility.Variables.ForbiddenThisUseContexts.OutsideObjectContext
+				$data['user_login'] = self::uabb_create_username( $data['user_email'], '' ); // phpcs:ignore PHPCompatibility.Variables.ForbiddenThisUseContexts.OutsideObjectContext
 
 			} elseif ( ! validate_username( $data['user_login'] ) ) {
 				$error['user_login'] = __( 'This username is invalid because it uses illegal characters. Please enter a valid username.', 'uabb' );
@@ -377,8 +377,11 @@ class UABBRegistrationFormModule extends FLBuilderModule {
 				<?php } else { ?>
 					<div class="uabb-registration_form-error-message uabb-registration_form-error-message-required"></div>
 				<?php } ?>
-				<?php if ( 'password' === $type && 'confirm_password' !== $field_name ) { ?>
+				<?php if ( 'password' === $type && 'confirm_pass' !== $field_name ) { ?>
 					<div class="uabb-registration-form-pass-verify"></div>
+				<?php } ?>
+				<?php if ( 'password' === $type && 'confirm_pass' === $field_name ) { ?>
+					<div class="uabb-registration-form-pass-match"></div>
 				<?php } ?>
 			</div>
 		</div>

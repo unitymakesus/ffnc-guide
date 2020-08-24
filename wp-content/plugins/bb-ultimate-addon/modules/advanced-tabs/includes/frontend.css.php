@@ -24,6 +24,8 @@ $settings->icon_active_color = UABB_Helper::uabb_colorpicker( $settings, 'icon_a
 
 $settings->content_color            = UABB_Helper::uabb_colorpicker( $settings, 'content_color' );
 $settings->content_background_color = UABB_Helper::uabb_colorpicker( $settings, 'content_background_color', true );
+$settings->tab_focus_color          = UABB_Helper::uabb_colorpicker( $settings, 'tab_focus_color', true );
+
 if ( ! $version_bb_check ) {
 	$settings->content_border_color  = UABB_Helper::uabb_colorpicker( $settings, 'content_border_color' );
 	$settings->content_border_radius = ( '' !== $settings->content_border_radius ) ? $settings->content_border_radius : '0';
@@ -185,7 +187,9 @@ if ( 'iconfall' !== $settings->style ) {
 	}
 }
 ?>
-
+.fl-node-<?php echo esc_attr( $id ); ?> .uabb-tab-link:focus {
+	border-color:<?php echo esc_attr( $settings->tab_focus_color ); ?>;
+}
 .fl-node-<?php echo esc_attr( $id ); ?> .uabb-tab-title,
 .fl-node-<?php echo esc_attr( $id ); ?> .uabb-acc-icon {
 	color: <?php echo esc_attr( uabb_theme_text_color( $settings->title_color ) ); ?>;
@@ -898,6 +902,9 @@ if ( $global_settings->responsive_enabled ) { // Global Setting If started.
 <?php if ( 'accordion' === $settings->responsive ) : ?>
 	<?php $responsive_breakpoint = ( '' !== $settings->responsive_breakpoint ) ? $settings->responsive_breakpoint : $global_settings->responsive_breakpoint; ?>
 	@media ( max-width: <?php echo esc_attr( $responsive_breakpoint ); ?>px ) {
+		.fl-node-<?php echo esc_attr( $id ); ?> .uabb-tabs-layout-vertical .uabb-content-wrap {
+			width: 100%;
+		}
 		.fl-node-<?php echo esc_attr( $id ); ?> .uabb-tabs-nav<?php echo esc_attr( $id ); ?> {
 			display: none;
 		}

@@ -198,6 +198,7 @@ class UABB_Init {
 
 		require_once BB_ULTIMATE_ADDON_DIR . 'classes/batch-process/class-uabb-batch-process.php';
 		require_once BB_ULTIMATE_ADDON_DIR . 'lib/notices/class-astra-notices.php';
+		require_once BB_ULTIMATE_ADDON_DIR . 'admin/bsf-analytics/class-bsf-analytics.php';
 
 		// Load the appropriate text-domain.
 		$this->load_plugin_textdomain();
@@ -333,15 +334,6 @@ class UABB_Init {
 	 * @since x.x.x
 	 */
 	public function load_scripts() {
-
-		$uabb_localize = apply_filters(
-			'uabb_js_localize',
-			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-			)
-		);
-
-		wp_localize_script( 'jquery', 'uabb', $uabb_localize );
 
 		if ( FLBuilderModel::is_builder_active() ) {
 

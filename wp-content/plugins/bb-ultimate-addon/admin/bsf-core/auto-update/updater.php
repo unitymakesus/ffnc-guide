@@ -121,6 +121,12 @@ if ( ! function_exists( 'bsf_check_product_update' ) ) {
 							$brainstrom_products['plugins'][ $key ]['download_url_beta'] = $download_url_beta;
 							$brainstrom_products['plugins'][ $key ]['download_url']      = $download_url;
 							$brainstrom_products['plugins'][ $key ]['tested']            = $tested_upto;
+
+							// Deregister status for plugin.
+							if ( isset( $remote_data->status ) && 0 === $remote_data->status ) {
+								$brainstrom_products['plugins'][ $key ]['status'] = 'not-registered';
+							}
+
 							$is_update = true;
 						}
 					}
@@ -142,6 +148,11 @@ if ( ! function_exists( 'bsf_check_product_update' ) ) {
 							$brainstrom_products['themes'][ $key ]['download_url']      = $download_url;
 							$brainstrom_products['themes'][ $key ]['download_url_beta'] = $download_url_beta;
 							$is_update = true;
+
+							// Deregister status for theme.
+							if ( isset( $remote_data->status ) && 0 === $remote_data->status ) {
+								$brainstrom_products['themes'][ $key ]['status'] = 'not-registered';
+							}
 						}
 					}
 
