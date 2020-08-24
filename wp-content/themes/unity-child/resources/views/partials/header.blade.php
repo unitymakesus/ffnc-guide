@@ -20,6 +20,19 @@
     $custom_logo_width = '';
   }
 @endphp
+
+@if (get_field('global_alert_bar_enable', 'options'))
+  <div class="alert-bar">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 text-center">
+          {!! get_field('global_alert_bar_message', 'option') !!}
+        </div>
+      </div>
+    </div>
+  </div>
+@endif
+
 <header class="banner" role="banner" style="background-color: {{ $header_color }}">
   <nav class="nav-primary" role="navigation">
     <div class="container-wide">

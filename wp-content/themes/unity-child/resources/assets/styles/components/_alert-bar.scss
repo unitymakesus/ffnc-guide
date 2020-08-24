@@ -1,0 +1,16 @@
+.alert-bar {
+  background-color: $color-ff-blue-a11y;
+  color: $color-white;
+  padding: 1rem 0;
+  text-align: center;
+
+  a {
+    font-weight: bold;
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  p:last-of-type {
+    margin-bottom: 0;
+  }
+}
