@@ -64,8 +64,10 @@ class ServerRequest extends \DeliciousBrains\WP_Offload_Media\Aws3\GuzzleHttp\Ps
      * Return an UploadedFile instance array.
      *
      * @param array $files A array which respect $_FILES structure
-     * @throws InvalidArgumentException for unrecognized values
+     *
      * @return array
+     *
+     * @throws InvalidArgumentException for unrecognized values
      */
     public static function normalizeFiles(array $files)
     {
@@ -133,7 +135,7 @@ class ServerRequest extends \DeliciousBrains\WP_Offload_Media\Aws3\GuzzleHttp\Ps
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         $headers = getallheaders();
         $uri = self::getUriFromGlobals();
-        $body = new \DeliciousBrains\WP_Offload_Media\Aws3\GuzzleHttp\Psr7\LazyOpenStream('php://input', 'r+');
+        $body = new \DeliciousBrains\WP_Offload_Media\Aws3\GuzzleHttp\Psr7\CachingStream(new \DeliciousBrains\WP_Offload_Media\Aws3\GuzzleHttp\Psr7\LazyOpenStream('php://input', 'r+'));
         $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']) : '1.1';
         $serverRequest = new \DeliciousBrains\WP_Offload_Media\Aws3\GuzzleHttp\Psr7\ServerRequest($method, $uri, $headers, $body, $protocol, $_SERVER);
         return $serverRequest->withCookieParams($_COOKIE)->withQueryParams($_GET)->withParsedBody($_POST)->withUploadedFiles(self::normalizeFiles($_FILES));

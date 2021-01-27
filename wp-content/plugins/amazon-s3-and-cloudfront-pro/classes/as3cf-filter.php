@@ -75,7 +75,7 @@ abstract class AS3CF_Filter {
 			$url = $this->get_url( $attachment['attachment_id'] );
 
 			if ( $url ) {
-				$value[ $key ]['file'] = $this->get_url( $attachment['attachment_id'] );
+				$value[ $key ]['file'] = $url;
 			}
 		}
 
@@ -501,7 +501,7 @@ abstract class AS3CF_Filter {
 			return false;
 		}
 
-		$base_url = $this->as3cf->encode_filename_in_path( AS3CF_Utils::reduce_url( $this->get_base_url( $attachment_id ) ) );
+		$base_url = AS3CF_Utils::encode_filename_in_path( AS3CF_Utils::reduce_url( $this->get_base_url( $attachment_id ) ) );
 		$basename = wp_basename( $base_url );
 
 		// Add full size URL
@@ -509,10 +509,10 @@ abstract class AS3CF_Filter {
 
 		// Add additional image size URLs
 		foreach ( $meta['sizes'] as $size ) {
-			$base_urls[] = str_replace( $basename, $this->as3cf->encode_filename_in_path( $size['file'] ), $base_url );
+			$base_urls[] = str_replace( $basename, AS3CF_Utils::encode_filename_in_path( $size['file'] ), $base_url );
 		}
 
-		$url = $this->as3cf->encode_filename_in_path( AS3CF_Utils::reduce_url( $url ) );
+		$url = AS3CF_Utils::encode_filename_in_path( AS3CF_Utils::reduce_url( $url ) );
 
 		if ( in_array( $url, $base_urls ) ) {
 			// Match found, return true
@@ -582,7 +582,7 @@ abstract class AS3CF_Filter {
 	 *
 	 * @return null|string
 	 */
-	protected function get_size_string_from_url( $attachment_id, $url ) {
+	public function get_size_string_from_url( $attachment_id, $url ) {
 		$meta = get_post_meta( $attachment_id, '_wp_attachment_metadata', true );
 
 		if ( empty( $meta['sizes'] ) ) {
@@ -590,10 +590,10 @@ abstract class AS3CF_Filter {
 			return null;
 		}
 
-		$basename = $this->as3cf->encode_filename_in_path( wp_basename( $this->as3cf->maybe_remove_query_string( $url ) ) );
+		$basename = AS3CF_Utils::encode_filename_in_path( wp_basename( $this->as3cf->maybe_remove_query_string( $url ) ) );
 
 		foreach ( $meta['sizes'] as $size => $file ) {
-			if ( $basename === $this->as3cf->encode_filename_in_path( $file['file'] ) ) {
+			if ( $basename === AS3CF_Utils::encode_filename_in_path( $file['file'] ) ) {
 				return $size;
 			}
 		}
@@ -848,8 +848,8 @@ abstract class AS3CF_Filter {
 	 *
 	 * @return string
 	 */
-	protected function remove_aws_query_strings( $content, $base_url = '' ) {
-		$pattern = '\?[^\s"<\?]*(?:X-Amz-Algorithm|AWSAccessKeyId)=[^\s"<\?]+';
+	public static function remove_aws_query_strings( $content, $base_url = '' ) {
+		$pattern = '\?[^\s"<\?]*(?:X-Amz-Algorithm|AWSAccessKeyId|Key-Pair-Id)=[^\s"<\?]+';
 		$group   = 0;
 
 		if ( ! is_string( $content ) ) {
@@ -935,6 +935,92 @@ abstract class AS3CF_Filter {
 		}
 
 		return $post->ID;
+	}
+
+	/**
+	 * Get an array of bare base_urls that can be used for uploaded items.
+	 *
+	 * @param bool $refresh Refresh cached domains, default false.
+	 *
+	 * @return array
+	 */
+	public function get_bare_upload_base_urls( $refresh = false ) {
+		static $base_urls = array();
+
+		if ( $refresh || empty( $base_urls ) ) {
+			$domains = array();
+
+			// Original domain and path.
+			$uploads     = wp_upload_dir();
+			$base_url    = AS3CF_Utils::remove_scheme( $uploads['baseurl'] );
+			$orig_domain = AS3CF_Utils::parse_url( $base_url, PHP_URL_HOST );
+			$domains[]   = $orig_domain;
+			$base_urls[] = $base_url;
+
+			// Current domain and path after potential domain mapping.
+			$base_url    = $this->as3cf->maybe_fix_local_subsite_url( $uploads['baseurl'] );
+			$base_url    = AS3CF_Utils::remove_scheme( $base_url );
+			$curr_domain = AS3CF_Utils::parse_url( $base_url, PHP_URL_HOST );
+
+			if ( $curr_domain !== $orig_domain ) {
+				$domains[] = $curr_domain;
+			}
+
+			/**
+			 * Allow alteration of the local domains that can be matched on.
+			 *
+			 * @param array $domains
+			 */
+			$domains = apply_filters( 'as3cf_local_domains', $domains );
+
+			if ( ! empty( $domains ) ) {
+				foreach ( array_unique( $domains ) as $match_domain ) {
+					$base_urls[] = substr_replace( $base_url, $match_domain, 2, strlen( $curr_domain ) );
+				}
+			}
+		}
+
+		return array_unique( $base_urls );
+	}
+
+	/**
+	 * Get an array of domain names that can be used for remote items.
+	 *
+	 * @param bool $refresh Refresh cached domains, default false.
+	 *
+	 * @return array
+	 */
+	public function get_remote_domains( $refresh = false ) {
+		static $domains = array();
+
+		if ( $refresh || empty( $domains ) ) {
+			// Storage Provider's default domain.
+			$domains = array(
+				$this->as3cf->get_storage_provider()->get_domain(),
+			);
+
+			// Delivery Provider's default domain.
+			$delivery_provider = $this->as3cf->get_delivery_provider();
+			$domains[]         = $delivery_provider->get_domain();
+
+			// Delivery Provider's custom domain.
+			if ( $delivery_provider->delivery_domain_allowed() && $this->as3cf->get_setting( 'enable-delivery-domain' ) ) {
+				$delivery_domain = $this->as3cf->get_setting( 'delivery-domain' );
+
+				if ( ! empty( $delivery_domain ) ) {
+					$domains[] = trim( $delivery_domain );
+				}
+			}
+
+			/**
+			 * Allow alteration of the remote domains that can be matched on.
+			 *
+			 * @param array $domains
+			 */
+			$domains = array_unique( apply_filters( 'as3cf_remote_domains', $domains ) );
+		}
+
+		return $domains;
 	}
 
 	/**

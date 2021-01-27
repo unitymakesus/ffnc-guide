@@ -305,10 +305,10 @@ class Quick_Featured_Images_Settings {
 	public function add_action_links( $links ) {
 		$url = sprintf( 'admin.php?page=%s', $this->page_slug );
 		return array_merge(
-			$links,
 			array(
 				'settings' => sprintf( '<a href="%s">%s</a>', esc_url( admin_url( $url ) ), esc_html( $this->get_page_headline() ) )
-			)
+			),
+			$links
 		);
 
 	}

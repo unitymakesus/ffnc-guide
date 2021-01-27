@@ -29,6 +29,8 @@ class Downloader extends Background_Tool {
 		}
 
 		$this->maybe_render_deactivate_prompt();
+
+		add_action( 'as3cfpro_load_assets', array( $this, 'load_assets' ) );
 	}
 
 	/**
@@ -42,6 +44,18 @@ class Downloader extends Background_Tool {
 		}
 
 		return parent::get_sidebar_block_args();
+	}
+
+	/**
+	 * Load assets.
+	 */
+	public function load_assets() {
+		parent::load_assets();
+
+		$this->as3cf->enqueue_script( 'as3cf-pro-downloader-script', 'assets/js/pro/tools/downloader', array(
+			'jquery',
+			'wp-util',
+		) );
 	}
 
 	/**
@@ -125,7 +139,7 @@ class Downloader extends Background_Tool {
 	 *
 	 * @return string
 	 */
-	public function get_more_info_text() {
+	public static function get_more_info_text() {
 		return __( 'If you\'ve ever had the "Remove Files From Server" option on, some Media Library files are likely missing on your server. You can use this tool to download any missing files back to your server.', 'amazon-s3-and-cloudfront' );
 	}
 

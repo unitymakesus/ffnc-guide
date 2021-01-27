@@ -10,7 +10,9 @@
  * Plugin Name:       Quick Featured Images
  * Plugin URI:        http://wordpress.org/plugins/quick-featured-images
  * Description:       Your time-saving Swiss Army Knife for featured images: Set, replace and delete them in bulk, in posts lists and set default images for future posts.
- * Version:           13.5.0
+ * Version:           13.5.3
+ * Requires at least: 3.8
+ * Requires PHP:      5.2
  * Author:            Martin Stehle
  * Author URI:        http://stehle-internet.de
  * Text Domain:       quick-featured-images

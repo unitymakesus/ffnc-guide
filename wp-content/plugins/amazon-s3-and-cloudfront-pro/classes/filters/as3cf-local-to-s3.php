@@ -20,6 +20,7 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 		add_filter( 'content_pagination', array( $this, 'filter_content_pagination' ) );
 		add_filter( 'the_content', array( $this, 'filter_post' ), 100 );
 		add_filter( 'the_excerpt', array( $this, 'filter_post' ), 100 );
+		add_filter( 'rss_enclosure', array( $this, 'filter_post' ), 100 );
 		add_filter( 'content_edit_pre', array( $this, 'filter_post' ) );
 		add_filter( 'excerpt_edit_pre', array( $this, 'filter_post' ) );
 		add_filter( 'as3cf_filter_post_local_to_s3', array( $this, 'filter_post' ) ); // Backwards compatibility
@@ -27,6 +28,8 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 		// Widgets
 		add_filter( 'widget_form_callback', array( $this, 'filter_widget_display' ), 10, 2 );
 		add_filter( 'widget_display_callback', array( $this, 'filter_widget_display' ), 10, 2 );
+		// Edit Media page
+		add_filter( 'set_url_scheme', array( $this, 'set_url_scheme' ), 10, 3 );
 	}
 
 	/**
@@ -115,7 +118,7 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 	 *
 	 * @return bool
 	 */
-	protected function url_needs_replacing( $url ) {
+	public function url_needs_replacing( $url ) {
 		if ( str_replace( $this->get_bare_upload_base_urls(), '', $url ) === $url ) {
 			// Remote URL, no replacement needed
 			return false;
@@ -123,50 +126,6 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 
 		// Local URL, perform replacement
 		return true;
-	}
-
-	/**
-	 * Get an array of bare base_urls that can be used for uploaded items.
-	 *
-	 * @return array
-	 */
-	private function get_bare_upload_base_urls() {
-		static $base_urls = array();
-
-		if ( empty( $base_urls ) ) {
-			$domains = array();
-
-			// Original domain and path.
-			$uploads     = wp_upload_dir();
-			$base_url    = AS3CF_Utils::remove_scheme( $uploads['baseurl'] );
-			$orig_domain = AS3CF_Utils::parse_url( $base_url, PHP_URL_HOST );
-			$domains[]   = $orig_domain;
-			$base_urls[] = $base_url;
-
-			// Current domain and path after potential domain mapping.
-			$base_url    = $this->as3cf->maybe_fix_local_subsite_url( $uploads['baseurl'] );
-			$base_url    = AS3CF_Utils::remove_scheme( $base_url );
-			$curr_domain = AS3CF_Utils::parse_url( $base_url, PHP_URL_HOST );
-
-			if ( $curr_domain !== $orig_domain ) {
-				$domains[] = $curr_domain;
-			}
-
-			/**
-			 * Allow alteration of the local domains that can be matched on.
-			 *
-			 * @param array $domains
-			 */
-			$domains = apply_filters( 'as3cf_local_domains', $domains );
-
-			if ( ! empty( $domains ) ) {
-				foreach ( array_unique( $domains ) as $match_domain ) {
-					$base_urls[] = substr_replace( $base_url, $match_domain, 2, strlen( $curr_domain ) );
-				}
-			}
-		}
-
-		return $base_urls;
 	}
 
 	/**
@@ -199,36 +158,20 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 	 *
 	 * @return bool|int
 	 */
-	protected function get_attachment_id_from_url( $url ) {
-		global $wpdb;
+	public function get_attachment_id_from_url( $url ) {
+		$results = $this->get_attachment_ids_from_urls( array( $url ) );
 
-		$full_url = AS3CF_Utils::remove_scheme( AS3CF_Utils::remove_size_from_filename( $url ) );
-
-		if ( isset( $this->query_cache[ $full_url ] ) ) {
-			// ID already cached, return
-			return $this->query_cache[ $full_url ];
-		}
-
-		$path = AS3CF_Utils::decode_filename_in_path( ltrim( str_replace( $this->get_bare_upload_base_urls(), '', $full_url ), '/' ) );
-
-		$sql = $wpdb->prepare( "
-			SELECT post_id FROM {$wpdb->postmeta}
-			WHERE meta_key = %s
-			AND meta_value = %s
-		", '_wp_attached_file', $path );
-
-		$result = $wpdb->get_var( $sql );
-
-		if ( is_null( $result ) ) {
-			// Attachment ID not found, return false
-			$this->query_cache[ $full_url ] = false;
-
+		if ( empty( $results ) ) {
 			return false;
 		}
 
-		$this->query_cache[ $full_url ] = (int) $result;
+		foreach ( $results as $result ) {
+			if ( $result ) {
+				return $result;
+			}
+		}
 
-		return (int) $result;
+		return false;
 	}
 
 	/**
@@ -249,11 +192,25 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 			$urls = array( $urls );
 		}
 
+		$query_set = array();
 		$paths     = array();
 		$full_urls = array();
 
+		// Quickly parse given URLs to add versions without size as we should lookup with size info first as that could be the "full" size.
 		foreach ( $urls as $url ) {
-			$full_url = AS3CF_Utils::remove_scheme( AS3CF_Utils::remove_size_from_filename( $url ) );
+			$query_set[]  = $url;
+			$size_removed = AS3CF_Utils::remove_size_from_filename( $url );
+
+			if ( $url !== $size_removed ) {
+				$query_set[] = $size_removed;
+			}
+		}
+
+		foreach ( $query_set as $url ) {
+			// Path to search for in query set should be based on bare URL.
+			$bare_url = AS3CF_Utils::remove_scheme( $url );
+			// There can be multiple URLs in the query set that belong to the same full URL for the Media Library item.
+			$full_url = AS3CF_Utils::remove_size_from_filename( $bare_url );
 
 			if ( isset( $this->query_cache[ $full_url ] ) ) {
 				// ID already cached, use it.
@@ -262,7 +219,7 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 				continue;
 			}
 
-			$path = AS3CF_Utils::decode_filename_in_path( ltrim( str_replace( $this->get_bare_upload_base_urls(), '', $full_url ), '/' ) );
+			$path = AS3CF_Utils::decode_filename_in_path( ltrim( str_replace( $this->get_bare_upload_base_urls(), '', $bare_url ), '/' ) );
 
 			$paths[ $path ]           = $full_url;
 			$full_urls[ $full_url ][] = $url;
@@ -296,9 +253,9 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 			}
 
 			// No more attachment IDs found, set remaining results as false.
-			if ( count( $urls ) !== count( $results ) ) {
-				foreach ( $full_urls as $full_url => $sizes ) {
-					foreach ( $sizes as $url ) {
+			if ( count( $query_set ) !== count( $results ) ) {
+				foreach ( $full_urls as $full_url => $schema_urls ) {
+					foreach ( $schema_urls as $url ) {
 						if ( ! array_key_exists( $url, $results ) ) {
 							$this->query_cache[ $full_url ] = false;
 							$results[ $url ]                = false;
@@ -330,7 +287,7 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 	 * @return string
 	 */
 	protected function normalize_replace_value( $url ) {
-		return $this->as3cf->encode_filename_in_path( $url );
+		return AS3CF_Utils::encode_filename_in_path( $url );
 	}
 
 	/**
@@ -373,5 +330,43 @@ class AS3CF_Local_To_S3 extends AS3CF_Filter {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Might need to re-fix remote URL's schema if WordPress core has substituted in HTTP but HTTPS is required.
+	 *
+	 * @param string $url
+	 * @param string $scheme
+	 * @param string $orig_scheme
+	 *
+	 * @return string
+	 */
+	public function set_url_scheme( $url, $scheme, $orig_scheme ) {
+		if (
+			'http' === $scheme && empty( $orig_scheme ) &&
+			$this->as3cf->get_setting( 'force-https' ) &&
+			$this->should_filter_content() &&
+			! $this->url_needs_replacing( $url )
+		) {
+			// Check that it's one of ours and not external.
+			$parts = AS3CF_Utils::parse_url( $url );
+
+			if ( empty( $parts['scheme'] ) || empty( $parts['host'] ) || 'http' !== $parts['scheme'] ) {
+				return $url;
+			}
+
+			$ours = false;
+			if ( $this->as3cf->get_setting( 'enable-delivery-domain' ) && $this->as3cf->get_setting( 'delivery-domain', '' ) === $parts['host'] ) {
+				$ours = true;
+			} elseif ( false !== strpos( $parts['host'], $this->as3cf->get_storage_provider()->get_domain() ) ) {
+				$ours = true;
+			}
+
+			if ( $ours ) {
+				return substr_replace( $url, 'https', 0, 4 );
+			}
+		}
+
+		return $url;
 	}
 }

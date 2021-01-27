@@ -343,14 +343,14 @@ class Quick_Featured_Images_Columns {
 	 */
 	 
 	/**
-	 * Add a column with the title 'Featured Image' in the post lists
+	 * Add a column with the title "Featured image" in the post lists
 	 *
 	 * @since     7.0
 	 *
 	 * @return    array	list of columns    
 	 */
     public function add_thumbnail_column( $cols ) {
-		$text = 'Featured Image';
+		$text = "Featured image";
 		$cols[ $this->thumbnail_column_name ] = _x( $text, 'post' );
         return $cols;
     }
@@ -636,7 +636,7 @@ class Quick_Featured_Images_Columns {
 	 */
 	 
 	/**
-	 * Add a column with the title 'Featured Image' in the post lists
+	 * Add a column with the title "Featured image" in the post lists
 	 *
 	 * @since     13.4.0
 	 *
