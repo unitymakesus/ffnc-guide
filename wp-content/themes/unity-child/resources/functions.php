@@ -296,24 +296,6 @@ add_filter( 'get_search_form', function( $form ) {
     return $form;
 } );
 
-/**
- * Filter search results to show highlighted terms
- */
-
-function searchwp_term_highlight_auto_excerpt( $excerpt ) {
- 	global $post;
- 	if ( ! is_search() ) {
- 		return $excerpt;
- 	}
- 	// prevent recursion
- 	remove_filter( 'get_the_excerpt', __NAMESPACE__ . '\\searchwp_term_highlight_auto_excerpt' );
- 	$global_excerpt = searchwp_term_highlight_get_the_excerpt_global( $post->ID, null, get_search_query() );
- 	add_filter( 'get_the_excerpt', __NAMESPACE__ . '\\searchwp_term_highlight_auto_excerpt' );
- 	return wp_kses_post( $global_excerpt );
-}
-add_filter( 'get_the_excerpt', __NAMESPACE__ . '\\searchwp_term_highlight_auto_excerpt' );
-
-
 // Before cast studies are displayed
 add_action( 'pre_get_posts', function($query){
   if ( is_admin() || ! $query->is_main_query() )
