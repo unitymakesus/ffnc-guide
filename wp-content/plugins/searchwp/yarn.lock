@@ -422,7 +422,7 @@ character-parser@^2.1.1:
   dependencies:
     is-regex "^1.0.3"
 
-chart.js@^2.9.3:
+chart.js@^2.9.4:
   version "2.9.4"
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.9.4.tgz#0827f9563faffb2dc5c06562f8eb10337d5b9684"
   integrity sha512-B07aAzxcrikjAPyV+01j7BmOpxtQETxTSlQ26BEYJ+3iUkbNKaOJ/nDbT6JjyqYxseM0ON12COHYdU2cTIjC7A==
@@ -2395,10 +2395,10 @@ vue-scrollto@^2.17.1:
   dependencies:
     bezier-easing "2.1.0"
 
-vue-select@3.9.4:
-  version "3.9.4"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.9.4.tgz#b46cea923aa2d8443000a2f82e7039fab8876bd0"
-  integrity sha512-91vvz2WcmlMTzKI2LbA+jxhHjVwuFhGZXV20F7XxIeF/+A7PLfBTu8mCHh51ELF/UF6YsXAvd8t7BUhx8sydzQ==
+vue-select@3.11.2:
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.11.2.tgz#3ef93e3f2707e133c2df0b2920a05eea78764d18"
+  integrity sha512-pIOcY8ajWNSwg8Ns4eHVr5ZWwqKCSZeQRymTnlUI8i+3QiQXF6JIM4lylK6mVfbccs4S6vOyxB7zmJBpp7tDUg==
 
 vue-simple-spinner@^1.2.10:
   version "1.2.10"
